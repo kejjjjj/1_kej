@@ -13,6 +13,27 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\lib">
+      <UniqueIdentifier>{1a5537ae-b883-4fdc-baf3-2d3b7508dfe3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\lib\detours">
+      <UniqueIdentifier>{aed28cca-dbcb-46b6-ac3a-4dc183f9b429}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\init">
+      <UniqueIdentifier>{7872e7d3-208c-4642-9d84-c11632ee0451}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cg">
+      <UniqueIdentifier>{581c4f0a-4aa9-4529-aad0-1aba2f949888}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cg">
+      <UniqueIdentifier>{84f44e9e-6f3e-4599-b930-9824e7ee9099}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game">
+      <UniqueIdentifier>{2d34a24e-c992-40dc-afb5-b9a07a5f20dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\com">
+      <UniqueIdentifier>{af94f49e-1efe-49cb-b9bd-b4a7ab134c8c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -21,13 +42,54 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="detours\detours.h">
+      <Filter>Header Files\lib\detours</Filter>
+    </ClInclude>
+    <ClInclude Include="koukku.hpp">
+      <Filter>Header Files\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="entry.hpp">
+      <Filter>Header Files\init</Filter>
+    </ClInclude>
+    <ClInclude Include="cg_init.hpp">
+      <Filter>Source Files\cg</Filter>
+    </ClInclude>
+    <ClInclude Include="cg_offsets.h">
+      <Filter>Header Files\cg</Filter>
+    </ClInclude>
+    <ClInclude Include="cg_local.h">
+      <Filter>Header Files\cg</Filter>
+    </ClInclude>
+    <ClInclude Include="dvar.hpp">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="com_channel.h">
+      <Filter>Source Files\com</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dllmain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="koukku.cpp">
+      <Filter>Header Files\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="entry.cpp">
+      <Filter>Header Files\init</Filter>
+    </ClCompile>
+    <ClCompile Include="cg_init.cpp">
+      <Filter>Source Files\cg</Filter>
+    </ClCompile>
+    <ClCompile Include="dvar.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="com_channel.cpp">
+      <Filter>Source Files\com</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="detours\detours.lib">
+      <Filter>Header Files\lib\detours</Filter>
+    </Library>
   </ItemGroup>
 </Project>
