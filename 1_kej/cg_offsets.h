@@ -216,10 +216,9 @@ namespace cg
 	inline char** objBuf = reinterpret_cast<char**>(0x1477F30);
 
 	inline client_t* client;
+	inline gentity_s* gent = reinterpret_cast<gentity_s*>(0x1288500);
 
-	inline bool* wndActive = reinterpret_cast<bool*>(cg::cod4x_entry + 0x4480E01 + 4);
-
-	void CG_GetCoD4xOffsets();
+	
 }
 
 #endif

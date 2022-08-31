@@ -4152,6 +4152,12 @@ struct TraceInfo
 	int end[3];
 	int pad[27];
 };
+struct BuiltinMethodDef
+{
+	const char* actionString;
+	void(__cdecl* actionFunc)(int);
+	int type;
+};
 
 struct WeaponDef
 {

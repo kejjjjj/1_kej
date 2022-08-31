@@ -97,7 +97,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <OutputFile>D:\Activision\CallOfDuty4\miles\1_kej.asi</OutputFile>
+      <OutputFile>D:\Activision\cod4\miles\1_kej.asi</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -119,7 +119,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <OutputFile>D:\Activision\CallOfDuty4\miles\1_kej.asi</OutputFile>
+      <OutputFile>D:\Activision\cod4\miles\1_kej.asi</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -167,6 +167,10 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="koukku.hpp" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="scr_cmd.hpp" />
+    <ClInclude Include="scr_functions.hpp" />
+    <ClInclude Include="scr_main.hpp" />
+    <ClInclude Include="scr_obj.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cg_init.cpp" />
@@ -180,6 +184,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="scr_cmd.cpp" />
+    <ClCompile Include="scr_functions.cpp" />
+    <ClCompile Include="scr_main.cpp" />
+    <ClCompile Include="scr_obj.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="detours\detours.lib" />

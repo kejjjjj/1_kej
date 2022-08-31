@@ -15,8 +15,6 @@ dvar_s* Dvar_RegisterNew(const char* name, DvarType type, int flags, const char*
     }
 
    return ((dvar_s * (__cdecl*)(const char*, DvarType, int, const char*, DvarValue, DvarLimits))0x56C130)(name, type, flags, description, defaultValue, domain);
-
-  // return  cg::Dvar_RegisterNew_f(name, type, flags, description, defaultValue, domain);
 }
 dvar_s* Dvar_Reregister(dvar_s* dvar, const char* name, DvarType type, int flags, const char* description, DvarValue defaultValue, DvarLimits domain)
 {

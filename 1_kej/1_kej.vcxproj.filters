@@ -34,6 +34,9 @@
     <Filter Include="Source Files\com">
       <UniqueIdentifier>{af94f49e-1efe-49cb-b9bd-b4a7ab134c8c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\scr">
+      <UniqueIdentifier>{f6c4ac48-bf2b-4792-b943-b82892f3ee2c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -66,6 +69,18 @@
     <ClInclude Include="com_channel.h">
       <Filter>Source Files\com</Filter>
     </ClInclude>
+    <ClInclude Include="scr_cmd.hpp">
+      <Filter>Source Files\scr</Filter>
+    </ClInclude>
+    <ClInclude Include="scr_functions.hpp">
+      <Filter>Source Files\scr</Filter>
+    </ClInclude>
+    <ClInclude Include="scr_main.hpp">
+      <Filter>Source Files\scr</Filter>
+    </ClInclude>
+    <ClInclude Include="scr_obj.hpp">
+      <Filter>Source Files\scr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -85,6 +100,18 @@
     </ClCompile>
     <ClCompile Include="com_channel.cpp">
       <Filter>Source Files\com</Filter>
+    </ClCompile>
+    <ClCompile Include="scr_cmd.cpp">
+      <Filter>Source Files\scr</Filter>
+    </ClCompile>
+    <ClCompile Include="scr_functions.cpp">
+      <Filter>Source Files\scr</Filter>
+    </ClCompile>
+    <ClCompile Include="scr_main.cpp">
+      <Filter>Source Files\scr</Filter>
+    </ClCompile>
+    <ClCompile Include="scr_obj.cpp">
+      <Filter>Source Files\scr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
