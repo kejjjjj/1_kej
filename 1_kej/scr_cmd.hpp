@@ -10,5 +10,5 @@ inline cg::scr_function_s* scr_methods = NULL;
 
 bool Scr_AddMethod(const char* cmd_name, xfunction_t function, bool developer);
 bool Scr_AddFunction(const char* cmd_name, xfunction_t function, bool developer);
-void* Scr_GetMethod(char** v_functionName);
+xfunction_t Scr_GetMethod(char** v_functionName);
 #endif

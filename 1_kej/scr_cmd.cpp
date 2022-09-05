@@ -59,7 +59,7 @@ bool Scr_AddMethod(const char* cmd_name, xfunction_t function, bool developer)
     scr_methods = cmd;
     return true;
 }
-void* Scr_GetMethod(char** v_functionName)
+xfunction_t Scr_GetMethod(char** v_functionName)
 {
     cg::scr_function_s* cmd;
 

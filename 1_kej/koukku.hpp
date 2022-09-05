@@ -13,20 +13,17 @@ struct hook //a VERY basic structure to do the most basic things!
 
 	LONG install(PVOID* ppPointer, PVOID pDetour);
 
-	//BYTE* install(std::uintptr_t address, void* func);
-	//BYTE* install(void* address, void* func);
-	//BOOL remove(void* Trampoline, void* detourFunc);
-	//#endif
 	void nop(std::uintptr_t address);
 	void write_addr(void* addr, const char* bytes, size_t len);
+	void write_addr(void* addr, void* bytes, size_t len);
+
 	void write_addr(std::uintptr_t addr, const char* bytes, size_t len);
-	void write_addr(void* addr, BYTE* byte, size_t len);
+	void memcopy(void* dst, void* src, size_t len);
 
 	void get_bytes(void* addr, size_t len, BYTE* buffer);
 
 	std::uintptr_t find_pattern(std::string moduleName, std::string pattern);
 	std::uintptr_t find_pattern(DWORD start_address, DWORD end_address, std::string pattern);
-	const char* bytes_to_text(const char* bytes);
 
 
 };

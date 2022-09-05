@@ -30,7 +30,7 @@ int Scr_GetNumParam()
 }
 int Scr_AddInt(int val)
 {
-	return ((int(__cdecl*)(uint32_t _prm))0x523AB0)(val);
+	return ((int(__cdecl*)(int32_t _prm))0x523AB0)(val);
 }
 int Scr_AddFloat(float val)
 {
@@ -40,4 +40,8 @@ float* Scr_AddVector(float* vector)
 {
 	return ((float* (__cdecl*)(float* _prm))0x523D10)(vector);
 
+}
+cg::gentity_s* Scr_GetEntity(scr_entref_t entref)
+{
+	return ((cg::gentity_s* (__cdecl*)(scr_entref_t))0x4CB260)(entref);
 }

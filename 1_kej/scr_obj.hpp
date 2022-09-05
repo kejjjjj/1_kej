@@ -14,4 +14,5 @@ int Scr_GetNumParam();
 int Scr_AddInt(int val);
 int Scr_AddFloat(float val);
 float* Scr_AddVector(float* vector);
+cg::gentity_s* Scr_GetEntity(scr_entref_t entref);
 #endif
