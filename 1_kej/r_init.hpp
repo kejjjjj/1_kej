@@ -1,0 +1,31 @@
+#pragma once
+
+#ifndef rinit
+#define rinit
+
+#include "pch.h"
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+namespace r
+{
+	inline DWORD WndProcAddr;
+
+	bool R_Init();
+	bool R_ImGui(IDirect3DDevice9* pDevice);
+	typedef HRESULT(__stdcall* endScene)(IDirect3DDevice9* pDevice);
+	inline endScene pEndScene;
+
+	HRESULT __stdcall draw_func(IDirect3DDevice9* pDevice);
+
+	typedef void(__cdecl* CG_DrawActive_h)();
+	inline CG_DrawActive_h CG_DrawActive_f = (CG_DrawActive_h)0x42F7F0;
+
+	void __cdecl CG_DrawActive();
+
+	LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	typedef LRESULT(__stdcall* WNDPROC)(HWND, UINT, WPARAM, LPARAM);
+	inline WNDPROC oWndProc;
+
+}
+
+#endif

@@ -3,9 +3,15 @@
 
 void cg::cod4x()
 {
-	if (!(DWORD)GetModuleHandleA("cod4x_021.dll"))
+	if (!(DWORD)GetModuleHandleA("cod4x_021.dll")) {
+		r::WndProcAddr = 0x57BB20;
 		return;
+	}
 
+	hook* a = nullptr;
+
+	a->write_addr(0x452C8E, "\xE8\x5D\xCB\xFD\xFF", 5); //redirect cod4x call back to iw3mp
+	r::WndProcAddr = (DWORD)a->find_pattern("cod4x_021.dll", "55 89 E5 53 81 EC 84 00 00 00 C7 04 24 02");
 	BG_WeaponNames = reinterpret_cast<WeaponDef**>(cod4x_entry + 0x443DDE0); 
 }
 #define MAX_PLAYERCMD_METHODS 84
@@ -13,9 +19,16 @@ void cg::CG_Init()
 {
 	hook* a = nullptr;
 	cod4x();
+
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, "^21_kej extension has been loaded!\n");
+
+	if (!r::R_Init()){
+		MessageBoxA(NULL, "failed to hook renderer", "FATAL ERROR", MB_ICONERROR);
+		exit(-1);
+	}
 	Scr_Init();
 	Dvar_Init();
+
 
 	while (true) {
 		//if(GetAsyncKeyState(VK_MENU)&1)

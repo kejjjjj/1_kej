@@ -40,6 +40,12 @@
     <Filter Include="Source Files\render">
       <UniqueIdentifier>{4e78cf4a-91a1-4b95-8dd3-ff7a38736594}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\sys">
+      <UniqueIdentifier>{f6329534-da8d-4bfb-b8b3-c4e4fcfb39b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\lib\ImGui">
+      <UniqueIdentifier>{c407edd6-f666-44c9-bc5e-d71cfdbb31e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -84,8 +90,41 @@
     <ClInclude Include="scr_obj.hpp">
       <Filter>Source Files\scr</Filter>
     </ClInclude>
-    <ClInclude Include="r_world.h">
+    <ClInclude Include="r_world.hpp">
       <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="r_init.hpp">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="r_drawtools.hpp">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="sys_tools.hpp">
+      <Filter>Source Files\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_win32.h">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_internal.h">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_rectpack.h">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_textedit.h">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_truetype.h">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imconfig.h">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui.h">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_dx9.h">
+      <Filter>Header Files\lib\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +160,39 @@
     </ClCompile>
     <ClCompile Include="r_world.cpp">
       <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="r_init.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="r_main.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="r_drawtools.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="sys_tools.cpp">
+      <Filter>Source Files\sys</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_win32.cpp">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_tables.cpp">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_widgets.cpp">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui.cpp">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_demo.cpp">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_draw.cpp">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_dx9.cpp">
+      <Filter>Header Files\lib\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

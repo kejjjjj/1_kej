@@ -516,8 +516,8 @@ struct GfxWindowTarget
 struct __declspec(align(8)) DxGlobals
 {
 	HINSTANCE__* hinst;
-	void* d3d9;
-	void* device;
+	IDirect3D9* d3d9;
+	IDirect3DDevice9* device;
 	unsigned int adapterIndex;
 	bool adapterNativeIsValid;
 	int adapterNativeWidth;

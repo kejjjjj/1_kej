@@ -47,13 +47,27 @@ typedef vec_t vec4_t[4];
 #include <functional>
 #include <format>
 #include <stdio.h>
-
+#include <timeapi.h>
 
 //#include <glm/vec2.hpp>
 //#include <glm/vec3.hpp>
 //#include <glm/vec4.hpp>
 //#include <glm/common.hpp>
 #include <glm/glm.hpp>
+
+#pragma comment(lib, "d3d9.lib")
+#pragma comment(lib, "d3dx9.lib")
+
+//DIRECTX
+#include <d3d9.h>
+#include <d3dx9.h>
+#include <d3dx9core.h>
+
+//IMGUI
+#include "imGui/imgui.h"
+#include "imGui/imgui_impl_dx9.h"
+#include "imGui/imgui_impl_win32.h"
+#include "imGui/imgui_internal.h"
 
 //detours
 #include "detours/detours.h"
@@ -77,7 +91,11 @@ typedef vec_t vec4_t[4];
 #include "scr_main.hpp"
 #include "scr_obj.hpp"
 
-#include "r_world.h"
+#include "r_init.hpp"
+#include "r_drawtools.hpp"
+#include "r_world.hpp"
+
+#include "sys_tools.hpp"
 
 using namespace std::chrono_literals;
 

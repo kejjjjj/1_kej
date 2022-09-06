@@ -13,7 +13,7 @@ void PlayerCmd_GetButtonPressed(scr_entref_t arg)
 	}
 	else {
 		ent = LOWORD(arg);
-		gent = &cg::gent[ent];
+		gent = Scr_GetEntity(arg);
 		if (!gent->client) {
 			Scr_ObjectError("Entity: [%i] is not a player", ent);
 		}
@@ -45,7 +45,7 @@ void PlayerCmd_GetForwardMove(scr_entref_t arg)
 	}
 	else {
 		ent = LOWORD(arg);
-		gent = &cg::gent[ent];
+		gent = Scr_GetEntity(arg);
 		if (!gent->client) {
 			Scr_ObjectError("Entity: [%i] is not a player", ent);
 		}
@@ -73,7 +73,6 @@ void PlayerCmd_GetRightMove(scr_entref_t arg)
 	}
 	else {
 		ent = LOWORD(arg);
-		//gent = &cg::gent[ent];
 		gent = Scr_GetEntity(arg);
 		if (!gent->client) {
 			Scr_ObjectError("Entity: [%i] is not a player", ent);
@@ -104,7 +103,7 @@ void PlayerCmd_SetVelocity(scr_entref_t arg)
 	}
 	else {
 		ent = LOWORD(arg);
-		gent = &cg::gent[ent];
+		gent = Scr_GetEntity(arg);
 		if (!gent->client) {
 			Scr_ObjectError("Entity: [%i] is not a player", ent);
 			return;
@@ -116,6 +115,7 @@ void PlayerCmd_SetVelocity(scr_entref_t arg)
 	Scr_GetVector(0, velocity);
 	VectorCopy(velocity, gent->client->ps.velocity);
 }
+
 void GScr_WorldToScreen(scr_entref_t arg)
 {
 	if (Scr_GetNumParam() != 1) {
@@ -154,7 +154,6 @@ void Scr_LoadMethods()
 	Scr_AddMethod("getforwardmove",		(xfunction_t)PlayerCmd_GetForwardMove, false);
 	Scr_AddMethod("getrightmove",		(xfunction_t)PlayerCmd_GetRightMove, false);
 	Scr_AddMethod("setvelocity",		(xfunction_t)PlayerCmd_SetVelocity, false);
-
 
 	Scr_AddFunction("weaponexists",		(xfunction_t)GScr_WeaponExists, false);
 	Scr_AddFunction("worldtoscreen",	(xfunction_t)GScr_WorldToScreen, false);
