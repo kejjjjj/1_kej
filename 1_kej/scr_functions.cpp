@@ -4,8 +4,6 @@
 
 void PlayerCmd_GetButtonPressed(scr_entref_t arg)
 {
-	if (NOT_SERVER)
-		return;
 
 	int32_t ent(0);
 	cg::gentity_s* gent;
@@ -38,8 +36,6 @@ void PlayerCmd_GetButtonPressed(scr_entref_t arg)
 }
 void PlayerCmd_GetForwardMove(scr_entref_t arg)
 {
-	if (NOT_SERVER)
-		return;
 
 	int32_t ent(0);
 	cg::gentity_s* gent;
@@ -68,8 +64,6 @@ void PlayerCmd_GetForwardMove(scr_entref_t arg)
 }
 void PlayerCmd_GetRightMove(scr_entref_t arg)
 {
-	if (NOT_SERVER)
-		return;
 
 	int32_t ent(0);
 	cg::gentity_s* gent;
@@ -79,7 +73,8 @@ void PlayerCmd_GetRightMove(scr_entref_t arg)
 	}
 	else {
 		ent = LOWORD(arg);
-		gent = &cg::gent[ent];
+		//gent = &cg::gent[ent];
+		gent = Scr_GetEntity(arg);
 		if (!gent->client) {
 			Scr_ObjectError("Entity: [%i] is not a player", ent);
 		}
@@ -96,18 +91,102 @@ void PlayerCmd_GetRightMove(scr_entref_t arg)
 
 	Scr_AddInt(cmd->rightmove);
 }
+void PlayerCmd_SetVelocity(scr_entref_t arg)
+{
+
+	int32_t ent(0);
+	cg::gentity_s* gent;
+	vec3_t velocity{};
+	if (HIWORD(arg)) {
+		Scr_ObjectError("Not an entity");
+		gent = NULL;
+		return;
+	}
+	else {
+		ent = LOWORD(arg);
+		gent = &cg::gent[ent];
+		if (!gent->client) {
+			Scr_ObjectError("Entity: [%i] is not a player", ent);
+			return;
+		}
+	}
+	if (Scr_GetNumParam() != 1)
+		Scr_ObjectError("Usage: player setVelocity( vec3 )");
+
+	Scr_GetVector(0, velocity);
+	VectorCopy(velocity, gent->client->ps.velocity);
+}
+void GScr_WorldToScreen(scr_entref_t arg)
+{
+	if (Scr_GetNumParam() != 1) {
+		Scr_ObjectError("Usage: WorldToScreen( end )");
+		return;
+	}
+	vec3_t end;
+	vec2_t screen;
+	Scr_GetVector(0, end);
+
+	bool success = r::WorldToScreen(end, screen);
+	Scr_AddVector(vec3_t{ screen[0], screen[1], (float)success});
+
+}
+void GScr_WeaponExists(scr_entref_t arg)
+{
+
+	if (Scr_GetNumParam() != 1)
+		Scr_ObjectError("Usage: player weaponExists( string )");
+
+	char* weap = Scr_GetString(0);
+	
+	if (!weap) {
+		Scr_AddInt(0);
+		return;
+	}
+	int wpIdx = ((int(__cdecl*)(const char*))0x416610)(weap);
+
+	Scr_AddInt(wpIdx > 0);
+	
+
+}
 void Scr_LoadMethods()
 {
-	Scr_AddMethod("getbuttonpressed", (xfunction_t)PlayerCmd_GetButtonPressed, false);
-	Scr_AddMethod("getforwardmove", (xfunction_t)PlayerCmd_GetForwardMove, false);
-	Scr_AddMethod("getrightmove", (xfunction_t)PlayerCmd_GetRightMove, false);
+	Scr_AddMethod("getbuttonpressed",	(xfunction_t)PlayerCmd_GetButtonPressed, false);
+	Scr_AddMethod("getforwardmove",		(xfunction_t)PlayerCmd_GetForwardMove, false);
+	Scr_AddMethod("getrightmove",		(xfunction_t)PlayerCmd_GetRightMove, false);
+	Scr_AddMethod("setvelocity",		(xfunction_t)PlayerCmd_SetVelocity, false);
 
+
+	Scr_AddFunction("weaponexists",		(xfunction_t)GScr_WeaponExists, false);
+	Scr_AddFunction("worldtoscreen",	(xfunction_t)GScr_WorldToScreen, false);
+
+}
+xfunction_t Scr_GetFunction(const char** name, int* type)
+{
+	xfunction_t a = (xfunction_t)Scr_GetFunction_f(name, type);
+	cg::scr_function_s* cmd = scr_functions;
+
+	if (a)
+		return a;
+
+	else {
+		if (!cmd)
+			return 0;
+		while (strcmp(*name, cmd->name)) {
+			cmd = cmd->next;
+			if (!cmd)
+				return 0;
+
+		}
+		a = (xfunction_t)cmd->function;
+		*name = cmd->name;
+		Com_Printf(CON_CHANNEL_CONSOLEONLY, "^5Adding function: %s\n", cmd->name);
+
+	}
+	return a;
 }
 xmethod_t Player_GetMethod(const char** name)
 {
-	static bool once = true;
 	xmethod_t a = (xmethod_t)Player_GetMethod_f(name);
-	int32_t i = 0;
 	cg::scr_function_s* cmd = scr_methods;
 
 	if (a)

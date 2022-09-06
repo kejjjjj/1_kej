@@ -20,9 +20,42 @@ float Scr_GetFloat(uint32_t param)
 {
 	return ((float(*)(uint32_t _prm))0x523360)(param);
 }
-float Scr_GetVector(uint32_t param, float* vector)
+char* Scr_GetString(uint32_t parameter)
 {
-	return ((float(__cdecl*)(uint32_t _prm, float* vector))0x5236E0)(param, vector);
+	char* str;
+	int numstr{};
+
+	__asm {
+		mov eax, parameter;
+		push eax;
+		mov esi, 0x523400;
+		call esi;
+		add esp, 0x4;
+		mov numstr, eax;
+	}
+
+	if (numstr) 
+		str = (char*)((((int)0x14E8A04) + (12 * numstr + 4)) + 0x2187C);
+	else str = 0;
+
+	return str;
+	
+
+}
+float __cdecl Scr_GetVector(uint32_t param, float* vector)
+{
+
+	__asm
+	{
+		mov edx, vector;
+		push edx;
+		mov eax, param;
+		push param;
+		mov esi, 0x5236E0;
+		call esi;
+		add esp, 0x8;
+	}
+	return 0.f;
 }
 int Scr_GetNumParam()
 {
@@ -38,7 +71,15 @@ int Scr_AddFloat(float val)
 }
 float* Scr_AddVector(float* vector)
 {
-	return ((float* (__cdecl*)(float* _prm))0x523D10)(vector);
+	const DWORD fnc = 0x523D10;
+	_asm {
+		mov esi, vector;
+		push esi;
+		mov eax, 0x523D10;
+		call eax;
+		pop esi;
+	}
+	return 0;
 
 }
 cg::gentity_s* Scr_GetEntity(scr_entref_t entref)

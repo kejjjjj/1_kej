@@ -6,12 +6,19 @@
 #include "pch.h"
 
 typedef void(__cdecl* xmethod_t)(scr_entref_t);
+//typedef void(__cdecl* xscr_function_t)();
 
 void Scr_LoadMethods();
 xmethod_t Player_GetMethod(const char** name);
+xfunction_t Scr_GetFunction(const char** name, int* type);
 
 void PlayerCmd_GetButtonPressed(scr_entref_t arg);
 void PlayerCmd_GetForwardMove(scr_entref_t arg);
 void PlayerCmd_GetRightMove(scr_entref_t arg);
+void PlayerCmd_SetVelocity(scr_entref_t arg);
+
+
+void GScr_WeaponExists(scr_entref_t arg);
+void GScr_WorldToScreen(scr_entref_t arg);
 
 #endif

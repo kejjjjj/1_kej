@@ -15,19 +15,11 @@ void cg::CG_Init()
 	cod4x();
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, "^21_kej extension has been loaded!\n");
 	Scr_Init();
-
-	std::cout << "com_printf moment\n";
-
-	//cg::BuiltinMethodDef methd;
-	//methd.actionFunc = PlayerCmd_GetButtonPressed;
-	//methd.actionString = "getbuttonpressed";
-	//methd.type = 0;
-	//
-	//a->write_addr(0x4B2009, "\xE5", 1);
-	//a->memcopy((void*)0x6BCC64, &methd, 0xC);
+	Dvar_Init();
 
 	while (true) {
-		//if(GetAsyncKeyState(VK_MENU)&1){
+		//if(GetAsyncKeyState(VK_MENU)&1)
+		//	Dvar_Init();
 
 		//	cg::BuiltinMethodDef* methods_2 = reinterpret_cast<cg::BuiltinMethodDef*>(0x6BC880);
 
@@ -41,6 +33,6 @@ void cg::CG_Init()
 		//		else Com_Printf(CON_CHANNEL_CONSOLEONLY, "[%i]: NULL (%s)\n", i, std::format("{:#x}", (int)methods_2).c_str());
 		//	}
 		//}
-		Sleep(100);
+		Sleep(1000);
 	}
 }

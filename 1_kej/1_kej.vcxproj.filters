@@ -37,6 +37,9 @@
     <Filter Include="Source Files\scr">
       <UniqueIdentifier>{f6c4ac48-bf2b-4792-b943-b82892f3ee2c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\render">
+      <UniqueIdentifier>{4e78cf4a-91a1-4b95-8dd3-ff7a38736594}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -81,6 +84,9 @@
     <ClInclude Include="scr_obj.hpp">
       <Filter>Source Files\scr</Filter>
     </ClInclude>
+    <ClInclude Include="r_world.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -112,6 +118,9 @@
     </ClCompile>
     <ClCompile Include="scr_obj.cpp">
       <Filter>Source Files\scr</Filter>
+    </ClCompile>
+    <ClCompile Include="r_world.cpp">
+      <Filter>Source Files\render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

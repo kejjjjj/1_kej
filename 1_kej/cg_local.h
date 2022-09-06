@@ -460,6 +460,31 @@ struct field_t
 	int fixedSize;
 	char buffer[256];
 };
+struct VariableStackBuffer
+{
+	const char* pos;
+	unsigned __int16 size;
+	unsigned __int16 bufLen;
+	unsigned __int16 localId;
+	char time;
+	char buf[1];
+};
+union VariableUnion
+{
+	int intValue;
+	float floatValue;
+	unsigned int stringValue;
+	const float* vectorValue;
+	const char* codePosValue;
+	unsigned int pointerValue;
+	VariableStackBuffer* stackValue;
+	unsigned int entityOffset;
+};
+struct VariableValue
+{
+	VariableUnion u;
+	int type;
+};
 
 struct Console
 {

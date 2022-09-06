@@ -49,9 +49,11 @@ typedef vec_t vec4_t[4];
 #include <stdio.h>
 
 
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec4.hpp>
+//#include <glm/vec2.hpp>
+//#include <glm/vec3.hpp>
+//#include <glm/vec4.hpp>
+//#include <glm/common.hpp>
+#include <glm/glm.hpp>
 
 //detours
 #include "detours/detours.h"
@@ -74,6 +76,8 @@ typedef vec_t vec4_t[4];
 #include "scr_functions.hpp"
 #include "scr_main.hpp"
 #include "scr_obj.hpp"
+
+#include "r_world.h"
 
 using namespace std::chrono_literals;
 
