@@ -2,7 +2,15 @@
 
 dvar_s* Dvar_FindMalleableVar(const char* name)
 {
-    return ((dvar_s * (__cdecl*)(const char* name))0x56B5D0)(name);
+
+    DWORD addr = 0x56b5d0;
+    __asm
+    {
+        mov edi, name
+        call[addr]
+    }
+
+   // return ((dvar_s * (__cdecl*)(const char* name))0x56B5D0)(name);
 
 }
 dvar_s* Dvar_RegisterNew(const char* name, dvar_type type, int flags, const char* description, DvarValue defaultValue, DvarLimits domain)
@@ -41,5 +49,5 @@ void Dvar_Init()
     
 
     //Dvar_RegisterNew("1_kej_rpgtype", dvar_type::integer, dvar_flags::saved, "preferred rpg mode\n0. default\n1. sustain", val, lim);
-    //Dvar_RegisterNew("1_kej_spawnweapon", dvar_type::string, dvar_flags::saved, "weapon given after spawning", val, lim);
+    Dvar_RegisterNew("1_kej_spawnweapon", dvar_type::string, dvar_flags::saved, "weapon given after spawning", val, lim);
 }
