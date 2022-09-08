@@ -9,6 +9,7 @@ namespace cg
 {
 	void cod4x();
 	void CG_Init();
+	void CG_InitHooks();
 
 }
 

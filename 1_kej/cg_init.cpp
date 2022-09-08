@@ -18,6 +18,8 @@ void cg::cod4x()
 	BG_WeaponNames = reinterpret_cast<WeaponDef**>(cod4x_entry + 0x443DDE0); 
 	cmd_functions = reinterpret_cast<cmd_function_s*>(cod4x_entry + 0x227A28);
 	Cmd_AddCommand_fnc = (void*)(cod4x_entry + 0x2116C);
+
+	std::cout << "WndProcAddr: " << std::hex << r::WndProcAddr << '\n';
 }
 void cg::CG_Init()
 {
@@ -25,6 +27,7 @@ void cg::CG_Init()
 	cod4x();
 
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, "^21_kej extension has been loaded!\n");
+	CG_InitHooks();
 	Scr_Init();
 	Cmd_Init();
 	//Dvar_Init();
@@ -32,4 +35,17 @@ void cg::CG_Init()
 		MessageBoxA(NULL, "failed to hook renderer", "FATAL ERROR", MB_ICONERROR);
 		exit(-1);
 	}
+}
+void cg::CG_InitHooks()
+{
+	r::CG_DrawActive_f			=	(r::CG_DrawActive_h)		(0x42F7F0); //r_init.cpp
+	r::CL_ShutdownRenderer_f	=	(r::CL_ShutdownRenderer_h)	(0x46CA40);
+	r::R_RecoverLostDevice_f	=	(r::R_RecoverLostDevice_ptr)(0x5F5360);
+	r::oWndProc					=	(WNDPROC)					(r::WndProcAddr);
+
+	hook* a = nullptr;
+
+	a->install(&(PVOID&)r::CL_ShutdownRenderer_f, r::CL_ShutdownRenderer);
+	a->install(&(PVOID&)r::R_RecoverLostDevice_f, r::R_RecoverLostDevice);
+	a->install(&(PVOID&)r::oWndProc, r::WndProc);
 }

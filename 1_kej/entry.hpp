@@ -7,7 +7,7 @@
 
 namespace cg {
 
-	void CG_DllEntry(HMODULE hModule, LPTHREAD_START_ROUTINE startAddr);
+	void CG_DllEntry();
 
 }
 #endif

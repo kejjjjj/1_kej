@@ -6,25 +6,14 @@ LONG hook::install(void** ppPointer, void* pDetour)
 {
 	DetourTransactionBegin();
 	DetourAttach(ppPointer, pDetour);
-	DetourTransactionCommit();
-
-	return 0;
+	return DetourTransactionCommit();
 }
-//#else
-//BYTE* hook::install(std::uintptr_t address, void* fnc)
-//{
-//	return DetourFunction((PBYTE)address, (PBYTE)fnc);
-//}
-//BYTE* hook::install(void* address, void* fnc)
-//{
-//	return DetourFunction((PBYTE)address, (PBYTE)fnc);
-//}
-//
-//BOOL hook::remove(void* Trampoline, void* detourFunc)
-//{
-//	return DetourRemove((PBYTE)Trampoline, (PBYTE)detourFunc);
-//}
-//#endif
+LONG hook::remove(PVOID* ppPointer, PVOID pDetour)
+{
+	DetourTransactionBegin();
+	DetourDetach(ppPointer, pDetour);
+	return DetourTransactionCommit();
+}
 void hook::nop(std::uintptr_t address)
 {
 	write_addr(address, "\x90\x90\x90\x90\x90", 5);

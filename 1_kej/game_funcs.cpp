@@ -71,6 +71,7 @@ void OpenMenu_f()
 {
     Com_Printf(CON_CHANNEL_CONSOLEONLY, "^1hello world\n");
     r::should_draw_menu = !r::should_draw_menu;
+    r::R_RemoveInput(r::should_draw_menu);
 }
 void Cmd_Init()
 {

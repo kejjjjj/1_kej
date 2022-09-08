@@ -18,7 +18,7 @@ namespace r
 	HRESULT __stdcall draw_func(IDirect3DDevice9* pDevice);
 
 	typedef void(__cdecl* CG_DrawActive_h)();
-	inline CG_DrawActive_h CG_DrawActive_f = (CG_DrawActive_h)0x42F7F0;
+	inline CG_DrawActive_h CG_DrawActive_f;
 
 	void __cdecl CG_DrawActive();
 
@@ -26,6 +26,13 @@ namespace r
 	typedef LRESULT(__stdcall* WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 	inline WNDPROC oWndProc;
 
+	typedef void* (__stdcall* CL_ShutdownRenderer_h)();
+	inline CL_ShutdownRenderer_h CL_ShutdownRenderer_f;
+	void* CL_ShutdownRenderer();
+
+	typedef char(__stdcall* R_RecoverLostDevice_ptr)();
+	inline R_RecoverLostDevice_ptr R_RecoverLostDevice_f;
+	char R_RecoverLostDevice();
 }
 
 #endif

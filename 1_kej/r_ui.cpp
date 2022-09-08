@@ -63,7 +63,8 @@ void r::R_MenuStyle()
 
 void r::R_RemoveInput(bool _true)
 {
-	static DWORD MouseInput = (cod4x_entry != NULL) ? (cg::cod4x_entry + 0x4480E01) : (DWORD)&s_wmv->mouseActive;
+	static const DWORD MouseInput = (cod4x_entry != NULL) ? (cg::cod4x_entry + 0x4480E01) : (DWORD)&s_wmv->mouseActive;
+	static const DWORD KeyInput = 0x4631B0; //CL_KeyMove
 	ImGuiIO& io = ImGui::GetIO();
 	hook* a = nullptr;
 
@@ -71,20 +72,49 @@ void r::R_RemoveInput(bool _true)
 		io.MouseDrawCursor = true;
 		io.WantCaptureMouse = true;
 		a->write_addr(MouseInput, "\x00", 1);
-		SendCommand("unbind mouse1");
+		a->write_addr(KeyInput, "\xC3", 1);
 		return;
 	}
 	io.MouseDrawCursor = false;
 	io.WantCaptureMouse = false;
 	a->write_addr(MouseInput, "\x01", 1);
-	SendCommand("bind mouse1 +attack"); //everyone uses this, right?
+	a->write_addr(KeyInput, "\x51", 1); 
 
 }
-void r::R_OpenMenu(IDirect3DDevice9* pDevice)
+bool r::R_OpenMenu(IDirect3DDevice9* pDevice)
 {
+
+	if (!ImGui::GetCurrentContext()) 
+		return false;
 	
+	ImGui_ImplDX9_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	if (r::should_draw_menu) {
+		R_MenuStyle();
+		ImGui::Begin("1_kej_v2", &r::should_draw_menu,  ImGuiWindowFlags_NoResize);
+		if(!r::should_draw_menu)
+			R_RemoveInput(r::should_draw_menu);
+
+		ImGui::SetWindowFontScale(1.2f);
+
+		const ImGuiViewport* viewport = ImGui::GetMainViewport();
+
+		ImGui::SetWindowSize(ImVec2(viewport->Size.x / 1.5f, viewport->Size.y / 1.5f));
+		char buf[1024]{};
+		buf[0] = 'A';
+		ImGui::InputText("hello", buf, 1024, ImGuiInputTextFlags_None);
+		buf[0] = 'A';
+		ImGui::End();
+	}
+
+	return true;
 }
 void r::R_EndRender()
 {
-
+	ImGui::EndFrame();
+	ImGui::Render();
+	ImDrawData* data = ImGui::GetDrawData();
+	ImGui_ImplDX9_RenderDrawData(data);
 }

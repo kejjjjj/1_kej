@@ -23,14 +23,10 @@ bool r::R_Init()
 }
 bool r::R_ImGui(IDirect3DDevice9* pDevice)
 {
-	static bool once = true;
-
-	if (!once)
+	if (ImGui::GetCurrentContext())
 		return true;
 
-	once = false;
-
-	hook a;
+	std::cout << "creating new imgui context!\n";
 
 	ImGui::CreateContext();
 
@@ -39,13 +35,49 @@ bool r::R_ImGui(IDirect3DDevice9* pDevice)
 	if (!ImGui_ImplWin32_Init(FindWindowA(NULL, window_name)))
 		return false;
 
-	if (!ImGui_ImplDX9_Init(pDevice)) {
+	if (!ImGui_ImplDX9_Init(pDevice)) 
 		return false;
+	
+	return true;
+}
+LRESULT CALLBACK r::WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+
+
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam) || r::should_draw_menu)
+		return 1l;
+
+	switch (uMsg) {
+	case WM_SYSCOMMAND:
+		if ((wParam & 0xfff0) == SC_KEYMENU)
+			return 0;
+		break;
+	case WM_DESTROY:
+		r::should_draw_menu = false;
+		R_RemoveInput(r::should_draw_menu);
 	}
 
+	return oWndProc(hWnd, uMsg, wParam, lParam);
+}
+void* r::CL_ShutdownRenderer()
+{
+	CL_ShutdownRenderer_f();
+	std::cout << "shutdown renderer!\n";
+	if (ImGui::GetCurrentContext()) {
+		ImGui_ImplDX9_Shutdown();
+		ImGui_ImplWin32_Shutdown();
+		ImGui::DestroyContext();
 
-	r::oWndProc = (WNDPROC)(r::WndProcAddr);
-	a.install(&(PVOID&)r::oWndProc, WndProc);
+	}
+	return 0;
+}
+char r::R_RecoverLostDevice()
+{
+	if (ImGui::GetCurrentContext()) {
+		ImGui_ImplDX9_InvalidateDeviceObjects();
+		r::should_draw_menu = false;
+		R_RemoveInput(r::should_draw_menu);
 
-	return true;
+	}
+
+	return R_RecoverLostDevice_f();
 }

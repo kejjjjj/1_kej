@@ -12,6 +12,7 @@ struct hook //a VERY basic structure to do the most basic things!
 {
 
 	LONG install(PVOID* ppPointer, PVOID pDetour);
+	LONG remove(PVOID* ppPointer, PVOID pDetour);
 
 	void nop(std::uintptr_t address);
 	void write_addr(void* addr, const char* bytes, size_t len);
