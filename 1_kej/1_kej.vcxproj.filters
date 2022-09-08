@@ -46,6 +46,12 @@
     <Filter Include="Header Files\lib\ImGui">
       <UniqueIdentifier>{c407edd6-f666-44c9-bc5e-d71cfdbb31e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\mod">
+      <UniqueIdentifier>{e48b5ebd-7b5b-46e5-b4f5-9d56bf94c9a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\render\ui">
+      <UniqueIdentifier>{cc16bacb-0a9b-4d6c-bf48-14c5b1e48313}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -126,6 +132,15 @@
     <ClInclude Include="ImGui\imgui_impl_dx9.h">
       <Filter>Header Files\lib\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="mod_vis.hpp">
+      <Filter>Source Files\mod</Filter>
+    </ClInclude>
+    <ClInclude Include="r_ui.hpp">
+      <Filter>Source Files\render\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="game_funcs.hpp">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -193,6 +208,15 @@
     </ClCompile>
     <ClCompile Include="ImGui\imgui_impl_dx9.cpp">
       <Filter>Header Files\lib\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="mod_vis.cpp">
+      <Filter>Source Files\mod</Filter>
+    </ClCompile>
+    <ClCompile Include="r_ui.cpp">
+      <Filter>Source Files\render\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="game_funcs.cpp">
+      <Filter>Source Files\game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

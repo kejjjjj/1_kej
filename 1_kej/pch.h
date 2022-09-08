@@ -75,13 +75,14 @@ typedef vec_t vec4_t[4];
 
 #include "koukku.hpp"
 
-#include "dvar.hpp"
-
 #include "entry.hpp"
 
 #include "cg_local.h"
 #include "cg_offsets.h"
 #include "cg_init.hpp"
+
+#include "game_funcs.hpp"
+#include "dvar.hpp"
 
 
 #include "com_channel.h"
@@ -94,8 +95,11 @@ typedef vec_t vec4_t[4];
 #include "r_init.hpp"
 #include "r_drawtools.hpp"
 #include "r_world.hpp"
+#include "r_ui.hpp"
 
 #include "sys_tools.hpp"
+
+#include "mod_vis.hpp"
 
 using namespace std::chrono_literals;
 

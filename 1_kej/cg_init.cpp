@@ -16,6 +16,8 @@ void cg::cod4x()
 
 	r::WndProcAddr = (DWORD)a->find_pattern("cod4x_021.dll", "55 89 E5 53 81 EC 84 00 00 00 C7 04 24 02");
 	BG_WeaponNames = reinterpret_cast<WeaponDef**>(cod4x_entry + 0x443DDE0); 
+	cmd_functions = reinterpret_cast<cmd_function_s*>(cod4x_entry + 0x227A28);
+	Cmd_AddCommand_fnc = (void*)(cod4x_entry + 0x2116C);
 }
 void cg::CG_Init()
 {
@@ -24,29 +26,10 @@ void cg::CG_Init()
 
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, "^21_kej extension has been loaded!\n");
 	Scr_Init();
-	Dvar_Init();
+	Cmd_Init();
+	//Dvar_Init();
 	if (!r::R_Init()){
 		MessageBoxA(NULL, "failed to hook renderer", "FATAL ERROR", MB_ICONERROR);
 		exit(-1);
-	}
-
-
-	while (true) {
-		//if(GetAsyncKeyState(VK_MENU)&1)
-		//	Dvar_Init();
-
-		//	cg::BuiltinMethodDef* methods_2 = reinterpret_cast<cg::BuiltinMethodDef*>(0x6BC880);
-
-		//	for (int i = 0; i < 84; i++) {
-		//		methods_2 = (cg::BuiltinMethodDef*)(0x6BC880 + (i * 0xC));
-		//		if (!methods_2)
-		//			continue;	
-
-		//		if(methods_2->actionString)
-		//			Com_Printf(CON_CHANNEL_CONSOLEONLY, "[%i]: %s\n", i, methods_2->actionString);
-		//		else Com_Printf(CON_CHANNEL_CONSOLEONLY, "[%i]: NULL (%s)\n", i, std::format("{:#x}", (int)methods_2).c_str());
-		//	}
-		//}
-		Sleep(1000);
 	}
 }

@@ -36,7 +36,18 @@ void cg::CG_DllEntry(HMODULE hModule, LPTHREAD_START_ROUTINE startAddr)
     while (!cgs && &cg::dx->device == nullptr) {
         std::this_thread::sleep_for(100ms);
     }
-    std::this_thread::sleep_for(3s);
+    std::this_thread::sleep_for(1s);
 
     CG_Init();
+
+    bool monitoring = true;
+
+    while (monitoring) {
+
+        if (!monitoring)
+            break;
+
+        Sleep(1000);
+    }
+
 }

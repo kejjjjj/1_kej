@@ -88,8 +88,8 @@ std::uintptr_t hook::find_pattern(DWORD start_address, DWORD end_address, std::s
 	MEMORY_BASIC_INFORMATION mbi{};
 	for (DWORD pCur = start_address; pCur < end_address; pCur++)
 	{
-		if (!VirtualQuery((char*)pCur, &mbi, sizeof(mbi)) || mbi.State != MEM_COMMIT || mbi.Protect == PAGE_NOACCESS) 
-			continue;
+		//if (!VirtualQuery((char*)pCur, &mbi, sizeof(mbi)) || mbi.State != MEM_COMMIT || mbi.Protect == PAGE_NOACCESS) 
+		//	continue;
 
 		if (!*pat)
 			return firstMatch;

@@ -4562,7 +4562,13 @@ struct weaponParms
 };
 
 ///////////////////// server
-
+struct __declspec(align(4)) WinMouseVars_t
+{
+	int oldButtonState;
+	tagPOINT oldPos;
+	bool mouseActive;
+	bool mouseInitialized;
+};
 struct archivedEntityShared_t
 {
 	int svFlags;

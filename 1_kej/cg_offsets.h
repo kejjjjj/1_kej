@@ -165,7 +165,7 @@ namespace cg
 	inline int* argv_1410BA4 = reinterpret_cast<int*>(0x1410BA4);
 
 	inline cmd_function_s* cmd_functions = reinterpret_cast<cmd_function_s*>(0x1410B3C);
-
+	inline void* Cmd_AddCommand_fnc;
 	//SCR_DrawSmallStringExt_t	SCR_DrawSmallStringExt = (SCR_DrawSmallStringExt_t)0x474C30;
 	//Sys_IsMainThread_t			Sys_IsMainThread = (Sys_IsMainThread_t)0x50B5D0;
 	//Con_TokenizeInput_t			Con_TokenizeInput = (Con_TokenizeInput_t)0x45F350;
@@ -209,7 +209,7 @@ namespace cg
 	inline float* penetrationDepthTable = reinterpret_cast<float*>(0x7373B8);
 	inline pointtrace_t* vec3_origin = reinterpret_cast<pointtrace_t*>(0x69C69C);
 
-	const static uint64_t cod4x_entry = (DWORD)GetModuleHandleA("cod4x_021.dll");
+	const static DWORD cod4x_entry = (DWORD)GetModuleHandleA("cod4x_021.dll");
 	inline PlayerNames_t* player_names = reinterpret_cast<PlayerNames_t*>(cod4x_entry + 0x443d200);
 
 	inline uint16_t* clientObjMap = reinterpret_cast<uint16_t*>(0x14A9F30);
@@ -217,6 +217,8 @@ namespace cg
 
 	inline client_t* client;
 	inline gentity_s* gent = reinterpret_cast<gentity_s*>(0x1288500);
+
+	inline WinMouseVars_t* s_wmv = reinterpret_cast<WinMouseVars_t*>(0xCC147C4);
 
 	
 }

@@ -169,6 +169,7 @@
     <ClInclude Include="dvar.hpp" />
     <ClInclude Include="entry.hpp" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="game_funcs.hpp" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\imgui_impl_dx9.h" />
@@ -178,9 +179,11 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="koukku.hpp" />
+    <ClInclude Include="mod_vis.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="r_drawtools.hpp" />
     <ClInclude Include="r_init.hpp" />
+    <ClInclude Include="r_ui.hpp" />
     <ClInclude Include="r_world.hpp" />
     <ClInclude Include="scr_cmd.hpp" />
     <ClInclude Include="scr_functions.hpp" />
@@ -193,6 +196,7 @@
     <ClCompile Include="com_channel.cpp" />
     <ClCompile Include="dvar.cpp" />
     <ClCompile Include="entry.cpp" />
+    <ClCompile Include="game_funcs.cpp" />
     <ClCompile Include="ImGui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -222,6 +226,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="koukku.cpp" />
+    <ClCompile Include="mod_vis.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -237,6 +242,7 @@
     <ClCompile Include="scr_main.cpp" />
     <ClCompile Include="scr_obj.cpp" />
     <ClCompile Include="sys_tools.cpp" />
+    <ClCompile Include="r_ui.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="detours\detours.lib" />
