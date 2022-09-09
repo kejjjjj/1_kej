@@ -42,6 +42,17 @@ char* Scr_GetString(uint32_t parameter)
 	
 
 }
+void Scr_AddString(char* string)
+{
+	const static DWORD fnc = 0x523C00;
+	__asm
+	{
+		mov esi, string;
+		call fnc;
+	}
+
+	return;
+}
 float __cdecl Scr_GetVector(uint32_t param, float* vector)
 {
 

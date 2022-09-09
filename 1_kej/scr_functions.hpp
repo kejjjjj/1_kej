@@ -20,5 +20,8 @@ void PlayerCmd_SetVelocity(scr_entref_t arg);
 
 void GScr_WeaponExists(scr_entref_t arg);
 void GScr_WorldToScreen(scr_entref_t arg);
+void GScr_GetEvarInt();
+void GScr_GetEvarFloat();
+void GScr_GetEvar();
 
 #endif

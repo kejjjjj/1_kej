@@ -148,6 +148,80 @@ void GScr_WeaponExists(scr_entref_t arg)
 	
 
 }
+void GScr_GetEvarInt()
+{
+	if (Scr_GetNumParam() != 1)
+		Scr_ObjectError("Usage: GetEvarInt( string )");
+
+	char* _evar = Scr_GetString(0);
+
+	evar_o* evar = Evar_FindByName(_evar);
+
+	if (evar) {
+		Scr_AddInt(evar->GetInt());
+		return;
+	}
+	Scr_AddInt(0);
+}
+void GScr_GetEvarFloat()
+{
+	if (Scr_GetNumParam() != 1)
+		Scr_ObjectError("Usage: GetEvarFloat( string )");
+
+	char* _evar = Scr_GetString(0);
+
+	evar_o* evar = Evar_FindByName(_evar);
+
+	if (evar) {
+		Scr_AddFloat(evar->GetFloat());
+		return;
+	}
+	Scr_AddFloat(0);
+}
+void GScr_GetEvar()
+{
+	if (Scr_GetNumParam() != 1)
+		Scr_ObjectError("Usage: GetEvar( string )");
+
+	char* _evar = Scr_GetString(0);
+
+	evar_o* evar = Evar_FindByName(_evar);
+
+
+	if (evar) {
+		char buf[64];
+
+		switch (evar->type) {
+		case EVAR_BOOL:
+			if (snprintf(buf, sizeof(buf), "%i", evar->isEnabled()) > 0)
+				Scr_AddString(buf);
+			else Scr_AddString((char*)"");
+			break;
+		case EVAR_INT:
+			if (snprintf(buf, sizeof(buf), "%i", evar->GetInt()) > 0)
+				Scr_AddString(buf);
+			else Scr_AddString((char*)"");
+			break;
+		case EVAR_FLOAT:
+			if (snprintf(buf, sizeof(buf), "%f", evar->GetFloat()) > 0)
+				Scr_AddString(buf);
+			else Scr_AddString((char*)"");
+			break;
+
+		case EVAR_STRING:
+			if (snprintf(buf, sizeof(buf), "%s", evar->GetString()) > 0)
+				Scr_AddString(buf);
+			else Scr_AddString((char*)"");
+			break;
+		default:
+			Scr_AddString((char*)"");
+			break;
+		}
+	
+		return;
+	}
+	Scr_AddString((char*)"");
+}
 void Scr_LoadMethods()
 {
 	Scr_AddMethod("getbuttonpressed",	(xfunction_t)PlayerCmd_GetButtonPressed, false);
@@ -157,6 +231,10 @@ void Scr_LoadMethods()
 
 	Scr_AddFunction("weaponexists",		(xfunction_t)GScr_WeaponExists, false);
 	Scr_AddFunction("worldtoscreen",	(xfunction_t)GScr_WorldToScreen, false);
+	Scr_AddFunction("getevarint",		(xfunction_t)GScr_GetEvarInt, false);
+	Scr_AddFunction("getevarfloat",		(xfunction_t)GScr_GetEvarFloat, false);
+	Scr_AddFunction("getevar",			(xfunction_t)GScr_GetEvar, false);
+
 
 }
 xfunction_t Scr_GetFunction(const char** name, int* type)
