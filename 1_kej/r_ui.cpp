@@ -15,21 +15,22 @@ void r::R_MenuStyle()
 	style->ScrollbarRounding = 9.0f;
 	style->GrabMinSize = 5.0f;
 	style->GrabRounding = 3.0f;
+	style->WindowTitleAlign = ImVec2(0.5, 0.5);
 
 	style->Colors[ImGuiCol_Text] = ImVec4(0.80f, 0.80f, 0.83f, 1.00f);
 	style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-	style->Colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+	style->Colors[ImGuiCol_WindowBg] = ImVec4(0.06f, 0.05f, 0.07f, 0.80f);
 	//style->Colors[ImGuiCol_ChildWindowBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
 	style->Colors[ImGuiCol_PopupBg] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
 	style->Colors[ImGuiCol_Border] = ImVec4(0.80f, 0.80f, 0.83f, 0.88f);
 	style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.92f, 0.91f, 0.88f, 0.00f);
-	style->Colors[ImGuiCol_FrameBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
-	style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
-	style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
-	style->Colors[ImGuiCol_TitleBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+	style->Colors[ImGuiCol_FrameBg] = ImVec4(0.10f, 0.09f, 0.12f, 0.80f);
+	style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.24f, 0.23f, 0.29f, 0.80f);
+	style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.56f, 0.56f, 0.58f, 0.80f);
+	style->Colors[ImGuiCol_TitleBg] = ImVec4(0.10f, 0.09f, 0.12f, 0.80f);
 	style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(1.00f, 0.98f, 0.95f, 0.75f);
 	style->Colors[ImGuiCol_TitleBgActive] = ImVec4(0.07f, 0.07f, 0.09f, 1.00f);
-	style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
+	style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.10f, 0.09f, 0.12f, 0.80f);
 	style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.10f, 0.09f, 0.12f, 1.00f);
 	style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
 	style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
@@ -59,6 +60,22 @@ void r::R_MenuStyle()
 	style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(0.25f, 1.00f, 0.00f, 1.00f);
 	style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f);
 	//style->Colors[ImGuiCol_ModalWindowDarkening] = ImVec4(1.00f, 0.98f, 0.95f, 0.73f);
+
+	ImVec4 col;
+
+	col.x = 0.7f;
+	col.y = 0.0f;
+	col.z = 0.12f;
+	col.w = 0.9f;
+
+	style->Colors[ImGuiCol_Button] = col;
+	style->Colors[ImGuiCol_CheckMark] = col;
+	//col.x = 0.f;
+	style->Colors[ImGuiCol_TabActive] = col;
+	style->Colors[ImGuiCol_TabHovered] = col;
+	col.x -= 0.1;
+	col.z += 0.1;
+	style->Colors[ImGuiCol_Tab] = col;
 }
 
 void r::R_RemoveInput(bool _true)
@@ -97,6 +114,10 @@ bool r::R_OpenMenu(IDirect3DDevice9* pDevice)
 	if (r::should_draw_menu) {
 		R_MenuStyle();
 		ImGui::Begin("1_kej_v2", &r::should_draw_menu);
+
+		
+
+
 		if(!r::should_draw_menu)
 			R_RemoveInput(r::should_draw_menu);
 
@@ -105,9 +126,8 @@ bool r::R_OpenMenu(IDirect3DDevice9* pDevice)
 		const ImGuiViewport* viewport = ImGui::GetMainViewport();
 
 		ImGui::SetWindowSize(ImVec2(viewport->Size.x / 3.f, viewport->Size.y / 3.5f), ImGuiCond_FirstUseEver);
-		
-		if (ImGui::Checkbox("velometer", &v::mod_velometer.evar->enabled))
-			v::mod_velometer.SetValue(v::mod_velometer.evar->enabled);
+
+		R_Features();
 
 		ImGui::End();
 	}

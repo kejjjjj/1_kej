@@ -88,7 +88,7 @@ void evar_o::Register(const char* name, evartype_t type, const char* defaultValu
 	if (type != evartype_t::EVAR_STRING || !evar)
 		return;
 
-	evar->type = type;
+	evar->type = evartype_t::EVAR_STRING;
 	evar->name = name;
 	evar->enabled = true;
 	evar->value = 0;
@@ -253,7 +253,8 @@ void Evar_Setup()
 
 	v::cfg::cfgDirectory = fs::GetExePath() + "\\1_kej.cfg";
 	
-	v::mod_velometer.Register("1_kej_velometer", evartype_t::EVAR_BOOL, (float)0);
+	v::mod_velometer.Register	("1_kej_velometer", evartype_t::EVAR_BOOL, (float)0);
+	v::mod_rpg_mode.Register	("1_kej_rpg_mode", evartype_t::EVAR_STRING, "default");
 
 	std::cout << "yep..\n";
 

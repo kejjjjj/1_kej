@@ -129,7 +129,7 @@ bool Evar_LoadFromFile(std::string directory)
 		if (evar) {
 			if (!evar->initialized)
 				continue;
-			if (evar->type > evartype_t::EVAR_FLOAT) {
+			if (evar->type > evartype_t::EVAR_STRING) {
 				Evar_LoadVector(f, evar, vec);
 
 				if(evar->type < evartype_t::EVAR_ARRAY)
@@ -142,12 +142,13 @@ bool Evar_LoadFromFile(std::string directory)
 
 			else {
 				std::string value = fs::F_ReadUntil(f, ';');
-				if (value != "N/A") {
+				if (value != "N/A" && evar->type != EVAR_STRING) {
 					_evar->SetValue(std::stof(value.c_str()));
 
 				}
-				else
+				else if (value != "N/A" && evar->type == EVAR_STRING)
 					_evar->SetValue(value.c_str());
+
 				vars_read++;
 
 

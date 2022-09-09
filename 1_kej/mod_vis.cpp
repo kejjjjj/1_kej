@@ -37,7 +37,7 @@ void cg::Mod_DrawVelocity()
 
 	}
 
-	char buffer[1024];
+	char buffer[10];
 	sprintf_s(buffer, "%i", velocity);
 	r::R_DrawText(buffer, 960, 540, 3, 3, 0, (float*)&col, 0);
 }

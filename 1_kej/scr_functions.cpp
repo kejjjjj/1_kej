@@ -191,7 +191,7 @@ void GScr_GetEvar()
 	if (evar) {
 		char buf[64];
 
-		switch (evar->type) {
+		switch (evar->evar->type) {
 		case EVAR_BOOL:
 			if (snprintf(buf, sizeof(buf), "%i", evar->isEnabled()) > 0)
 				Scr_AddString(buf);

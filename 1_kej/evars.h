@@ -12,7 +12,10 @@ namespace v
 		inline std::string cfgDirectory;
 	}
 
-	inline evar_o mod_velometer;
+	inline evar_o 
+		mod_velometer,
+		mod_rpg_mode;
+
 }
 
 #endif

@@ -242,6 +242,9 @@
     <ClCompile Include="fs_funcs.cpp">
       <Filter>Source Files\evar</Filter>
     </ClCompile>
+    <ClCompile Include="r_ui_features.cpp">
+      <Filter>Source Files\render\ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="detours\detours.lib">

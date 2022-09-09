@@ -12,6 +12,8 @@ namespace r
 	bool R_OpenMenu(IDirect3DDevice9* pDevice);
 	void R_EndRender();
 	void R_MenuStyle();
+
+	void R_Features();
 }
 
 #endif

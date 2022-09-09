@@ -243,6 +243,7 @@
     <ClCompile Include="r_drawtools.cpp" />
     <ClCompile Include="r_init.cpp" />
     <ClCompile Include="r_main.cpp" />
+    <ClCompile Include="r_ui_features.cpp" />
     <ClCompile Include="r_world.cpp" />
     <ClCompile Include="scr_cmd.cpp" />
     <ClCompile Include="scr_functions.cpp" />

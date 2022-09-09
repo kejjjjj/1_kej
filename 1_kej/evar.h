@@ -29,11 +29,11 @@ struct evar_s
 	bool enabled;
 	float value;
 	evartype_t type;
-	evar_s* Next;
+	struct evar_o* Next;
 };
 void Evar_Setup();
 
-struct evar_o : evar_s
+struct evar_o
 {
 	evar_o() {
 		this->evar = new evar_s;
