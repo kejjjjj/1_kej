@@ -84,6 +84,10 @@ typedef vec_t vec4_t[4];
 #include "game_funcs.hpp"
 #include "dvar.hpp"
 
+#include "fs_funcs.h"
+#include "evar.h"
+#include "evar_config.h"
+#include "evars.h"
 
 #include "com_channel.h"
 

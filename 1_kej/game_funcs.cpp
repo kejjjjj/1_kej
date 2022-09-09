@@ -69,18 +69,17 @@ cg::cmd_function_s* Cmd_AddCommand(char* cmdname, void(__cdecl* function)())
 }
 void OpenMenu_f()
 {
-    Com_Printf(CON_CHANNEL_CONSOLEONLY, "^1hello world\n");
+
     r::should_draw_menu = !r::should_draw_menu;
+    if(r::should_draw_menu)
+        Com_Printf(CON_CHANNEL_CONSOLEONLY, "^2opening the menu\n");
+    else 
+        Com_Printf(CON_CHANNEL_CONSOLEONLY, "^1closing the menu\n");
+
     r::R_RemoveInput(r::should_draw_menu);
 }
 void Cmd_Init()
 {
-    //OpenMenu_f();
     Cmd_AddCommand((char*)"1_kej_openmenu", OpenMenu_f);
-    //if (!Cmd_FindCommand("1_kej_openmenu")) {
-    //    cmd_openmenu.name = "1_kej_openmenu";
-    //    cmd_openmenu.function = OpenMenu_f;
-    //    cmd_openmenu.next = cmd_functions;
-    //    cmd_functions = &cmd_openmenu;
-    //}
+
 }

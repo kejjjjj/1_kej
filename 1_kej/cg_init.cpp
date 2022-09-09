@@ -19,7 +19,6 @@ void cg::cod4x()
 	cmd_functions = reinterpret_cast<cmd_function_s*>(cod4x_entry + 0x227A28);
 	Cmd_AddCommand_fnc = (void*)(cod4x_entry + 0x2116C);
 
-	std::cout << "WndProcAddr: " << std::hex << r::WndProcAddr << '\n';
 }
 void cg::CG_Init()
 {

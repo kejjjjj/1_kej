@@ -3,6 +3,9 @@
 
 void cg::Mod_DrawVelocity()
 {
+	if (!v::mod_velometer.isEnabled())
+		return;
+
 	const int32_t velocity = (int32_t)glm::length(glm::vec2(cg::clients->cgameVelocity[0], cg::clients->cgameVelocity[1]));
 	static int32_t velocity_prev_frame = velocity;
 

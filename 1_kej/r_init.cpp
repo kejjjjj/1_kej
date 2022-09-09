@@ -17,7 +17,8 @@ bool r::R_Init()
 		return false;
 	}
 
-
+	Evar_Setup();
+	Evar_LoadFromFile(v::cfg::cfgDirectory);
 
 	return true;
 }

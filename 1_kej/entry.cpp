@@ -61,10 +61,10 @@ void cg::CG_DllEntry()
     FILE* fp;
     freopen_s(&fp, "CONOUT$", "w", stdout);
 
-    while (!cgs && &cg::dx->device == nullptr) {
+    while (!cgs || !cg::dx->device) {
         std::this_thread::sleep_for(100ms);
     }
-    std::this_thread::sleep_for(1s);
+   // std::this_thread::sleep_for(1s);
 
     CG_Init();
 
@@ -74,6 +74,9 @@ void cg::CG_DllEntry()
 
         if (!monitoring)
             break;
+
+        if (GetAsyncKeyState(VK_PRIOR) & 1)
+            Evar_Setup();
 
         Sleep(1000);
     }

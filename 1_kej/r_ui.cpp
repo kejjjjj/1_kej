@@ -63,7 +63,7 @@ void r::R_MenuStyle()
 
 void r::R_RemoveInput(bool _true)
 {
-	static const DWORD MouseInput = (cod4x_entry != NULL) ? (cg::cod4x_entry + 0x4480E01) : (DWORD)&s_wmv->mouseActive;
+	static const DWORD MouseInput = (cod4x_entry != NULL) ? (cg::cod4x_entry + 0x4480E01) : (DWORD)&s_wmv->mouseInitialized;
 	static const DWORD KeyInput = 0x4631B0; //CL_KeyMove
 	ImGuiIO& io = ImGui::GetIO();
 	hook* a = nullptr;
@@ -78,7 +78,10 @@ void r::R_RemoveInput(bool _true)
 	io.MouseDrawCursor = false;
 	io.WantCaptureMouse = false;
 	a->write_addr(MouseInput, "\x01", 1);
-	a->write_addr(KeyInput, "\x51", 1); 
+	a->write_addr(KeyInput, "\x51", 1);
+	Com_Printf(CON_CHANNEL_CONSOLEONLY, "saving evars...\n");
+	Evar_SaveToFile(v::cfg::cfgDirectory);
+	Com_Printf(CON_CHANNEL_CONSOLEONLY, "^2done!...\n");
 
 }
 bool r::R_OpenMenu(IDirect3DDevice9* pDevice)
@@ -93,7 +96,7 @@ bool r::R_OpenMenu(IDirect3DDevice9* pDevice)
 
 	if (r::should_draw_menu) {
 		R_MenuStyle();
-		ImGui::Begin("1_kej_v2", &r::should_draw_menu,  ImGuiWindowFlags_NoResize);
+		ImGui::Begin("1_kej_v2", &r::should_draw_menu);
 		if(!r::should_draw_menu)
 			R_RemoveInput(r::should_draw_menu);
 
@@ -101,11 +104,11 @@ bool r::R_OpenMenu(IDirect3DDevice9* pDevice)
 
 		const ImGuiViewport* viewport = ImGui::GetMainViewport();
 
-		ImGui::SetWindowSize(ImVec2(viewport->Size.x / 1.5f, viewport->Size.y / 1.5f));
-		char buf[1024]{};
-		buf[0] = 'A';
-		ImGui::InputText("hello", buf, 1024, ImGuiInputTextFlags_None);
-		buf[0] = 'A';
+		ImGui::SetWindowSize(ImVec2(viewport->Size.x / 3.f, viewport->Size.y / 3.5f), ImGuiCond_FirstUseEver);
+		
+		if (ImGui::Checkbox("velometer", &v::mod_velometer.evar->enabled))
+			v::mod_velometer.SetValue(v::mod_velometer.evar->enabled);
+
 		ImGui::End();
 	}
 

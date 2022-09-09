@@ -168,7 +168,11 @@
     <ClInclude Include="detours\detours.h" />
     <ClInclude Include="dvar.hpp" />
     <ClInclude Include="entry.hpp" />
+    <ClInclude Include="evar.h" />
+    <ClInclude Include="evars.h" />
+    <ClInclude Include="evar_config.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="fs_funcs.h" />
     <ClInclude Include="game_funcs.hpp" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
@@ -196,6 +200,9 @@
     <ClCompile Include="com_channel.cpp" />
     <ClCompile Include="dvar.cpp" />
     <ClCompile Include="entry.cpp" />
+    <ClCompile Include="evar.cpp" />
+    <ClCompile Include="evar_config.cpp" />
+    <ClCompile Include="fs_funcs.cpp" />
     <ClCompile Include="game_funcs.cpp" />
     <ClCompile Include="ImGui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>

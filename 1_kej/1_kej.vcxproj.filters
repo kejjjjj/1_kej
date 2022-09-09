@@ -52,6 +52,9 @@
     <Filter Include="Source Files\render\ui">
       <UniqueIdentifier>{cc16bacb-0a9b-4d6c-bf48-14c5b1e48313}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\evar">
+      <UniqueIdentifier>{f95c71fc-cb7a-421a-9ba1-e1b2ce0f54e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -141,6 +144,18 @@
     <ClInclude Include="game_funcs.hpp">
       <Filter>Source Files\game</Filter>
     </ClInclude>
+    <ClInclude Include="evar_config.h">
+      <Filter>Source Files\evar</Filter>
+    </ClInclude>
+    <ClInclude Include="evar.h">
+      <Filter>Source Files\evar</Filter>
+    </ClInclude>
+    <ClInclude Include="fs_funcs.h">
+      <Filter>Source Files\evar</Filter>
+    </ClInclude>
+    <ClInclude Include="evars.h">
+      <Filter>Source Files\evar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -217,6 +232,15 @@
     </ClCompile>
     <ClCompile Include="game_funcs.cpp">
       <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="evar_config.cpp">
+      <Filter>Source Files\evar</Filter>
+    </ClCompile>
+    <ClCompile Include="evar.cpp">
+      <Filter>Source Files\evar</Filter>
+    </ClCompile>
+    <ClCompile Include="fs_funcs.cpp">
+      <Filter>Source Files\evar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
