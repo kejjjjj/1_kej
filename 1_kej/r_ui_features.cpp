@@ -5,11 +5,67 @@ void RPG_Features();
 
 void Visual_Features()
 {
-	if (ImGui::Checkbox("velometer", &v::mod_velometer.evar->enabled))
-		v::mod_velometer.SetValue(v::mod_velometer.evar->enabled);
+	if (ImGui::Checkbox("velometer", &v::mod_velometer.evar->enabled)) {
+		float val = (float)v::mod_velometer.evar->enabled;
+		v::mod_velometer.SetValue(&val, 1, 0);
+	}
 
-	if (ImGui::Checkbox("coordinates", &v::mod_coordinates.evar->enabled))
-		v::mod_coordinates.SetValue(v::mod_coordinates.evar->enabled);
+	if (v::mod_velometer.evar->arrayValue[0]) {
+		ImGui::SameLine();
+		static bool editing;
+		if (ImGui::Button("modify##01"))
+			editing = !editing;
+
+
+		if (editing) {
+			ImGui::Begin("Modify velometer", &editing);
+
+			const ImGuiViewport* viewport = ImGui::GetMainViewport();
+
+			ImGui::SetWindowSize(ImVec2(viewport->Size.x / 3.f, viewport->Size.y / 3.5f), ImGuiCond_FirstUseEver);
+
+			ImGui::PushItemWidth(100);
+			ImGui::DragFloat("x", &v::mod_velometer.evar->arrayValue[1], 1.f, 0.f, 1920.f, "%.0f");
+
+			ImGui::PushItemWidth(100);
+			ImGui::DragFloat("y", &v::mod_velometer.evar->arrayValue[2], 1.f, 0.f, 1080.f, "%.0f");
+
+			ImGui::PushItemWidth(100);
+			ImGui::DragFloat("font scale", &v::mod_velometer.evar->arrayValue[3], 0.25f, 0.f, 10.f, "%.2f");
+			ImGui::End();
+		}
+	}
+
+
+	if (ImGui::Checkbox("coordinates", &v::mod_coordinates.evar->enabled)) {
+		float val = (float)v::mod_coordinates.evar->enabled;
+		v::mod_coordinates.SetValue(&val, 1, 0);
+
+	}if (v::mod_coordinates.evar->arrayValue[0]) {
+		ImGui::SameLine();
+		static bool editing;
+		if (ImGui::Button("modify##02"))
+			editing = !editing;
+
+
+		if (editing) {
+			ImGui::Begin("Modify Coordinates", &editing);
+
+			const ImGuiViewport* viewport = ImGui::GetMainViewport();
+
+			ImGui::SetWindowSize(ImVec2(viewport->Size.x / 3.f, viewport->Size.y / 3.5f), ImGuiCond_FirstUseEver);
+
+			ImGui::PushItemWidth(100);
+			ImGui::DragFloat("x", &v::mod_coordinates.evar->arrayValue[1], 1.f, 0.f, 1920.f, "%.0f");
+
+			ImGui::PushItemWidth(100);
+			ImGui::DragFloat("y", &v::mod_coordinates.evar->arrayValue[2], 1.f, 0.f, 1080.f, "%.0f");
+
+			ImGui::PushItemWidth(100);
+			ImGui::DragFloat("font scale", &v::mod_coordinates.evar->arrayValue[3], 0.25f, 0.f, 10.f, "%.2f");
+			ImGui::End();
+		}
+	}
 
 }
 void RPG_Features()

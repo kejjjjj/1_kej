@@ -39,7 +39,7 @@ void cg::Mod_DrawVelocity()
 
 	char buffer[10];
 	sprintf_s(buffer, "%i", velocity);
-	r::R_DrawText(buffer, 960, 540, 3, 3, 0, (float*)&col, 0);
+	r::R_DrawText(buffer, v::mod_velometer.evar->arrayValue[1], v::mod_velometer.evar->arrayValue[2], v::mod_velometer.evar->arrayValue[3], v::mod_velometer.evar->arrayValue[3], 0, (float*)&col, 0);
 }
 void cg::Mod_DrawCoordinates()
 {
@@ -59,6 +59,6 @@ void cg::Mod_DrawCoordinates()
 	if (clients->cgameOrigin[0] == (int)clients->cgameOrigin[0] || clients->cgameOrigin[1] == (int)clients->cgameOrigin[1])
 		col.b = 255;
 
-	r::R_DrawText(buffer, 0, 540, 1.2, 1.2, 0, (float*)&col, 0);
+	r::R_DrawText(buffer, v::mod_coordinates.evar->arrayValue[1], v::mod_coordinates.evar->arrayValue[2], v::mod_coordinates.evar->arrayValue[3], v::mod_coordinates.evar->arrayValue[3], 0, (float*)&col, 0);
 
 }
