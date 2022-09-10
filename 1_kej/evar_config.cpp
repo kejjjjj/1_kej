@@ -3,6 +3,7 @@
 
 bool Evar_SaveToFile(std::string directory)
 {
+	std::cout << "Evar_SaveToFile(): executed\n";
 	std::fstream f;
 
 	if (directory.size() < 2) {

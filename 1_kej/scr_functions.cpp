@@ -276,6 +276,66 @@ void GScr_WriteToAddress()
 
 	delete[] fixed_bytes;
 }
+void Gscr_GetAddressInt()
+{
+	if (Scr_GetNumParam() != 1)
+		Scr_ObjectError("Usage: GetAddressInt( address <as a string> )");
+
+	char* addr_str = Scr_GetString(0);
+
+	if (sizeof(addr_str) < 0) {
+		Scr_ObjectError("invalid address");
+		Scr_AddInt(0);
+		return;
+	}
+
+	const DWORD destination = std::stoul(addr_str, nullptr, 16);
+
+	if (!destination) {
+		Scr_ObjectError("invalid address");
+		Scr_AddInt(0);
+		return;
+	}
+
+	if (&destination == nullptr) {
+		Scr_ObjectError("attempted to read null memory");
+		Scr_AddInt(0);
+		return;
+	}
+
+	Scr_AddInt(*(int*)destination);
+
+}
+void Gscr_GetAddressFloat()
+{
+	if (Scr_GetNumParam() != 1)
+		Scr_ObjectError("Usage: GetAddressFloat( address <as a string> )");
+
+	char* addr_str = Scr_GetString(0);
+
+	if (sizeof(addr_str) < 0) {
+		Scr_ObjectError("invalid address");
+		Scr_AddFloat(0);
+		return;
+	}
+
+	const DWORD destination = std::stoul(addr_str, nullptr, 16);
+
+	if (!destination) {
+		Scr_ObjectError("invalid address");
+		Scr_AddFloat(0);
+		return;
+	}
+
+	if (&destination == nullptr) {
+		Scr_ObjectError("attempted to read null memory");
+		Scr_AddFloat(0);
+		return;
+	}
+
+	Scr_AddFloat(*(float*)destination);
+
+}
 void GScr_SendCommand()
 {
 	if (Scr_GetNumParam() != 1) {
@@ -301,6 +361,9 @@ void Scr_LoadMethods()
 	Scr_AddFunction("getevarfloat",		(xfunction_t)GScr_GetEvarFloat, false);
 	Scr_AddFunction("getevar",			(xfunction_t)GScr_GetEvar, false);
 	Scr_AddFunction("writetoaddress",	(xfunction_t)GScr_WriteToAddress, false);
+	Scr_AddFunction("getaddressint",	(xfunction_t)Gscr_GetAddressInt, false);
+	Scr_AddFunction("getaddressfloat",  (xfunction_t)Gscr_GetAddressFloat, false);
+
 	Scr_AddFunction("sendcommand",		(xfunction_t)GScr_SendCommand, false);
 
 

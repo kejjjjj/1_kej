@@ -17,6 +17,7 @@ void __cdecl r::CG_DrawActive()
 {
 	Mod_DrawVelocity();
 	Mod_DrawCoordinates();
+	Mod_HitAnalyzer();
 
 
 	return CG_DrawActive_f();

@@ -22,9 +22,10 @@ void cg::cod4x()
 }
 void cg::CG_Init()
 {
+	std::cout << "frametime: 0x" << &cgs->frametime << '\n';
 	hook* a = nullptr;
 	cod4x();
-
+	std::cout << "CG_Init() executed\n";
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, "^21_kej extension has been loaded!\n");
 	CG_InitHooks();
 	Scr_Init();

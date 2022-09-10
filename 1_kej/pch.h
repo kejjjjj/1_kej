@@ -104,6 +104,7 @@ typedef vec_t vec4_t[4];
 #include "sys_tools.hpp"
 
 #include "mod_vis.hpp"
+#include "mod_jumps.hpp"
 
 using namespace std::chrono_literals;
 

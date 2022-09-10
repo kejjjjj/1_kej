@@ -5,14 +5,7 @@
 typedef int(*WinMainCRTStartup_h)();
 WinMainCRTStartup_h WinMainCRTStartup_f;
 
-void _init()
-{
-    std::thread(cg::CG_DllEntry).detach();
-
-
-    hook a;
-    a.write_addr(0x67493C, "E8 48 A8 00 00 E9 16 FE FF FF", 10);
-}
+void _init();
 
 __declspec(naked) void dll_init()
 {
@@ -24,6 +17,26 @@ __declspec(naked) void dll_init()
         jmp		eax;
     }
 }
+
+void _init()
+{
+    static bool once = true;
+    if (once) {
+        AllocConsole();
+        FILE* fp;
+        freopen_s(&fp, "CONOUT$", "w", stdout);
+
+        std::thread(cg::CG_DllEntry).detach();
+
+
+        hook a;
+        a.remove(&(PVOID&)WinMainCRTStartup_f, dll_init);
+        a.write_addr(0x67493C, "E8 48 A8 00 00 E9 16 FE FF FF", 10);
+    }
+    std::cout << "requesting to inject\n";
+    once = false;
+}
+
 
 static bool hooked = false;
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
@@ -57,9 +70,6 @@ void cg::CG_DllEntry()
         return;
     }
 
-    AllocConsole();
-    FILE* fp;
-    freopen_s(&fp, "CONOUT$", "w", stdout);
 
     while (!cgs || !cg::dx->device) {
         std::this_thread::sleep_for(100ms);
@@ -74,9 +84,6 @@ void cg::CG_DllEntry()
 
         if (!monitoring)
             break;
-
-        if (GetAsyncKeyState(VK_PRIOR) & 1)
-            Evar_Setup();
 
         Sleep(1000);
     }

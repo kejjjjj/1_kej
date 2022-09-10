@@ -129,8 +129,10 @@ bool r::R_OpenMenu(IDirect3DDevice9* pDevice)
 		
 
 
-		if(!r::should_draw_menu)
+		if (!r::should_draw_menu) {
+			std::cout << "calling R_RemoveInput() from R_OpenMenu()\n";
 			R_RemoveInput(r::should_draw_menu);
+		}
 
 		ImGui::SetWindowFontScale(1.2f);
 

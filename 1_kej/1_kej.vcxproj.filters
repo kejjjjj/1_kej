@@ -156,6 +156,9 @@
     <ClInclude Include="evars.h">
       <Filter>Source Files\evar</Filter>
     </ClInclude>
+    <ClInclude Include="mod_jumps.hpp">
+      <Filter>Source Files\mod</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -244,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="r_ui_features.cpp">
       <Filter>Source Files\render\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mod_jumps.cpp">
+      <Filter>Source Files\mod</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

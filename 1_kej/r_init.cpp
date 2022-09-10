@@ -54,6 +54,8 @@ LRESULT CALLBACK r::WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 		break;
 	case WM_DESTROY:
 		r::should_draw_menu = false;
+		std::cout << "calling R_RemoveInput() from WndProc() -> WM_Destroy\n";
+
 		R_RemoveInput(r::should_draw_menu);
 	}
 
@@ -76,7 +78,8 @@ char r::R_RecoverLostDevice()
 	if (ImGui::GetCurrentContext()) {
 		ImGui_ImplDX9_InvalidateDeviceObjects();
 		r::should_draw_menu = false;
-		R_RemoveInput(r::should_draw_menu);
+		//std::cout << "calling R_RemoveInput() from R_RecoverLostDevice()\n";
+		//R_RemoveInput(r::should_draw_menu);
 
 	}
 
