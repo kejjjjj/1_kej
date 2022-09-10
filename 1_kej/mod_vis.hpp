@@ -8,6 +8,7 @@
 namespace cg
 {
 	void Mod_DrawVelocity();
+	void Mod_DrawCoordinates();
 }
 
 #endif

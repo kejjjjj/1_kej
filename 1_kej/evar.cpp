@@ -255,8 +255,7 @@ void Evar_Setup()
 	
 	v::mod_velometer.Register	("1_kej_velometer", evartype_t::EVAR_BOOL, (float)0);
 	v::mod_rpg_mode.Register	("1_kej_rpg_mode", evartype_t::EVAR_STRING, "default");
-
-	std::cout << "yep..\n";
+	v::mod_coordinates.Register ("1_kej_coordinates", evartype_t::EVAR_BOOL, (float)0);
 
 }
 int evar_o::GetInt()

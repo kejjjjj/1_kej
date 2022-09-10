@@ -130,14 +130,13 @@ void GScr_WorldToScreen(scr_entref_t arg)
 	Scr_AddVector(vec3_t{ screen[0], screen[1], (float)success});
 
 }
-void GScr_WeaponExists(scr_entref_t arg)
+void GScr_WeaponExists()
 {
-
 	if (Scr_GetNumParam() != 1)
-		Scr_ObjectError("Usage: player weaponExists( string )");
+		Scr_ObjectError("Usage: weaponExists( string )");
 
 	char* weap = Scr_GetString(0);
-	
+
 	if (!weap) {
 		Scr_AddInt(0);
 		return;
@@ -170,6 +169,7 @@ void GScr_GetEvarFloat()
 
 	char* _evar = Scr_GetString(0);
 
+
 	evar_o* evar = Evar_FindByName(_evar);
 
 	if (evar) {
@@ -184,6 +184,7 @@ void GScr_GetEvar()
 		Scr_ObjectError("Usage: GetEvar( string )");
 
 	char* _evar = Scr_GetString(0);
+
 
 	evar_o* evar = Evar_FindByName(_evar);
 
@@ -222,6 +223,70 @@ void GScr_GetEvar()
 	}
 	Scr_AddString((char*)"");
 }
+void GScr_WriteToAddress()
+{
+	if (Scr_GetNumParam() != 3)
+		Scr_ObjectError("Usage: WriteToAddress( address, bytes, length )");
+
+	char* addr_str = Scr_GetString(0);
+	char* bytes = Scr_GetString(1);
+	int length = Scr_GetInt(2);
+
+	if (length < 0) {
+		Scr_ObjectError("write length (%i) must be greater than 0", length);
+		return;
+	} else if(sizeof(addr_str) < 0) {
+		Scr_ObjectError("invalid address");
+		return;
+	}else if (sizeof(bytes) < 0) {
+		Scr_ObjectError("invalid amount of bytes to write");
+		return;
+	}
+	if (addr_str[0] != '0' || addr_str[1] != 'x') {
+		Scr_ObjectError("invalid address format, (missing 0x)");
+		return;
+	}
+	const DWORD destination = std::stoul(addr_str, nullptr, 16);
+
+	if (!destination) {
+		Scr_ObjectError("invalid address");
+		return;
+	}
+	BYTE* fixed_bytes = new BYTE[length];
+	int byte;
+	for (BYTE i = 0; i < length; i++) {
+		std::string combined;
+		std::stringstream ss;
+
+		combined.push_back(*(BYTE*)(bytes));
+		combined.push_back(*(BYTE*)(bytes+1));
+
+		ss << combined;
+		ss >> std::hex >> byte;
+
+		fixed_bytes[i] = (BYTE)(byte);
+
+		
+		bytes += 3;
+	}
+
+	hook* a = nullptr;
+	a->write_addr(destination, (char*)fixed_bytes, length);
+
+	delete[] fixed_bytes;
+}
+void GScr_SendCommand()
+{
+	if (Scr_GetNumParam() != 1) {
+		Scr_ObjectError("Usage: SendCommand( string )");
+		return;
+	}
+	char* str = Scr_GetString(0);
+
+	if (str) {
+		SendCommand(str);
+	}
+}
 void Scr_LoadMethods()
 {
 	Scr_AddMethod("getbuttonpressed",	(xfunction_t)PlayerCmd_GetButtonPressed, false);
@@ -234,6 +299,8 @@ void Scr_LoadMethods()
 	Scr_AddFunction("getevarint",		(xfunction_t)GScr_GetEvarInt, false);
 	Scr_AddFunction("getevarfloat",		(xfunction_t)GScr_GetEvarFloat, false);
 	Scr_AddFunction("getevar",			(xfunction_t)GScr_GetEvar, false);
+	Scr_AddFunction("writetoaddress",	(xfunction_t)GScr_WriteToAddress, false);
+	Scr_AddFunction("sendcommand",		(xfunction_t)GScr_SendCommand, false);
 
 
 }

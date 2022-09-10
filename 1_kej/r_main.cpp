@@ -16,7 +16,8 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 void __cdecl r::CG_DrawActive()
 {
 	Mod_DrawVelocity();
-	
+	Mod_DrawCoordinates();
+
 
 	return CG_DrawActive_f();
 }

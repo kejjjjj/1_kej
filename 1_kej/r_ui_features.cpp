@@ -7,6 +7,10 @@ void Visual_Features()
 {
 	if (ImGui::Checkbox("velometer", &v::mod_velometer.evar->enabled))
 		v::mod_velometer.SetValue(v::mod_velometer.evar->enabled);
+
+	if (ImGui::Checkbox("coordinates", &v::mod_coordinates.evar->enabled))
+		v::mod_coordinates.SetValue(v::mod_coordinates.evar->enabled);
+
 }
 void RPG_Features()
 {

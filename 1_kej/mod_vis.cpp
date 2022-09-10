@@ -41,3 +41,24 @@ void cg::Mod_DrawVelocity()
 	sprintf_s(buffer, "%i", velocity);
 	r::R_DrawText(buffer, 960, 540, 3, 3, 0, (float*)&col, 0);
 }
+void cg::Mod_DrawCoordinates()
+{
+	if (!v::mod_coordinates.isEnabled())
+		return;
+
+	char buffer[128];
+	static glm::vec4 col{};
+
+	sprintf_s(buffer, "x:     %.6f\ny:     %.6f\nz:     %.6f\nyaw: %.6f", clients->cgameOrigin[0], clients->cgameOrigin[1], clients->cgameOrigin[2], cgs->refdefViewAngles[YAW]);
+
+	col.r = 0;
+	col.g = 255;
+	col.b = 0;
+	col.w = 255;
+
+	if (clients->cgameOrigin[0] == (int)clients->cgameOrigin[0] || clients->cgameOrigin[1] == (int)clients->cgameOrigin[1])
+		col.b = 255;
+
+	r::R_DrawText(buffer, 0, 540, 1.2, 1.2, 0, (float*)&col, 0);
+
+}

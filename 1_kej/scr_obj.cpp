@@ -22,9 +22,9 @@ float Scr_GetFloat(uint32_t param)
 }
 char* Scr_GetString(uint32_t parameter)
 {
-	char* str;
 	int numstr{};
-
+	char* str;
+	
 	__asm {
 		mov eax, parameter;
 		push eax;
@@ -37,10 +37,8 @@ char* Scr_GetString(uint32_t parameter)
 	if (numstr) 
 		str = (char*)((((int)0x14E8A04) + (12 * numstr + 4)) + 0x2187C);
 	else str = 0;
-
-	return str;
 	
-
+	return str;
 }
 void Scr_AddString(char* string)
 {

@@ -14,7 +14,8 @@ namespace v
 
 	inline evar_o 
 		mod_velometer,
-		mod_rpg_mode;
+		mod_rpg_mode,
+		mod_coordinates;
 
 }
 

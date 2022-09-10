@@ -18,10 +18,11 @@ void PlayerCmd_GetRightMove(scr_entref_t arg);
 void PlayerCmd_SetVelocity(scr_entref_t arg);
 
 
-void GScr_WeaponExists(scr_entref_t arg);
+void GScr_WeaponExists();
 void GScr_WorldToScreen(scr_entref_t arg);
 void GScr_GetEvarInt();
 void GScr_GetEvarFloat();
 void GScr_GetEvar();
-
+void GScr_WriteToAddress();
+void GScr_SendCommand();
 #endif
