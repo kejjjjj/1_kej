@@ -164,10 +164,13 @@ void evar_o::SetValue(const char* value)
 {
 	evar_s* evar = this->evar;
 
-	if (evar->type != evartype_t::EVAR_STRING || !evar)
+	if (!evar) {
+		printf("setvalue(string): passed a null\n");
 		return;
+	}
 
 	evar->stringValue = value;
+	printf("SetValue(%s): name: [%s] at: [0x%p]\n", value, evar->name, &evar->stringValue);
 }
 void evar_o::SetValue(float* value)
 {
@@ -272,7 +275,7 @@ float evar_o::GetVector(uint32_t prm)
 }
 const char* evar_o::GetString()
 {
-	return this->evar->stringValue;
+	return this->evar->stringValue.c_str();
 }
 bool evar_o::isEnabled()
 {

@@ -210,8 +210,9 @@ void GScr_GetEvar()
 			break;
 
 		case EVAR_STRING:
-			if (snprintf(buf, sizeof(buf), "%s", evar->GetString()) > 0)
+			if (snprintf(buf, sizeof(buf), "%s", evar->GetString()) > 0) {
 				Scr_AddString(buf);
+			}
 			else Scr_AddString((char*)"");
 			break;
 		default:

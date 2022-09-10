@@ -14,7 +14,7 @@ void cg::Mod_DrawVelocity()
 
 	static glm::vec4 col{};
 
-	if (timePassed > cgs->frametime) {
+	if (timePassed > (1000.f / cgs->frametime) / 10) {
 		ms = Sys_MilliSeconds();
 		col.a = 255;
 		if (velocity > velocity_prev_frame) {

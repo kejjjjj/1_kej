@@ -23,7 +23,7 @@ struct evar_s
 	const char* name;
 	int intValue;
 	float floatValue;
-	const char* stringValue;
+	std::string stringValue;
 	vec4_t vecValue;
 	std::vector<float> arrayValue;
 	bool enabled;

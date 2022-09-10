@@ -26,7 +26,7 @@ bool Evar_SaveToFile(std::string directory)
 			case evartype_t::EVAR_BOOL:		f << evar->name << " = " << evar->enabled		<< ";\n";		break;
 			case evartype_t::EVAR_INT:		f << evar->name << " = " << evar->intValue		<< ";\n";		break;
 			case evartype_t::EVAR_FLOAT:	f << evar->name << " = " << evar->floatValue	<< ";\n";		break;
-			case evartype_t::EVAR_STRING:	f << evar->name << " = " << evar->stringValue << ";\n";		break;
+			case evartype_t::EVAR_STRING:	f << evar->name << " = " << evar->stringValue.c_str() << ";\n";		break;
 			case evartype_t::EVAR_VEC2:		f << evar->name << " = " << evar->vecValue[0] << ' ' << evar->vecValue[1] << ";\n";		break;
 			case evartype_t::EVAR_VEC3:		f << evar->name << " = " << evar->vecValue[0] << ' ' << evar->vecValue[1] << ' ' << evar->vecValue[2] << ";\n";		break;
 			case evartype_t::EVAR_VEC4:		f << evar->name << " = " << evar->vecValue[0] << ' ' << evar->vecValue[1] << ' ' << evar->vecValue[2] << ' ' << evar->vecValue[3] << ";\n";		break;
@@ -141,13 +141,17 @@ bool Evar_LoadFromFile(std::string directory)
 			}
 
 			else {
-				std::string value = fs::F_ReadUntil(f, ';');
+				static std::string value;
+				evar->stringValue = fs::F_ReadUntil(f, ';');
+
+
 				if (value != "N/A" && evar->type != EVAR_STRING) {
-					_evar->SetValue(std::stof(value.c_str()));
+					_evar->SetValue(std::stof(evar->stringValue.c_str()));
 
 				}
-				else if (value != "N/A" && evar->type == EVAR_STRING)
-					_evar->SetValue(value.c_str());
+				else if (value != "N/A" && evar->type == EVAR_STRING) {
+					_evar->SetValue(evar->stringValue.c_str());
+				}
 
 				vars_read++;
 
