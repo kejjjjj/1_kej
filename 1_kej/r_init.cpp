@@ -12,13 +12,10 @@ bool r::R_Init()
 
 	pEndScene = (endScene)vTable[42];
 	
-	if (a.install(&(PVOID&)pEndScene, draw_func) != S_OK || a.install(&(PVOID&)CG_DrawActive_f, CG_DrawActive) != S_OK) {
+	if (a.install(&(PVOID&)pEndScene, draw_func) != S_OK) {
 		Com_PrintError(CON_CHANNEL_CONSOLEONLY, "failed to hook endscene or cg_Drawactive\n");
 		return false;
 	}
-
-	Evar_Setup();
-	Evar_LoadFromFile(v::cfg::cfgDirectory);
 
 	return true;
 }

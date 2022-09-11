@@ -55,6 +55,15 @@
     <Filter Include="Source Files\evar">
       <UniqueIdentifier>{f95c71fc-cb7a-421a-9ba1-e1b2ce0f54e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\pmove">
+      <UniqueIdentifier>{15ba53db-9e1d-4345-8108-5e1803a04f76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cl">
+      <UniqueIdentifier>{21c0fafd-c9d3-42dc-919c-d4f2ff9b14cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sv">
+      <UniqueIdentifier>{6c1004da-e4d1-4895-b1b3-a8ee80db9225}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -159,6 +168,18 @@
     <ClInclude Include="mod_jumps.hpp">
       <Filter>Source Files\mod</Filter>
     </ClInclude>
+    <ClInclude Include="bg_slidemove.hpp">
+      <Filter>Source Files\pmove</Filter>
+    </ClInclude>
+    <ClInclude Include="g_trace.h">
+      <Filter>Source Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="cl_main.hpp">
+      <Filter>Source Files\cl</Filter>
+    </ClInclude>
+    <ClInclude Include="sv_ccmds.hpp">
+      <Filter>Source Files\sv</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -250,6 +271,18 @@
     </ClCompile>
     <ClCompile Include="mod_jumps.cpp">
       <Filter>Source Files\mod</Filter>
+    </ClCompile>
+    <ClCompile Include="bg_slidemove.cpp">
+      <Filter>Source Files\pmove</Filter>
+    </ClCompile>
+    <ClCompile Include="g_trace.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="cl_main.cpp">
+      <Filter>Source Files\cl</Filter>
+    </ClCompile>
+    <ClCompile Include="sv_ccmds.cpp">
+      <Filter>Source Files\sv</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

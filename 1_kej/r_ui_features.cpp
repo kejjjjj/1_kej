@@ -2,6 +2,7 @@
 
 void Visual_Features();
 void RPG_Features();
+void Jump_Features();
 
 void Visual_Features()
 {
@@ -77,6 +78,15 @@ void RPG_Features()
 	if(ImGui::Combo("Mode", &rpg_mode, items, 3))
 		v::mod_rpg_mode.SetValue(items[rpg_mode]);
 }
+void Jump_Features()
+{
+	if (ImGui::Checkbox("hit analyzer", &v::mod_hitanalyzer.evar->enabled)) {
+		v::mod_hitanalyzer.SetValue(v::mod_hitanalyzer.evar->enabled);
+	} ImGui::SameLine(); r::MetricsHelpMarker("print the difference in velocity before and after bounce");
+
+
+
+}
 void r::R_Features()
 {
 	if (ImGui::BeginTabBar("##tabs", ImGuiTabBarFlags_None)) {
@@ -84,12 +94,15 @@ void r::R_Features()
 			Visual_Features();
 			ImGui::EndTabItem();
 
-		}
-		if (ImGui::BeginTabItem("RPG")) {
+		}if (ImGui::BeginTabItem("RPG")) {
 			RPG_Features();
 			ImGui::EndTabItem();
 
+		}if (ImGui::BeginTabItem("Jumping")) {
+			Jump_Features();
+			ImGui::EndTabItem();
 		}
+
 
 	}
 	ImGui::EndTabBar();

@@ -59,3 +59,15 @@ float r::Y(float pos)
 	const float y = cgs->refdef.height;
 	return pos <= 1080 ? pos / (1080.f / y) : pos * (y / 1080);
 }
+void r::MetricsHelpMarker(const char* desc)
+{
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::BeginTooltip();
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted(desc);
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
+}

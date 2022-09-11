@@ -85,6 +85,13 @@ void cg::CG_DllEntry()
         if (!monitoring)
             break;
 
+        dvar_s* fs_game = Dvar_FindMalleableVar("fs_game");
+
+        if (fs_game) {
+            mglobs.isUsing = (!strcmp(fs_game->current.string, "mods/1_kej_v2"));
+
+        }
+
         Sleep(1000);
     }
 

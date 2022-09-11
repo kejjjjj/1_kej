@@ -27,6 +27,8 @@ typedef vec_t vec4_t[4];
 #define	VectorMA(v, s, b, o)	((o)[0]=(v)[0]+(b)[0]*(s),(o)[1]=(v)[1]+(b)[1]*(s),(o)[2]=(v)[2]+(b)[2]*(s))
 #define VectorClear( a )              ( ( a )[0] = ( a )[1] = ( a )[2] = 0 )
 
+#pragma warning(disable : 26495)
+
 // add headers that you want to pre-compile here
 #include "framework.h"
 
@@ -83,6 +85,7 @@ typedef vec_t vec4_t[4];
 
 #include "game_funcs.hpp"
 #include "dvar.hpp"
+#include "g_trace.h"
 
 #include "fs_funcs.h"
 #include "evar.h"
@@ -100,6 +103,12 @@ typedef vec_t vec4_t[4];
 #include "r_drawtools.hpp"
 #include "r_world.hpp"
 #include "r_ui.hpp"
+
+#include "cl_main.hpp"
+
+#include "sv_ccmds.hpp"
+
+#include "bg_slidemove.hpp"
 
 #include "sys_tools.hpp"
 

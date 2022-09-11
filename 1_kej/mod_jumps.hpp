@@ -6,7 +6,7 @@
 #include "pch.h"
 
 namespace cg {
-	void Mod_HitAnalyzer();
+	void Mod_HitAnalyzer(pmove_t* pm, pml_t* pml);
 
 }
 #endif

@@ -18,6 +18,8 @@ namespace r
 
 	float X(float pos);
 	float Y(float pos);
+
+	void MetricsHelpMarker(const char* desc);
 }
 
 #endif

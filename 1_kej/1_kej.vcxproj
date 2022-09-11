@@ -161,9 +161,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="bg_slidemove.hpp" />
     <ClInclude Include="cg_init.hpp" />
     <ClInclude Include="cg_local.h" />
     <ClInclude Include="cg_offsets.h" />
+    <ClInclude Include="cl_main.hpp" />
     <ClInclude Include="com_channel.h" />
     <ClInclude Include="detours\detours.h" />
     <ClInclude Include="dvar.hpp" />
@@ -174,6 +176,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="fs_funcs.h" />
     <ClInclude Include="game_funcs.hpp" />
+    <ClInclude Include="g_trace.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\imgui_impl_dx9.h" />
@@ -194,10 +197,13 @@
     <ClInclude Include="scr_functions.hpp" />
     <ClInclude Include="scr_main.hpp" />
     <ClInclude Include="scr_obj.hpp" />
+    <ClInclude Include="sv_ccmds.hpp" />
     <ClInclude Include="sys_tools.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="bg_slidemove.cpp" />
     <ClCompile Include="cg_init.cpp" />
+    <ClCompile Include="cl_main.cpp" />
     <ClCompile Include="com_channel.cpp" />
     <ClCompile Include="dvar.cpp" />
     <ClCompile Include="entry.cpp" />
@@ -205,6 +211,7 @@
     <ClCompile Include="evar_config.cpp" />
     <ClCompile Include="fs_funcs.cpp" />
     <ClCompile Include="game_funcs.cpp" />
+    <ClCompile Include="g_trace.cpp" />
     <ClCompile Include="ImGui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -251,6 +258,7 @@
     <ClCompile Include="scr_functions.cpp" />
     <ClCompile Include="scr_main.cpp" />
     <ClCompile Include="scr_obj.cpp" />
+    <ClCompile Include="sv_ccmds.cpp" />
     <ClCompile Include="sys_tools.cpp" />
     <ClCompile Include="r_ui.cpp" />
   </ItemGroup>

@@ -67,6 +67,18 @@ cg::cmd_function_s* Cmd_AddCommand(char* cmdname, void(__cdecl* function)())
 
     return cmd_functions;
 }
+cg::cmd_function_s* Cmd_RemoveCommand(const char* cmdname)
+{
+    __asm
+    {
+        push cmdname;
+        mov esi, 0x4F99E0;
+        call esi;
+        add esp, 0x4;
+    }
+
+
+}
 void OpenMenu_f()
 {
 
