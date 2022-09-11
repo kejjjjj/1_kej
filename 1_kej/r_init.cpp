@@ -9,6 +9,8 @@ bool r::R_Init()
 
 	hook a;
 
+	if (pEndScene)
+		return true;
 
 	pEndScene = (endScene)vTable[42];
 	

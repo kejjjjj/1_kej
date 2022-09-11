@@ -33,13 +33,17 @@ void cg::CG_Init()
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, "^21_kej extension has been loaded!\n");
 
 }
+void cg::CG_PrepareHooks()
+{
+	r::CG_DrawActive_f = (r::CG_DrawActive_h)(0x42F7F0); //r_init.cpp
+	r::CL_ShutdownRenderer_f = (r::CL_ShutdownRenderer_h)(0x46CA40);
+	r::R_RecoverLostDevice_f = (r::R_RecoverLostDevice_ptr)(0x5F5360);
+	r::oWndProc = (WNDPROC)(r::WndProcAddr);
+	PM_AirMove_f = (PM_AirMove_h)(0x40F680);
+}
 void cg::CG_InitForeverHooks()
 {
-	r::CG_DrawActive_f			= (r::CG_DrawActive_h)			(0x42F7F0); //r_init.cpp
-	r::CL_ShutdownRenderer_f	= (r::CL_ShutdownRenderer_h)	(0x46CA40);
-	r::R_RecoverLostDevice_f	= (r::R_RecoverLostDevice_ptr)	(0x5F5360);
-	r::oWndProc					= (WNDPROC)						(r::WndProcAddr);
-	PM_AirMove_f				= (PM_AirMove_h)				(0x40F680);
+	CG_PrepareHooks();
 	CL_Disconnect_f				= (CL_Disconnect_h)				(0x4696B0);
 	SV_Map_f					= (SV_Map_h)					(0x527670);
 
@@ -51,10 +55,11 @@ void cg::CG_InitForeverHooks()
 }
 void cg::CG_InitHooks()
 {
+	std::cout << "calling cg::CG_InitHooks()\n";
 	if (mglobs.initialized)
 		return;
 
-
+	CG_PrepareHooks();
 
 	hook* a = nullptr;
 
@@ -68,7 +73,7 @@ void cg::CG_InitHooks()
 }
 void cg::CG_RemoveHooks()
 {
-
+	std::cout << "calling cg::CG_RemoveHooks()\n";
 	if (!mglobs.initialized)
 		return;
 

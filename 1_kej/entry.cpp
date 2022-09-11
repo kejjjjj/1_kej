@@ -20,21 +20,18 @@ __declspec(naked) void dll_init()
 
 void _init()
 {
-    static bool once = true;
-    if (once) {
-        AllocConsole();
-        FILE* fp;
-        freopen_s(&fp, "CONOUT$", "w", stdout);
 
-        std::thread(cg::CG_DllEntry).detach();
+    hook a;
+    a.remove(&(PVOID&)WinMainCRTStartup_f, dll_init);
+    a.write_addr(0x67493C, "E8 48 A8 00 00 E9 16 FE FF FF", 10);
 
 
-        hook a;
-        a.remove(&(PVOID&)WinMainCRTStartup_f, dll_init);
-        a.write_addr(0x67493C, "E8 48 A8 00 00 E9 16 FE FF FF", 10);
-    }
+    AllocConsole();
+    FILE* fp;
+    freopen_s(&fp, "CONOUT$", "w", stdout);
+
+    std::thread(cg::CG_DllEntry).detach();
     std::cout << "requesting to inject\n";
-    once = false;
 }
 
 

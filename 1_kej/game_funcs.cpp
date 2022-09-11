@@ -50,9 +50,13 @@ cg::cmd_function_s* Cmd_AddCommand(char* cmdname, void(__cdecl* function)())
         return ((cmd_function_s*(__cdecl*)(char* cmd, void* function))Cmd_AddCommand_fnc)(cmdname, function);
 
     cmd_function_s* cmd = Cmd_FindCommand(cmdname);
+    printf("adding __a new func command: %s\n", cmdname);
 
     if (cmd)
         return cmd;
+
+    printf("adding a new func command: %s\n", cmdname);
+
 
     static cmd_function_s _cmd{};
 
@@ -92,6 +96,7 @@ void OpenMenu_f()
 }
 void Cmd_Init()
 {
+    std::cout << "calling Cmd_Init()\n";
     Cmd_AddCommand((char*)"1_kej_openmenu", OpenMenu_f);
 
 }

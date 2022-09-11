@@ -34,7 +34,7 @@ bool Evar_SaveToFile(std::string directory)
 			case evartype_t::EVAR_ARRAY:
 			{
 				f << evar->name << " = ";
-				printf("(%s).size: %u\n", evar->name, evar->arrayValue.size());
+				//printf("(%s).size: %u\n", evar->name, evar->arrayValue.size());
 				for (uint32_t i = 0; i < evar->arrayValue.size(); i++)
 				{
 					f << evar->arrayValue[i];

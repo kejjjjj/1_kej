@@ -12,11 +12,13 @@ namespace v
 		inline std::string cfgDirectory;
 	}
 
-	inline evar_o 
+	inline evar_o
 		mod_velometer,
 		mod_rpg_mode,
 		mod_coordinates,
-		mod_hitanalyzer;
+		mod_hitanalyzer,
+		mod_bhop,
+		mod_bhop_nodelay;
 
 }
 

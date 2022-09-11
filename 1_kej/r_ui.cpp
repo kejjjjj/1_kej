@@ -91,6 +91,12 @@ void r::R_MenuStyle()
 
 void r::R_RemoveInput(bool _true)
 {
+	if (!ImGui::GetCurrentContext()) {
+		std::cout << "R_RemoveInput(): called without imgui context!\n";
+		Com_PrintError(CON_CHANNEL_CONSOLEONLY, "R_RemoveInput(): called without imgui context!\n");
+		return;
+	}
+
 	static const DWORD MouseInput = (cod4x_entry != NULL) ? (cg::cod4x_entry + 0x4480E01) : (DWORD)&s_wmv->mouseInitialized;
 	static const DWORD KeyInput = 0x4631B0; //CL_KeyMove
 	ImGuiIO& io = ImGui::GetIO();

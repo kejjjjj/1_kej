@@ -17,6 +17,7 @@ namespace cg
 	void CG_Init();
 	void CG_InitHooks();
 	void CG_InitForeverHooks();
+	void CG_PrepareHooks();
 	void CG_RemoveHooks();
 
 	inline mod_globs mglobs;

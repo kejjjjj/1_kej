@@ -85,6 +85,18 @@ void Jump_Features()
 	} ImGui::SameLine(); r::MetricsHelpMarker("print the difference in velocity before and after bounce");
 
 
+	if (ImGui::Checkbox("Bunnyhopping", &v::mod_bhop.evar->enabled)) {
+		v::mod_bhop.SetValue(v::mod_bhop.evar->enabled);
+		cg::Mod_EditMemory(false);
+	}if (v::mod_bhop.isEnabled()) {
+		ImGui::SameLine();
+		if (ImGui::Checkbox("No Delay", &v::mod_bhop_nodelay.evar->enabled)) {
+			v::mod_bhop_nodelay.SetValue(v::mod_bhop_nodelay.evar->enabled);
+			cg::Mod_EditMemory(false);
+
+		}
+
+	}
 
 }
 void r::R_Features()
