@@ -91,8 +91,10 @@ void r::R_MenuStyle()
 
 void r::R_RemoveInput(bool _true)
 {
+	std::cout << "calling R_RemoveInput(" << _true << ")\n";
+
 	if (!ImGui::GetCurrentContext()) {
-		std::cout << "R_RemoveInput(): called without imgui context!\n";
+		std::cout << "R_RemoveInput(" << _true << "): called without imgui context!\n";
 		Com_PrintError(CON_CHANNEL_CONSOLEONLY, "R_RemoveInput(): called without imgui context!\n");
 		return;
 	}
@@ -103,14 +105,18 @@ void r::R_RemoveInput(bool _true)
 	hook* a = nullptr;
 
 	if (_true) {
-		io.MouseDrawCursor = true;
-		io.WantCaptureMouse = true;
+
+			io.MouseDrawCursor = true;
+			io.WantCaptureMouse = true;
+		
 		a->write_addr(MouseInput, "\x00", 1);
 		a->write_addr(KeyInput, "\xC3", 1);
 		return;
 	}
+
 	io.MouseDrawCursor = false;
 	io.WantCaptureMouse = false;
+	
 	a->write_addr(MouseInput, "\x01", 1);
 	a->write_addr(KeyInput, "\x51", 1);
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, "saving evars...\n");

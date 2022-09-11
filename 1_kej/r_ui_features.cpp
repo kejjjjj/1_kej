@@ -6,6 +6,9 @@ void Jump_Features();
 
 void Visual_Features()
 {
+	ImGui::Text("Basic");
+	ImGui::Separator();
+
 	if (ImGui::Checkbox("velometer", &v::mod_velometer.evar->enabled)) {
 		float val = (float)v::mod_velometer.evar->enabled;
 		v::mod_velometer.SetValue(&val, 1, 0);
@@ -80,23 +83,37 @@ void RPG_Features()
 }
 void Jump_Features()
 {
+	ImGui::Text("Utilities");
+	ImGui::Separator();
 	if (ImGui::Checkbox("hit analyzer", &v::mod_hitanalyzer.evar->enabled)) {
 		v::mod_hitanalyzer.SetValue(v::mod_hitanalyzer.evar->enabled);
 	} ImGui::SameLine(); r::MetricsHelpMarker("print the difference in velocity before and after bounce");
 
-
+	ImGui::Text("Movement");
+	ImGui::Separator();
 	if (ImGui::Checkbox("Bunnyhopping", &v::mod_bhop.evar->enabled)) {
 		v::mod_bhop.SetValue(v::mod_bhop.evar->enabled);
 		cg::Mod_EditMemory(false);
-	}if (v::mod_bhop.isEnabled()) {
-		ImGui::SameLine();
-		if (ImGui::Checkbox("No Delay", &v::mod_bhop_nodelay.evar->enabled)) {
-			v::mod_bhop_nodelay.SetValue(v::mod_bhop_nodelay.evar->enabled);
-			cg::Mod_EditMemory(false);
-
-		}
 
 	}
+	
+	//////////////////////////////////////////
+	if (!v::mod_bhop.isEnabled())
+		ImGui::BeginDisabled(true);
+
+	ImGui::Text("\t");
+	ImGui::SameLine();
+	if (ImGui::Checkbox("No Delay", &v::mod_bhop_nodelay.evar->enabled)) {
+		v::mod_bhop_nodelay.SetValue(v::mod_bhop_nodelay.evar->enabled);
+		cg::Mod_EditMemory(false);
+
+	}
+
+	if (!v::mod_bhop.isEnabled())
+		ImGui::EndDisabled();
+
+	//////////////////////////////////////////
+
 
 }
 void r::R_Features()
