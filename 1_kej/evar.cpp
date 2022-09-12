@@ -264,6 +264,7 @@ void Evar_Setup()
 	v::mod_bhop_nodelay.Register	("1_kej_bhop_nodelay",		evartype_t::EVAR_BOOL,		(float)0); 
 	v::mod_elevatable_surf.Register	("1_kej_elevatable_surf",	evartype_t::EVAR_BOOL, 		(float)0);
 	v::mod_bounceable_surf.Register	("1_kej_bounceable_surf",	evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_pmove_fixed.Register		("1_kej_pmove_fixed",		evartype_t::EVAR_BOOL,		(float)0);
 
 }
 int evar_o::GetInt()

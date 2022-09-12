@@ -2,13 +2,15 @@
 
 void iPrintLn(const char* text)
 {
+    static const DWORD fnc = 0x43DDA0;
+
     __asm
     {
-
-        push text
-        push 0 //int localClientNum
-        mov esi, 0x43dda0
-        call esi
+        mov eax, text;
+        mov esi, 0;
+        push eax;
+        push esi; //int localClientNum
+        call fnc;
         add esp, 0x8
     }
 }
@@ -50,12 +52,11 @@ cg::cmd_function_s* Cmd_AddCommand(char* cmdname, void(__cdecl* function)())
         return ((cmd_function_s*(__cdecl*)(char* cmd, void* function))Cmd_AddCommand_fnc)(cmdname, function);
 
     cmd_function_s* cmd = Cmd_FindCommand(cmdname);
-    printf("adding __a new func command: %s\n", cmdname);
 
     if (cmd)
         return cmd;
 
-    printf("adding a new func command: %s\n", cmdname);
+    Com_Printf(CON_CHANNEL_CONSOLEONLY, "adding a new func command: %s\n", cmdname);
 
 
     static cmd_function_s _cmd{};
@@ -87,16 +88,25 @@ void OpenMenu_f()
 {
 
     r::should_draw_menu = !r::should_draw_menu;
-    if(r::should_draw_menu)
-        Com_Printf(CON_CHANNEL_CONSOLEONLY, "^2opening the menu\n");
-    else 
-        Com_Printf(CON_CHANNEL_CONSOLEONLY, "^1closing the menu\n");
 
     r::R_RemoveInput(r::should_draw_menu);
 }
 void Cmd_Init()
 {
     std::cout << "calling Cmd_Init()\n";
+    Com_Printf(CON_CHANNEL_CONSOLEONLY, "loading custom cmd functions\n");
     Cmd_AddCommand((char*)"1_kej_openmenu", OpenMenu_f);
 
+}
+void Cbuf_AddText(const char* text, int localClientNum)
+{
+    __asm {
+        mov eax, text;
+        push eax;
+        mov ecx, localClientNum;
+        push ecx;
+        mov esi, 0x4F8D90;
+        call esi;
+        add esp, 0x8;
+    }
 }

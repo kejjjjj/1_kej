@@ -7,8 +7,7 @@
 
 namespace cg
 {
-	typedef void(*CL_Disconnect_h)(int);
-	inline CL_Disconnect_h CL_Disconnect_f;
+	inline void(*CL_Disconnect_f)(int);
 	void CL_Disconnect(int localClientNum);
 
 

@@ -88,6 +88,7 @@ typedef vec_t vec4_t[4];
 #include "g_trace.h"
 
 #include "fs_funcs.h"
+#include "fs_log.hpp"
 #include "evar.h"
 #include "evar_config.h"
 #include "evars.h"
@@ -108,7 +109,7 @@ typedef vec_t vec4_t[4];
 
 #include "sv_ccmds.hpp"
 
-#include "bg_slidemove.hpp"
+#include "bg_pmove.hpp"
 
 #include "sys_tools.hpp"
 

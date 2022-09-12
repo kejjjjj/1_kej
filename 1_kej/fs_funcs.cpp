@@ -38,7 +38,7 @@ bool fs::F_OpenFile(std::fstream& fp, std::string path, fileopen type)
 		fp.open(path, std::ios_base::out);
 		break;
 	case fileopen::FILE_APP:
-		fp.open(path, std::ios_base::out);
+		fp.open(path, std::ios_base::app);
 		break;
 	case fileopen::FILE_BINARY:
 		fp.open(path, std::ios_base::binary);
@@ -69,6 +69,72 @@ bool fs::F_CloseFile(std::fstream& fp)
 bool fs::F_CreateDirectory(std::string path)
 {
 	return _mkdir((path).c_str()) != -1;
+}
+bool fs::F_CreateFile(std::string path)
+{
+	//std::fstream f;
+
+	//if (!F_OpenFile(f, path, fs::fileopen::FILE_OUT))
+	//	return false;
+	//
+	//F_CloseFile(f);
+
+	std::fstream* nf = new std::fstream(path, std::ios_base::out);
+	*nf << "";
+	if (nf->is_open())
+		nf->close();
+	delete nf;
+
+	return true;
+}
+void fs::F_FilesInThisDirectory(std::string directory, std::vector<std::string>* out)
+{
+	out->clear();
+	out->resize(1);
+	out->erase(out->begin(), out->end());
+	int i{ 0 };
+	if (!_fs::exists(directory)) {
+		return;
+	}
+	for (const auto& entry : _fs::directory_iterator(directory)) {
+		if (entry.is_directory())
+			continue;
+
+		std::string str = entry.path().string();
+
+		out->push_back(str);
+		i += 1;
+	}
+	out->resize(i);
+}
+std::string fs::GetFileExtension(std::string file)
+{
+
+	int extensionPos = file.find_last_of(".");
+
+	if (extensionPos < 0)
+		return "No extension";
+
+	file = file.substr(extensionPos);
+
+
+	return file;
+}
+std::string fs::removeFileExtension(std::string file, size_t chars)
+{
+	return file.substr(0, file.size() - chars);
+}
+std::string fs::F_GetFileName(std::string fullpath)
+{
+	size_t pos = fullpath.find_last_of('\\');
+
+	if (pos < 1)
+		return fullpath;
+
+	fullpath = fullpath.substr(pos + 1);
+
+
+	return fullpath;
 }
 //assuming we are now at the character before the 0x
 uint64_t fs::F_ReadAddress(std::fstream& f) 

@@ -10,6 +10,9 @@ void Com_Printf($B87C0110D100A68234FECCEB9075A41E channel, const char* msg, ...)
 	_vsnprintf_s(v2, 0x1000u, msg, va);
 	v2[4095] = 0;
 
+	if(channel == CON_CHANNEL_CONSOLEONLY)
+		fs::Log_Write(LOG_NONE, v2);
+
 	return ((void(*)($B87C0110D100A68234FECCEB9075A41E channel, char* Format, int buf))0x4FCA50)(channel, v2, 0);
 
 }
@@ -27,6 +30,10 @@ void Com_PrintWarning($B87C0110D100A68234FECCEB9075A41E channel, const char* msg
 	v2 = strlen(v3);
 	_vsnprintf(&v3[v2], 4096 - v2, msg, va);
 	v4 = 0;
+
+	if (channel == CON_CHANNEL_CONSOLEONLY)
+		fs::Log_Write(LOG_WARNING, v3);
+
 
 	return ((void(*)($B87C0110D100A68234FECCEB9075A41E channel, char* Format, int buf))0x4FCA50)(channel, v3, 2);
 
@@ -52,6 +59,10 @@ void Com_PrintError($B87C0110D100A68234FECCEB9075A41E channel, const char* msg, 
 	_vsnprintf(&_buffer[v2], 4096 - v2, msg, va);
 	++*(DWORD*)0x1435D3C;
 	v4 = 0;
+
+	if (channel == CON_CHANNEL_CONSOLEONLY)
+		fs::Log_Write(LOG_ERROR, _buffer);
+
 
 	return ((void(*)($B87C0110D100A68234FECCEB9075A41E channel, char* Format, int buf))0x4FCA50)(channel, _buffer, 2);
 

@@ -91,6 +91,7 @@ void cg::CG_DllEntry()
         std::this_thread::sleep_for(100ms);
     }
    // std::this_thread::sleep_for(1s);
+    fs::Log_Create(fs::GetExePath() + "\\1_kej_log.txt");
 
     CG_Init();
 

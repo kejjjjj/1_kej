@@ -109,6 +109,11 @@ void Jump_Features()
 	//ImGui::Separator();
 
 	if (ImGui::CollapsingHeader("Movement")) {
+
+		if (ImGui::Checkbox("fixed fps", &v::mod_pmove_fixed.evar->enabled)) {
+			v::mod_pmove_fixed.SetValue(v::mod_pmove_fixed.isEnabled());
+		} ImGui::SameLine(); r::MetricsHelpMarker("simulates a stable fps for a more consistent experience\nnote: this feature can make a big difference in your codjumping skill");
+
 		if (ImGui::Checkbox("Bunnyhopping", &v::mod_bhop.evar->enabled)) {
 			v::mod_bhop.SetValue(v::mod_bhop.evar->enabled);
 			cg::Mod_EditMemory(false);

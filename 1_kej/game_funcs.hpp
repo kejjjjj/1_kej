@@ -14,5 +14,7 @@ cg::cmd_function_s* Cmd_FindCommand(const char* name);
 cg::cmd_function_s* Cmd_AddCommand(char* cmdname, void(__cdecl* function)());
 cg::cmd_function_s* Cmd_RemoveCommand(const char* cmdname);
 
+void Cbuf_AddText(const char* text, int localClientNum);
+
 void Cmd_Init();
 #endif

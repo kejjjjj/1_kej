@@ -161,7 +161,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="bg_slidemove.hpp" />
+    <ClInclude Include="bg_pmove.hpp" />
     <ClInclude Include="cg_init.hpp" />
     <ClInclude Include="cg_local.h" />
     <ClInclude Include="cg_offsets.h" />
@@ -175,6 +175,7 @@
     <ClInclude Include="evar_config.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="fs_funcs.h" />
+    <ClInclude Include="fs_log.hpp" />
     <ClInclude Include="game_funcs.hpp" />
     <ClInclude Include="g_trace.h" />
     <ClInclude Include="ImGui\imconfig.h" />
@@ -201,7 +202,7 @@
     <ClInclude Include="sys_tools.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="bg_slidemove.cpp" />
+    <ClCompile Include="bg_pmove.cpp" />
     <ClCompile Include="cg_init.cpp" />
     <ClCompile Include="cl_main.cpp" />
     <ClCompile Include="com_channel.cpp" />
@@ -210,6 +211,7 @@
     <ClCompile Include="evar.cpp" />
     <ClCompile Include="evar_config.cpp" />
     <ClCompile Include="fs_funcs.cpp" />
+    <ClCompile Include="fs_log.cpp" />
     <ClCompile Include="game_funcs.cpp" />
     <ClCompile Include="g_trace.cpp" />
     <ClCompile Include="ImGui\imgui.cpp">

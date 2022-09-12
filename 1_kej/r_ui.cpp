@@ -91,7 +91,6 @@ void r::R_MenuStyle()
 
 void r::R_RemoveInput(bool _true)
 {
-	std::cout << "calling R_RemoveInput(" << _true << ")\n";
 
 	if (!ImGui::GetCurrentContext()) {
 		std::cout << "R_RemoveInput(" << _true << "): called without imgui context!\n";
@@ -119,9 +118,7 @@ void r::R_RemoveInput(bool _true)
 	
 	a->write_addr(MouseInput, "\x01", 1);
 	a->write_addr(KeyInput, "\x51", 1);
-	Com_Printf(CON_CHANNEL_CONSOLEONLY, "saving evars...\n");
 	Evar_SaveToFile(v::cfg::cfgDirectory);
-	Com_Printf(CON_CHANNEL_CONSOLEONLY, "^2done!...\n");
 
 }
 bool r::R_OpenMenu(IDirect3DDevice9* pDevice)

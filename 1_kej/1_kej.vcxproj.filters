@@ -64,6 +64,9 @@
     <Filter Include="Source Files\sv">
       <UniqueIdentifier>{6c1004da-e4d1-4895-b1b3-a8ee80db9225}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\evar\fs">
+      <UniqueIdentifier>{dca192b3-c283-4fa1-9bb1-fa55ffbab10f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -159,16 +162,13 @@
     <ClInclude Include="evar.h">
       <Filter>Source Files\evar</Filter>
     </ClInclude>
-    <ClInclude Include="fs_funcs.h">
-      <Filter>Source Files\evar</Filter>
-    </ClInclude>
     <ClInclude Include="evars.h">
       <Filter>Source Files\evar</Filter>
     </ClInclude>
     <ClInclude Include="mod_jumps.hpp">
       <Filter>Source Files\mod</Filter>
     </ClInclude>
-    <ClInclude Include="bg_slidemove.hpp">
+    <ClInclude Include="bg_pmove.hpp">
       <Filter>Source Files\pmove</Filter>
     </ClInclude>
     <ClInclude Include="g_trace.h">
@@ -179,6 +179,12 @@
     </ClInclude>
     <ClInclude Include="sv_ccmds.hpp">
       <Filter>Source Files\sv</Filter>
+    </ClInclude>
+    <ClInclude Include="fs_log.hpp">
+      <Filter>Source Files\evar\fs</Filter>
+    </ClInclude>
+    <ClInclude Include="fs_funcs.h">
+      <Filter>Source Files\evar\fs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -263,16 +269,13 @@
     <ClCompile Include="evar.cpp">
       <Filter>Source Files\evar</Filter>
     </ClCompile>
-    <ClCompile Include="fs_funcs.cpp">
-      <Filter>Source Files\evar</Filter>
-    </ClCompile>
     <ClCompile Include="r_ui_features.cpp">
       <Filter>Source Files\render\ui</Filter>
     </ClCompile>
     <ClCompile Include="mod_jumps.cpp">
       <Filter>Source Files\mod</Filter>
     </ClCompile>
-    <ClCompile Include="bg_slidemove.cpp">
+    <ClCompile Include="bg_pmove.cpp">
       <Filter>Source Files\pmove</Filter>
     </ClCompile>
     <ClCompile Include="g_trace.cpp">
@@ -283,6 +286,12 @@
     </ClCompile>
     <ClCompile Include="sv_ccmds.cpp">
       <Filter>Source Files\sv</Filter>
+    </ClCompile>
+    <ClCompile Include="fs_log.cpp">
+      <Filter>Source Files\evar\fs</Filter>
+    </ClCompile>
+    <ClCompile Include="fs_funcs.cpp">
+      <Filter>Source Files\evar\fs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

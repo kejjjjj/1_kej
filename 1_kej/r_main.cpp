@@ -2,6 +2,8 @@
 
 HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 {
+	r::device_needs_reset = false;
+
 	if (mglobs.isUsing) {
 		R_ImGui(pDevice);
 		if (R_OpenMenu(pDevice)) {
