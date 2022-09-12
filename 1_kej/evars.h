@@ -18,7 +18,9 @@ namespace v
 		mod_coordinates,
 		mod_hitanalyzer,
 		mod_bhop,
-		mod_bhop_nodelay;
+		mod_bhop_nodelay,
+		mod_bounceable_surf,
+		mod_elevatable_surf;
 
 }
 

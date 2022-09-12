@@ -7,48 +7,57 @@ WinMainCRTStartup_h WinMainCRTStartup_f;
 
 void _init();
 
-__declspec(naked) void dll_init()
+int dll_init()
 {
-
-    __asm
-    {
-        call    _init;
-        mov		eax, 0x67493C;
-        jmp		eax;
-    }
-}
-
-void _init()
-{
+    _init();
 
     hook a;
     a.remove(&(PVOID&)WinMainCRTStartup_f, dll_init);
-    a.write_addr(0x67493C, "E8 48 A8 00 00 E9 16 FE FF FF", 10);
+    //a.write_addr(0x67493C, "\xE8\x48\xA8\x00\x00\xE9\x16\xFE\xFF\xFF", 10);
+    __asm
+    {
+        mov eax, 0x67493C;
+        jmp eax;
+    }
 
+}
+bool hooked = false;
+FILE* _con;
+void _init()
+{
+
+    if (hooked)
+        return;
 
     AllocConsole();
-    FILE* fp;
-    freopen_s(&fp, "CONOUT$", "w", stdout);
+    freopen_s(&_con, "CONOUT$", "w", stdout);
 
     std::thread(cg::CG_DllEntry).detach();
     std::cout << "requesting to inject\n";
 }
 
 
-static bool hooked = false;
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
 
     switch (ul_reason_for_call)
     {
     case DLL_PROCESS_ATTACH:
+
+        DisableThreadLibraryCalls(hModule);
+
         if (!hooked) {
-            hook* a = nullptr;
+            DWORD oldProtect;
+            VirtualProtect(GetModuleHandle(nullptr), 0xD536000, PAGE_EXECUTE_READWRITE, &oldProtect);
+            //hook* a = nullptr;
             WinMainCRTStartup_f = (WinMainCRTStartup_h)(0x67493C);
-            a->install(&(PVOID&)WinMainCRTStartup_f, dll_init);
+
+            //a->install(&(PVOID&)WinMainCRTStartup_f, dll_init);
+
             __asm {
-                mov esi, 0x67493C;
+                mov esi, _init;
                 call esi;
+                //add esp, 0;
             }
             hooked = true;
         }
@@ -56,6 +65,16 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
     case DLL_THREAD_ATTACH:
     case DLL_THREAD_DETACH:
     case DLL_PROCESS_DETACH:
+        
+        //if (lpReserved != nullptr)
+        //{
+        //    break;
+        //}
+        //if (_con) {
+        //    fclose(_con);
+        //    FreeConsole();
+        //}
+        //MessageBoxA(NULL, "DLL_PROCESS_DETACH", "DLL_PROCESS_DETACH", 0);
         break;
     }
     return TRUE;

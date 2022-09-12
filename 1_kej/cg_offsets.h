@@ -16,6 +16,7 @@ namespace cg
 	inline GfxScene* scene = reinterpret_cast<GfxScene*>(0xCF10280);
 	inline clientInfo_t* cinfo = reinterpret_cast<clientInfo_t*>(0x839270);
 	inline viewMatrix_t* viewMatrix = reinterpret_cast<viewMatrix_t*>(0x0079E700);
+	inline r_globals_t* rg = reinterpret_cast<r_globals_t*>(0x0CC9D150);
 
 	inline DirInput* input = reinterpret_cast<DirInput*>(0x8C9CAA);
 	inline CInput* cinput = reinterpret_cast<CInput*>(0xcc4ff8);

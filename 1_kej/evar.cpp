@@ -256,12 +256,14 @@ void Evar_Setup()
 
 	v::cfg::cfgDirectory = fs::GetExePath() + "\\1_kej.cfg";
 	
-	v::mod_velometer.Register	("1_kej_velometer",		evartype_t::EVAR_ARRAY,		(float)1, 4); //enabled, x, y, scale
-	v::mod_rpg_mode.Register	("1_kej_rpg_mode",		evartype_t::EVAR_STRING,	"default");
-	v::mod_coordinates.Register ("1_kej_coordinates",	evartype_t::EVAR_ARRAY,		(float)1, 4); //enabled, x, y, scale
-	v::mod_hitanalyzer.Register ("1_kej_hitanalyzer",	evartype_t::EVAR_BOOL,		(float)0);
-	v::mod_bhop.Register		("1_kej_bhop",			evartype_t::EVAR_BOOL,		(float)0);
-	v::mod_bhop_nodelay.Register("1_kej_bhop_nodelay",  evartype_t::EVAR_BOOL,		(float)0); 
+	v::mod_velometer.Register		("1_kej_velometer",			evartype_t::EVAR_ARRAY,		(float)1, 4); //enabled, x, y, scale
+	v::mod_rpg_mode.Register		("1_kej_rpg_mode",			evartype_t::EVAR_STRING,	"default");
+	v::mod_coordinates.Register		("1_kej_coordinates",		evartype_t::EVAR_ARRAY,		(float)1, 4); //enabled, x, y, scale
+	v::mod_hitanalyzer.Register		("1_kej_hitanalyzer",		evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_bhop.Register			("1_kej_bhop",				evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_bhop_nodelay.Register	("1_kej_bhop_nodelay",		evartype_t::EVAR_BOOL,		(float)0); 
+	v::mod_elevatable_surf.Register	("1_kej_elevatable_surf",	evartype_t::EVAR_BOOL, 		(float)0);
+	v::mod_bounceable_surf.Register	("1_kej_bounceable_surf",	evartype_t::EVAR_BOOL,		(float)0);
 
 }
 int evar_o::GetInt()

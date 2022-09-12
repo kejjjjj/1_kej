@@ -132,7 +132,7 @@ char cg::BG_AdvanceTrace(BulletTraceResults* br, BulletFireParams* bpp, float _f
 	}
 	return success;
 }
-void __fastcall cg::CG_TracePoint(vec3_t maxs, trace_t* trace, vec3_t start, vec3_t mins, vec3_t end, int entityNum, int contentMask, uint8_t unknw0, int8_t traceStaticModels)
+void __cdecl cg::CG_TracePoint(const vec3_t maxs, trace_t* trace, const vec3_t start, const vec3_t mins, const vec3_t end, int entityNum, int contentMask, uint8_t unknw0, int8_t traceStaticModels)
 {
 
 	_asm
@@ -154,7 +154,7 @@ void __fastcall cg::CG_TracePoint(vec3_t maxs, trace_t* trace, vec3_t start, vec
 		push ecx;
 		mov esi, 0x459EF0;
 		call esi;
-		add esp, 0x1C;
+		add esp, 0x1C+4;
 	} //shit asm, but at least it doesn't crash and it doesn't seem to cause any weird issues..
 }
 int cg::PM_playerTrace(pmove_t* pm, trace_t* trace, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int passEntityNum, int contentMask)
