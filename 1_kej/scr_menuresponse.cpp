@@ -31,7 +31,7 @@ void Script_OnMenuResponse(int serverId, int menu, const char* response)
             Script_OnPositionLoaded();
     }
 
-    printf("menu[" "%s" "], response[" "%s" "]\n", menu_name, response);
+    //printf("menu[" "%s" "], response[" "%s" "]\n", menu_name, response);
 }
 void Script_ParseMenuResponse(char* text)
 {
@@ -108,7 +108,14 @@ __declspec(naked) void Script_OpenScriptMenu()
 }
 void Script_OnPositionLoaded()
 {
+    if (v::mod_jumpanalyzer.isEnabled()) {
+        if (cg::jumpanalyzer.hasJumped)
+            Com_Printf(CON_CHANNEL_OBITUARY, "^6jump velocity: ^2%i\n", cg::jumpanalyzer.jumpVelocity);
+        if (cg::jumpanalyzer.hasBounced)
+            Com_Printf(CON_CHANNEL_OBITUARY, "^6bounce velocity: ^2%i\n", cg::jumpanalyzer.bounceVelocity);
 
+        memset(&cg::jumpanalyzer, 0, sizeof(cg::jumpanalyzer_s));
+    }
 }
 void Script_OnPositionSaved()
 {

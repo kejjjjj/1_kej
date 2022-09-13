@@ -104,6 +104,9 @@ void Jump_Features()
 		if (ImGui::Checkbox("hit analyzer", &v::mod_hitanalyzer.evar->enabled)) {
 			v::mod_hitanalyzer.SetValue(v::mod_hitanalyzer.evar->enabled);
 		} ImGui::SameLine(); r::MetricsHelpMarker("print the difference in velocity before and after bounce");
+		if (ImGui::Checkbox("jump analyzer", &v::mod_jumpanalyzer.evar->enabled)) {
+			v::mod_jumpanalyzer.SetValue(v::mod_jumpanalyzer.evar->enabled);
+		} ImGui::SameLine(); r::MetricsHelpMarker("print the jump velocity and velocity on bounce hit");
 	}
 	//ImGui::Text("Movement");
 	//ImGui::Separator();
