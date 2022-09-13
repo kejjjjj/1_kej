@@ -99,6 +99,7 @@ typedef vec_t vec4_t[4];
 #include "scr_functions.hpp"
 #include "scr_main.hpp"
 #include "scr_obj.hpp"
+#include "scr_menuresponse.hpp"
 
 #include "r_init.hpp"
 #include "r_drawtools.hpp"

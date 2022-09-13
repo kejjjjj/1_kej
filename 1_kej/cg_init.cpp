@@ -34,15 +34,13 @@ void cg::CG_Init()
 
 	hook* a = nullptr;
 
-	stub = (void(*)())(0x54DE59);
-
-	a->install(&(PVOID&)stub, Script_ScriptMenuResponse);
-
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, "^21_kej extension has been loaded!\n");
 
 }
 void cg::CG_PrepareHooks()
 {
+	stub						= (void(*)())										(0x54DE59); //scriptmenusresponse
+	stub2						= (void(*)())										(0x46D4CF); //openscriptmenu
 	r::CG_DrawActive_f			= (void(__cdecl*)())								(0x42F7F0); //r_init.cpp
 	r::CL_ShutdownRenderer_f	= (void*(__stdcall*)())								(0x46CA40);
 	r::R_RecoverLostDevice_f	= (char(__stdcall*)())								(0x5F5360);
@@ -86,6 +84,8 @@ void cg::CG_InitHooks()
 	a->install(&(PVOID&)PM_AirMove_f, PM_AirMove);
 	a->install(&(PVOID&)r::CG_DrawActive_f, r::CG_DrawActive); 
 	a->install(&(PVOID&)Pmove_f, Pmove);
+	a->install(&(PVOID&)stub, Script_ScriptMenuResponse);
+	a->install(&(PVOID&)stub2, Script_OpenScriptMenu);
 
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, " done!\n");
 
@@ -110,6 +110,8 @@ void cg::CG_RemoveHooks()
 	a->remove(&(PVOID&)PM_AirMove_f, PM_AirMove);
 	a->remove(&(PVOID&)r::CG_DrawActive_f, r::CG_DrawActive);
 	a->remove(&(PVOID&)Pmove_f, Pmove);
+	a->remove(&(PVOID&)stub, Script_ScriptMenuResponse);
+	a->remove(&(PVOID&)stub2, Script_OpenScriptMenu);
 
 	if (r::pEndScene) {
 		a->remove(&(PVOID&)r::pEndScene, r::draw_func);

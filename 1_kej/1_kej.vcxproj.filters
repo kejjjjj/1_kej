@@ -186,6 +186,9 @@
     <ClInclude Include="fs_funcs.h">
       <Filter>Source Files\evar\fs</Filter>
     </ClInclude>
+    <ClInclude Include="scr_menuresponse.hpp">
+      <Filter>Source Files\scr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -292,6 +295,9 @@
     </ClCompile>
     <ClCompile Include="fs_funcs.cpp">
       <Filter>Source Files\evar\fs</Filter>
+    </ClCompile>
+    <ClCompile Include="scr_menuresponse.cpp">
+      <Filter>Source Files\scr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -197,6 +197,7 @@
     <ClInclude Include="scr_cmd.hpp" />
     <ClInclude Include="scr_functions.hpp" />
     <ClInclude Include="scr_main.hpp" />
+    <ClInclude Include="scr_menuresponse.hpp" />
     <ClInclude Include="scr_obj.hpp" />
     <ClInclude Include="sv_ccmds.hpp" />
     <ClInclude Include="sys_tools.hpp" />
@@ -259,6 +260,7 @@
     <ClCompile Include="scr_cmd.cpp" />
     <ClCompile Include="scr_functions.cpp" />
     <ClCompile Include="scr_main.cpp" />
+    <ClCompile Include="scr_menuresponse.cpp" />
     <ClCompile Include="scr_obj.cpp" />
     <ClCompile Include="sv_ccmds.cpp" />
     <ClCompile Include="sys_tools.cpp" />
