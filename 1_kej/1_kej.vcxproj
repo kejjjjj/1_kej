@@ -162,6 +162,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="bg_pmove.hpp" />
+    <ClInclude Include="cg_angle.hpp" />
     <ClInclude Include="cg_init.hpp" />
     <ClInclude Include="cg_local.h" />
     <ClInclude Include="cg_offsets.h" />
@@ -190,6 +191,7 @@
     <ClInclude Include="mod_jumps.hpp" />
     <ClInclude Include="mod_vis.hpp" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="q_math.hpp" />
     <ClInclude Include="r_drawtools.hpp" />
     <ClInclude Include="r_init.hpp" />
     <ClInclude Include="r_ui.hpp" />
@@ -204,7 +206,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bg_pmove.cpp" />
+    <ClCompile Include="cg_angle.cpp" />
     <ClCompile Include="cg_init.cpp" />
+    <ClCompile Include="cg_main.cpp" />
     <ClCompile Include="cl_main.cpp" />
     <ClCompile Include="com_channel.cpp" />
     <ClCompile Include="dvar.cpp" />
@@ -252,6 +256,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="q_math.cpp" />
     <ClCompile Include="r_drawtools.cpp" />
     <ClCompile Include="r_init.cpp" />
     <ClCompile Include="r_main.cpp" />
@@ -268,6 +273,9 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="detours\detours.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cg_main.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

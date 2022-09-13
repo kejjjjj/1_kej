@@ -73,6 +73,49 @@ void Visual_Features()
 			}
 		}
 	}
+	if (ImGui::CollapsingHeader("Anglehelper")) {
+
+		ImGui::Text("\t"); ImGui::SameLine();
+		ImGui::BeginGroup();
+		if (ImGui::CollapsingHeader("Transfer Zone")) {
+			if (ImGui::Checkbox("horizontal bar", &v::mod_fps_transferz.evar->enabled)) {
+				float val = (float)v::mod_fps_transferz.evar->enabled;
+				v::mod_fps_transferz.SetValue(&val, 1, 0);
+			}
+
+			if(v::mod_fps_transferz.evar->arrayValue[0]){
+				ImGui::SameLine();
+				static bool editing;
+				if (ImGui::Button("modify##03"))
+					editing = !editing;
+
+
+				if (editing) {
+					ImGui::Begin("Modify Transfer Zone UI", &editing);
+
+					const ImGuiViewport* viewport = ImGui::GetMainViewport();
+
+					ImGui::SetWindowSize(ImVec2(viewport->Size.x / 3.f, viewport->Size.y / 3.5f), ImGuiCond_FirstUseEver);
+
+					ImGui::PushItemWidth(100);
+					ImGui::DragFloat("y", &v::mod_fps_transferz.evar->arrayValue[1], 1.f, 0.f, 1080.f, "%.0f");
+
+					ImGui::PushItemWidth(100);
+					ImGui::DragFloat("height", &v::mod_fps_transferz.evar->arrayValue[2], 1.f, 0.f, 1080.f, "%.0f");
+
+					ImGui::PushItemWidth(100);
+					ImGui::DragFloat("fovscale", &v::mod_fps_transferz.evar->arrayValue[3], 0.25f, 0.f, 10.f, "%.2f");
+					ImGui::End();
+				}
+			}
+			static bool dummy;
+			if (ImGui::Checkbox("Change crosshair color", &dummy)) {
+				v::mod_fps_transferz.evar->arrayValue[4] = (float)dummy;
+			} ImGui::SameLine(); r::MetricsHelpMarker("Crosshair color changes green when you need to strafe change and changes to red if you go past a transfer zone");
+		}
+		ImGui::EndGroup();
+
+	}
 	if (ImGui::CollapsingHeader("World")) {
 		//ImGui::Text("Advanced");
 		//ImGui::Separator();

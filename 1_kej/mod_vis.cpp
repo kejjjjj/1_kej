@@ -115,3 +115,80 @@ void cg::Mod_DrawSurfaceInfo()
 
 	}
 }
+//#define BAR_START_Y 490
+//#define BAR_HEIGHT 10
+void cg::Mod_DrawFPSHelpers()
+{
+	constexpr static float length_marker250 = 1.f;
+
+	static bool rightmove{};
+
+	const usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
+
+	if (cmd->rightmove > 0)
+		rightmove = true;
+	else if (cmd->rightmove < 0)
+		rightmove = false;
+
+	FPS_CalculateSingleBeatDirection(rightmove, cmd);
+
+	float yaw = clients->cgameViewangles[YAW] > 0 ? clients->cgameViewangles[YAW] : 180.f - clients->cgameViewangles[YAW] * -1; //mirror the yaw
+	float aa = atan2(-(int)cmd->rightmove, (int)cmd->forwardmove) * 57.2957795f;
+
+	aa > 0 ? aa -= 45 : aa += 45;
+
+	static const float m250 = 86.f;
+	vec2_t marker250 = { m250, 90.f + m250 };
+
+	if (rightmove) {
+		marker250[0] = 189.f - marker250[0];
+		marker250[1] = 189.f - marker250[1];
+	}
+
+	yaw = AngleNormalize180(yaw += aa);
+	if (yaw < 0)
+		yaw = 180.f - fabs(yaw);
+
+	const dvar_s* _fov = Dvar_FindMalleableVar("cg_fov");
+	const dvar_s* fovscale = Dvar_FindMalleableVar("cg_fovscale");
+
+	float fov = _fov->current.value * fovscale->current.value * v::mod_fps_transferz.evar->arrayValue[3];
+
+	const bool isInverted = clients->cgameViewangles[YAW] < fov || clients->cgameViewangles[YAW] > 180.f - fov;
+	
+	//r::R_DrawRect("white", 0, BAR_START_Y, 1920, 10, vec4_t{ 1,1,1,100 });
+
+	const float BAR_START_Y = v::mod_fps_transferz.evar->arrayValue[1];
+	const float BAR_HEIGHT = v::mod_fps_transferz.evar->arrayValue[2];
+
+
+	if (v::mod_fps_transferz.evar->arrayValue[0] != NULL) {
+		if (isInverted) {
+			CG_FillAngleYaw(-180.f + marker250[0], -180.f + (marker250[0] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,255 });
+			CG_FillAngleYaw(-180.f + marker250[1], -180.f + (marker250[1] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,255 });
+		}
+
+		CG_FillAngleYaw(marker250[0], (marker250[0] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,255 });
+		CG_FillAngleYaw(marker250[1], (marker250[1] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,255 });
+
+		r::R_DrawRect("white", 958, BAR_START_Y - 10, 4, BAR_HEIGHT + 20, vec4_t{ 1,1,1,255 });
+	}
+}
+void cg::FPS_CalculateSingleBeatDirection(bool& rightmove, const usercmd_s* cmd)
+{
+	static uint16_t frames = NULL;
+	static vec_t oldYaw = NULL;
+	vec_t newYaw = cgs->refdefViewAngles[YAW];
+
+	frames += 1;
+
+	if (frames >= 4) {
+		frames = 0;
+
+		if (oldYaw < newYaw && cmd->forwardmove != 0 && cmd->rightmove == 0 && rightmove)
+			rightmove = false;
+		else if (oldYaw > newYaw && cmd->forwardmove != 0 && cmd->rightmove == 0 && !rightmove)
+			rightmove = true;
+		oldYaw = newYaw;
+	}
+}

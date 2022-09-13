@@ -1,14 +1,60 @@
 #include "pch.h"
 
-
-Material* r::R_RegisterMaterial(const char* fontname)
+void r::CG_AdjustFrom640(float& x, float& y, float& w, float& h)
 {
-	return ((Material * (*)(const char* fontname, int size))0x5F2A80)(fontname, sizeof(fontname));
+	const float scale = (float)cgs->refdef.width / 640.f;
+
+	x *= scale;
+	y *= scale;
+	w *= scale;
+	h *= scale;
+}
+Material* r::R_RegisterMaterial(const char* mtl)
+{
+	return ((Material * (*)(const char* mtl, int size))0x5F2A80)(mtl, sizeof(mtl));
 
 }
 Font_s* r::R_RegisterFont(const char* fontname)
 {
 	return ((Font_s * (*)(const char* fontname, int size))0x5F1EC0)(fontname, sizeof(fontname));
+}
+void r::R_DrawRect(const char* material, float x, float y, float w, float h, const float* color)
+{
+	//CG_AdjustFrom640(x, y, w, h);
+	Material* mat = R_RegisterMaterial(material);
+	R_AddCmdDrawStretchPic(mat, X(x), Y(y), X(w), Y(h), 0, 0, 0, 0, color);
+
+
+}
+void r::R_AddCmdDrawStretchPic(Material* material, float x, float y, float w, float h, float s0, float t0, float s1, float t1, const float* color)
+{
+	const static uint32_t R_AddCmdDrawStretchPic_func = 0x5F65F0;
+	__asm
+	{
+		pushad;
+		push	color;
+		mov		eax, [material];
+		sub		esp, 20h;
+		fld		t1;
+		fstp[esp + 1Ch];
+		fld		s1;
+		fstp[esp + 18h];
+		fld		t0;
+		fstp[esp + 14h];
+		fld		s0;
+		fstp[esp + 10h];
+		fld		h;
+		fstp[esp + 0Ch];
+		fld		w;
+		fstp[esp + 8h];
+		fld		y;
+		fstp[esp + 4h];
+		fld		x;
+		fstp[esp];
+		call	R_AddCmdDrawStretchPic_func;
+		add		esp, 24h;
+		popad;
+	}
 }
 char* __cdecl r::R_AddCmdDrawText(const char* text, int maxChars, Font_s* font, float x, float y, float xScale, float yScale, float rotation, float* color, int style)
 {

@@ -27,6 +27,12 @@ typedef vec_t vec4_t[4];
 #define	VectorMA(v, s, b, o)	((o)[0]=(v)[0]+(b)[0]*(s),(o)[1]=(v)[1]+(b)[1]*(s),(o)[2]=(v)[2]+(b)[2]*(s))
 #define VectorClear( a )              ( ( a )[0] = ( a )[1] = ( a )[2] = 0 )
 
+#define DEG2RAD(a) (((a) * M_PI) / 180.0F)
+#define RAD2DEG(a) (((a) * 180.0f) / M_PI)
+#define RAD2SHORT(a) ((a) * (32768.f / (float)M_PI))
+#define SHORT2RAD(a) ((a) * ((float)M_PI / 32768.f))
+#define SHORT2DEG(a) (((a) / 32768.f) * 180.0f)
+
 #pragma warning(disable : 26495)
 
 // add headers that you want to pre-compile here
@@ -79,12 +85,18 @@ typedef vec_t vec4_t[4];
 
 #include "entry.hpp"
 
+#include "q_math.hpp"
+
+#include "dvar.hpp"
+
 #include "cg_local.h"
 #include "cg_offsets.h"
 #include "cg_init.hpp"
+#include "cg_angle.hpp"
+#include "cg_main.hpp"
 
 #include "game_funcs.hpp"
-#include "dvar.hpp"
+
 #include "g_trace.h"
 
 #include "fs_funcs.h"

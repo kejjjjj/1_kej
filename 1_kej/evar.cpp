@@ -14,7 +14,7 @@ evar_o* Evar_FindByName(const char* name)
 	}
 	return evar; //returns a nullptr on purpose
 }
-void evar_o::Register(const char* name, evartype_t type, float defaultValue, uint32_t size) //arrays
+void evar_o::Register(const char* name, evartype_t type, float* defaultValue, uint32_t size) //arrays
 {
 
 	evar_s* evar = this->evar;
@@ -25,12 +25,12 @@ void evar_o::Register(const char* name, evartype_t type, float defaultValue, uin
 	evar->arrayValue.reserve(size);
 	evar->name = name;
 	evar->type = type;
-	evar->value = defaultValue;
+	evar->value = defaultValue[0];
 
 	switch (type) {
 	case evartype_t::EVAR_ARRAY:
 		for (uint32_t i = 0; i < size; i++){
-			evar->arrayValue.push_back(defaultValue);
+			evar->arrayValue.push_back(defaultValue[i]);
 		}
 		break;
 	}
@@ -256,9 +256,12 @@ void Evar_Setup()
 
 	v::cfg::cfgDirectory = fs::GetExePath() + "\\1_kej.cfg";
 	
-	v::mod_velometer.Register		("1_kej_velometer",			evartype_t::EVAR_ARRAY,		(float)1, 4); //enabled, x, y, scale
+	float mod_velometer[4] = { 0, 960, 540, 3.f };
+	v::mod_velometer.Register		("1_kej_velometer",			evartype_t::EVAR_ARRAY,		mod_velometer, 4); //enabled, x, y, scale
 	v::mod_rpg_mode.Register		("1_kej_rpg_mode",			evartype_t::EVAR_STRING,	"default");
-	v::mod_coordinates.Register		("1_kej_coordinates",		evartype_t::EVAR_ARRAY,		(float)1, 4); //enabled, x, y, scale
+
+	float mod_coordinates[4] = { 0, 0, 540, 1.3f };
+	v::mod_coordinates.Register		("1_kej_coordinates",		evartype_t::EVAR_ARRAY,		mod_coordinates, 4); //enabled, x, y, scale
 	v::mod_hitanalyzer.Register		("1_kej_hitanalyzer",		evartype_t::EVAR_BOOL,		(float)0);
 	v::mod_jumpanalyzer.Register	("1_kej_jumpanalyzer",		evartype_t::EVAR_BOOL,		(float)0);
 	v::mod_bhop.Register			("1_kej_bhop",				evartype_t::EVAR_BOOL,		(float)0);
@@ -266,6 +269,10 @@ void Evar_Setup()
 	v::mod_elevatable_surf.Register	("1_kej_elevatable_surf",	evartype_t::EVAR_BOOL, 		(float)0);
 	v::mod_bounceable_surf.Register	("1_kej_bounceable_surf",	evartype_t::EVAR_BOOL,		(float)0);
 	v::mod_pmove_fixed.Register		("1_kej_pmove_fixed",		evartype_t::EVAR_BOOL,		(float)0);
+
+
+	float mod_fps_transferz[5] = { 0, 540, 10, 1.f, 0.f };
+	v::mod_fps_transferz.Register	("1_kej_fps_transferz",		evartype_t::EVAR_ARRAY, mod_fps_transferz, 5); //enabled, y, height, fovscale, change crosshair color
 
 }
 int evar_o::GetInt()

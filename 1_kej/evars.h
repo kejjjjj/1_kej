@@ -22,7 +22,8 @@ namespace v
 		mod_bhop_nodelay,
 		mod_bounceable_surf,
 		mod_elevatable_surf,
-		mod_pmove_fixed;
+		mod_pmove_fixed,
+		mod_fps_transferz;
 
 
 }

@@ -67,6 +67,9 @@
     <Filter Include="Source Files\evar\fs">
       <UniqueIdentifier>{dca192b3-c283-4fa1-9bb1-fa55ffbab10f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\shared">
+      <UniqueIdentifier>{decff074-e5e9-49eb-bbb3-dc09cfe30492}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -189,6 +192,12 @@
     <ClInclude Include="scr_menuresponse.hpp">
       <Filter>Source Files\scr</Filter>
     </ClInclude>
+    <ClInclude Include="q_math.hpp">
+      <Filter>Source Files\shared</Filter>
+    </ClInclude>
+    <ClInclude Include="cg_angle.hpp">
+      <Filter>Source Files\cg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -299,10 +308,24 @@
     <ClCompile Include="scr_menuresponse.cpp">
       <Filter>Source Files\scr</Filter>
     </ClCompile>
+    <ClCompile Include="q_math.cpp">
+      <Filter>Source Files\shared</Filter>
+    </ClCompile>
+    <ClCompile Include="cg_angle.cpp">
+      <Filter>Source Files\cg</Filter>
+    </ClCompile>
+    <ClCompile Include="cg_main.cpp">
+      <Filter>Source Files\cg</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="detours\detours.lib">
       <Filter>Header Files\lib\detours</Filter>
     </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cg_main.hpp">
+      <Filter>Source Files\cg</Filter>
+    </None>
   </ItemGroup>
 </Project>

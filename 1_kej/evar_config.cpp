@@ -93,6 +93,9 @@ bool Evar_LoadVector(std::fstream& f, evar_s* evar, vec4_t vec)
 			else
 				var = fs::F_ReadUntil(f, '\n');
 			CheckValid(var, evar->arrayValue[i]);
+
+			if (evar->arrayValue[0] != NULL)
+				evar->enabled = true;
 		}
 	}
 	return true;

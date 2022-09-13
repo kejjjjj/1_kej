@@ -7,6 +7,7 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 	if (mglobs.isUsing) {
 		R_ImGui(pDevice);
 		if (R_OpenMenu(pDevice)) {
+
 			R_EndRender();
 		}
 	}
@@ -18,6 +19,8 @@ void __cdecl r::CG_DrawActive()
 		Mod_DrawVelocity();
 		Mod_DrawCoordinates();
 		Mod_DrawSurfaceInfo();
+		Mod_DrawFPSHelpers();
+
 	}
 
 	return CG_DrawActive_f();

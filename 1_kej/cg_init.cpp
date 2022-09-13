@@ -47,6 +47,7 @@ void cg::CG_PrepareHooks()
 	r::oWndProc					= (LRESULT(__stdcall*)(HWND, UINT, WPARAM, LPARAM))	(r::WndProcAddr);
 	PM_AirMove_f				= (void(__cdecl*)(pmove_t*, pml_t*))				(0x40F680);
 	Pmove_f						= (void(*)(pmove_t * pmove))						(0x414D10);
+	CG_CalcCrosshairColor_f		= (char(__cdecl*)(float , dvar_s * ))				(0x430960);
 }
 void cg::CG_InitForeverHooks()
 {
@@ -86,6 +87,8 @@ void cg::CG_InitHooks()
 	a->install(&(PVOID&)Pmove_f, Pmove);
 	a->install(&(PVOID&)stub, Script_ScriptMenuResponse);
 	a->install(&(PVOID&)stub2, Script_OpenScriptMenu);
+	//a->install(&(PVOID&)CG_CalcCrosshairColor_f, CG_CalcCrosshairColor);
+
 
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, " done!\n");
 
@@ -112,6 +115,8 @@ void cg::CG_RemoveHooks()
 	a->remove(&(PVOID&)Pmove_f, Pmove);
 	a->remove(&(PVOID&)stub, Script_ScriptMenuResponse);
 	a->remove(&(PVOID&)stub2, Script_OpenScriptMenu);
+	a->remove(&(PVOID&)CG_CalcCrosshairColor_f, CG_CalcCrosshairColor);
+
 
 	if (r::pEndScene) {
 		a->remove(&(PVOID&)r::pEndScene, r::draw_func);

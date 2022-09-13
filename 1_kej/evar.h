@@ -46,7 +46,7 @@ struct evar_o
 	void Register(const char* name, evartype_t type, float defaultValue);
 	void Register(const char* name, evartype_t type, float* defaultValue);
 	void Register(const char* name, evartype_t type, const char* defaultValue);
-	void Register(const char* name, evartype_t type, float defaultValue, uint32_t size); //arrays
+	void Register(const char* name, evartype_t type, float* defaultValue, uint32_t size); //arrays
 
 
 	int GetInt();
