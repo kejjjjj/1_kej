@@ -25,8 +25,8 @@ void cg::Mod_EditMemory(bool forceDisable)
 
 void cg::SV_Map()
 {
-	dvar_s* fs_game = Dvar_FindMalleableVar("fs_game");
-	dvar_s* g_gametype = Dvar_FindMalleableVar("g_gametype");
+	const dvar_s* fs_game = Dvar_FindMalleableVar("fs_game");
+	const dvar_s* g_gametype = Dvar_FindMalleableVar("g_gametype");
 	if (fs_game && g_gametype) {
 		if (!strcmp(fs_game->current.string, "mods/1_kej_v2") && (!strcmp(g_gametype->current.string, "cj") || !strcmp(g_gametype->latched.string, "cj"))) {
 			Com_Printf(CON_CHANNEL_CONSOLEONLY, "Loading 1_kej features..\n");
