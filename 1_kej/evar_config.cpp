@@ -169,7 +169,7 @@ bool Evar_LoadFromFile(std::string directory)
 				else if (value != "N/A" && evar->type == EVAR_STRING) {
 
 					try {
-						_evar->SetValue(std::stof(evar->stringValue.c_str()));
+						_evar->SetValue(evar->stringValue.c_str());
 					}
 					catch (std::exception& ex) {
 						Com_PrintError(CON_CHANNEL_CONSOLEONLY, "Evar_LoadFromFile(): failed with [%s], defaulting to 0...\n", ex.what());

@@ -11,6 +11,7 @@ void cg::PM_AirMove(pmove_t* pm, pml_t* pml)
 }
 void cg::Pmove(pmove_t* pm)
 {
+
 	dvar_s* com_maxfps = Dvar_FindMalleableVar("com_maxfps");
 
 	if (!com_maxfps) {

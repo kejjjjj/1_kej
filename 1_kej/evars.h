@@ -24,7 +24,9 @@ namespace v
 		mod_elevatable_surf,
 		mod_pmove_fixed,
 		mod_fps_transferz,
-		mod_crosshair;
+		mod_crosshair,
+		mod_veldirection,
+		mod_show_worldaxes;
 
 
 }

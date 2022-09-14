@@ -56,3 +56,36 @@ void cg::CG_FillAngleYaw(float start, float end, float yaw, float y, float h, fl
 
 	}
 }
+void cg::setYaw(float ref, float ang)
+{
+	ref = fmodf(ref, 360);
+
+	ref -= ref * 2 - ang;
+
+	clients->viewangles[1] += ref;
+
+}
+void cg::setPitch(float ref, float ang)
+{
+	ref = fmodf(ref, 360);
+
+	ref -= ref * 2 - ang;
+
+	clients->viewangles[0] += ref;
+
+}
+void cg::setRoll(float ref, float ang)
+{
+	ref = fmodf(ref, 360);
+
+	ref -= ref * 2 - ang;
+
+	clients->viewangles[2] += ref;
+
+}
+void cg::CG_SetPlayerAngles(vec3_t source, vec3_t target)
+{
+	setPitch(source[0], target[0]);
+	setYaw(source[1], target[1]);
+	setRoll(source[2], target[2]);
+}

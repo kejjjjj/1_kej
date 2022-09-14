@@ -257,10 +257,14 @@ void Evar_Setup()
 	v::cfg::cfgDirectory = fs::GetExePath() + "\\1_kej.cfg";
 	
 	float mod_velometer[4] = { 0, 960, 540, 3.f };
+	float mod_coordinates[4] = { 0, 0, 540, 1.3f };
+	float mod_fps_transferz[5] = { 0, 540, 10, 1.f, 0.f };
+	float mod_crosshair[] = { 0 };
+
+
 	v::mod_velometer.Register		("1_kej_velometer",			evartype_t::EVAR_ARRAY,		mod_velometer, 4); //enabled, x, y, scale
 	v::mod_rpg_mode.Register		("1_kej_rpg_mode",			evartype_t::EVAR_STRING,	"default");
 
-	float mod_coordinates[4] = { 0, 0, 540, 1.3f };
 	v::mod_coordinates.Register		("1_kej_coordinates",		evartype_t::EVAR_ARRAY,		mod_coordinates, 4); //enabled, x, y, scale
 	v::mod_hitanalyzer.Register		("1_kej_hitanalyzer",		evartype_t::EVAR_BOOL,		(float)0);
 	v::mod_jumpanalyzer.Register	("1_kej_jumpanalyzer",		evartype_t::EVAR_BOOL,		(float)0);
@@ -269,14 +273,10 @@ void Evar_Setup()
 	v::mod_elevatable_surf.Register	("1_kej_elevatable_surf",	evartype_t::EVAR_BOOL, 		(float)0);
 	v::mod_bounceable_surf.Register	("1_kej_bounceable_surf",	evartype_t::EVAR_BOOL,		(float)0);
 	v::mod_pmove_fixed.Register		("1_kej_pmove_fixed",		evartype_t::EVAR_BOOL,		(float)0);
-
-
-	float mod_fps_transferz[5] = { 0, 540, 10, 1.f, 0.f };
 	v::mod_fps_transferz.Register	("1_kej_fps_transferz",		evartype_t::EVAR_ARRAY,		mod_fps_transferz, 5); //enabled, y, height, fovscale, change crosshair color
-
-	float mod_crosshair[] = {0};
-
 	v::mod_crosshair.Register		("1_kej_crosshair",			evartype_t::EVAR_VEC4,		vec4_t{1,1,1,0.5f}); //r,g,b,min alpha
+	v::mod_veldirection.Register	("1_kej_veldirection",		evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_show_worldaxes.Register	("1_kej_show_worldaxes",	evartype_t::EVAR_BOOL,		(float)0);
 
 }
 int evar_o::GetInt()

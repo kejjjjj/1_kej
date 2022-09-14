@@ -222,3 +222,71 @@ void cg::FPS_CalculateSingleBeatDirection(bool& rightmove, const usercmd_s* cmd)
 		oldYaw = newYaw;
 	}
 }
+void cg::Mod_DrawVelocityDirection()
+{
+	if (!v::mod_veldirection.isEnabled() || NOT_SERVER)
+		return;
+
+	float velAngle = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180 / PI;
+	vec3_t angles = { 0, velAngle, 0 }, end;
+	AnglesToForward(angles, clients->cgameOrigin, 100, end);
+	vec2_t self_xy, end_xy;
+	if (r::WorldToScreen(clients->cgameOrigin, self_xy) && r::WorldToScreen(end, end_xy)) {
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), IM_COL32(255, 255, 0, 255), 1.5f);
+	}
+}
+#define DIRECTION_LENGTH 2000
+void cg::Mod_DrawWorldAxes()
+{
+	if (!v::mod_show_worldaxes.isEnabled() || NOT_SERVER)
+		return;
+
+	vec3_t forwardStart, start;
+	VectorCopy(clients->cgameOrigin, forwardStart);
+	VectorCopy(clients->cgameOrigin, start);
+
+	forwardStart[0] -= DIRECTION_LENGTH;
+
+	const float pitch = clients->cgameViewangles[PITCH];
+
+	start[2] -= 1000;
+	forwardStart[2] -= 1000;
+
+
+	if (pitch < 0) {
+		start[0] -= fabs(pitch) * 50;
+	}
+
+	vec2_t self_xy, end_xy;
+	if (r::WorldToScreen(forwardStart, self_xy) && r::WorldToScreen(start, end_xy)) {
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), IM_COL32(255, 0, 0, 255), 2.f);
+	}
+	start[0] = clients->cgameOrigin[0];
+	if (pitch < 0) {
+		start[0] += fabs(pitch) * 50;
+	}
+	forwardStart[0] += DIRECTION_LENGTH * 2;
+	if (r::WorldToScreen(forwardStart, self_xy) && r::WorldToScreen(start, end_xy)) {
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), IM_COL32(255, 0, 0, 255), 2.f);
+	}
+	VectorCopy(clients->cgameOrigin, forwardStart);
+	forwardStart[2] -= 1000;
+	//Y
+
+	forwardStart[1] -= DIRECTION_LENGTH;
+	if (pitch < 0) {
+		start[1] -= fabs(pitch) * 50;
+	}
+
+	if (r::WorldToScreen(forwardStart, self_xy) && r::WorldToScreen(start, end_xy)) {
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), IM_COL32(255, 0, 0, 255), 2.f);
+	}
+	start[1] = clients->cgameOrigin[1];
+	if (pitch < 0) {
+		start[1] += fabs(pitch) * 50;
+	}
+	forwardStart[1] += DIRECTION_LENGTH * 2;
+	if (r::WorldToScreen(forwardStart, self_xy) && r::WorldToScreen(start, end_xy)) {
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), IM_COL32(255, 0, 0, 255), 2.f);
+	}
+}

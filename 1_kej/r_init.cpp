@@ -82,15 +82,18 @@ char r::R_RecoverLostDevice()
 	if (!r::device_needs_reset) {
 		Com_Printf(CON_CHANNEL_CONSOLEONLY, "R_RecoverLostDevice(): restoring input\n");
 		r::device_needs_reset = true;
-		r::R_RemoveInput(false);
-	}
-	if (ImGui::GetCurrentContext()) {
-		ImGui_ImplDX9_InvalidateDeviceObjects();
 		r::should_draw_menu = false;
-		//std::cout << "calling R_RemoveInput() from R_RecoverLostDevice()\n";
-		//R_RemoveInput(r::should_draw_menu);
-
+		r::R_RemoveInput(false);
+		ImGui_ImplDX9_InvalidateDeviceObjects();
+		std::cout << "R_RecoverLostDevice(): restoring input\n";
 	}
+	//if (ImGui::GetCurrentContext()) {
+	//	ImGui_ImplDX9_InvalidateDeviceObjects();
+	//	r::should_draw_menu = false;
+	//	//std::cout << "calling R_RemoveInput() from R_RecoverLostDevice()\n";
+	//	//R_RemoveInput(r::should_draw_menu);
+
+	//}
 
 	return R_RecoverLostDevice_f();
 }

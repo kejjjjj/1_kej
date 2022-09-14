@@ -114,7 +114,20 @@ void Visual_Features()
 			} ImGui::SameLine(); r::MetricsHelpMarker("Crosshair color changes to green when you should strafe change and changes to red if you go past a transfer zone");
 		}
 		ImGui::EndGroup();
+		ImGui::Text("\t"); ImGui::SameLine();
+		ImGui::BeginGroup();
+		if (ImGui::CollapsingHeader("Miscellaneous")) {
+			if (ImGui::Checkbox("Velocity direction", &v::mod_veldirection.evar->enabled)) {
+				v::mod_veldirection.SetValue(v::mod_veldirection.isEnabled());
 
+			} ImGui::SameLine(); r::MetricsHelpMarker("Draw a line underneath the player indicating the velocity direction");
+
+			if (ImGui::Checkbox("Show world axes", &v::mod_show_worldaxes.evar->enabled)) {
+				v::mod_show_worldaxes.SetValue(v::mod_show_worldaxes.isEnabled());
+
+			} ImGui::SameLine(); r::MetricsHelpMarker("Draw the XY world axes underneath the player to give an understanding of current angles (useful with angled jumps)");
+		}	
+		ImGui::EndGroup();
 	}
 	if (ImGui::CollapsingHeader("Crosshair")) {
 		//ImGui::Text("crosshair color"); ImGui::SameLine();

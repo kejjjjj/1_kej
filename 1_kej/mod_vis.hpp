@@ -15,6 +15,8 @@ namespace cg
 	void Mod_DrawVelocity();
 	void Mod_DrawCoordinates();
 	void Mod_DrawSurfaceInfo();
+	void Mod_DrawVelocityDirection();
+	void Mod_DrawWorldAxes();
 	void FPS_CalculateSingleBeatDirection(bool& rightmove, const usercmd_s* cmd);
 
 	void Mod_DrawFPSHelpers();
