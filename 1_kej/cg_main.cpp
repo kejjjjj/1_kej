@@ -3,10 +3,23 @@
 void SetCrosshairColor(vec4_t col)
 {
 	static dvar_s* cg_crosshairAlphaMin = Dvar_FindMalleableVar("cg_crosshairAlphaMin");
-	col[0] = v::mod_crosshair.GetVector(0);
-	col[1] = v::mod_crosshair.GetVector(1);
-	col[2] = v::mod_crosshair.GetVector(2);
+	
+
+	if (mod_fps.DistanceToTransferZone > 2 && mod_fps.DistanceToTransferZone < 85 || !v::mod_fps_transferz.evar->arrayValue[4]) {
+		col[0] = v::mod_crosshair.GetVector(0);
+		col[1] = v::mod_crosshair.GetVector(1);
+		col[2] = v::mod_crosshair.GetVector(2);
+	}else if (mod_fps.DistanceToTransferZone <= 2) {
+		col[0] = 0;
+		col[1] = 1;
+		col[2] = 0;
+	}else {
+		col[0] = 1;
+		col[1] = 0;
+		col[2] = 0;
+	}
 	col[3] = 1.f;
+
 	cg_crosshairAlphaMin->current.value = v::mod_crosshair.GetVector(3);
 }
 

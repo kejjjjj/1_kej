@@ -143,6 +143,7 @@ void cg::Mod_DrawFPSHelpers()
 	if (rightmove) {
 		marker250[0] = 189.f - marker250[0];
 		marker250[1] = 189.f - marker250[1];
+		yaw += 10;
 	}
 
 	yaw = AngleNormalize180(yaw += aa);
@@ -152,7 +153,7 @@ void cg::Mod_DrawFPSHelpers()
 	const dvar_s* _fov = Dvar_FindMalleableVar("cg_fov");
 	const dvar_s* fovscale = Dvar_FindMalleableVar("cg_fovscale");
 
-	float fov = _fov->current.value * fovscale->current.value * v::mod_fps_transferz.evar->arrayValue[3];
+	const float fov = _fov->current.value * fovscale->current.value * v::mod_fps_transferz.evar->arrayValue[3];
 
 	const bool isInverted = clients->cgameViewangles[YAW] < fov || clients->cgameViewangles[YAW] > 180.f - fov;
 	
@@ -162,16 +163,45 @@ void cg::Mod_DrawFPSHelpers()
 	const float BAR_HEIGHT = v::mod_fps_transferz.evar->arrayValue[2];
 
 
-	if (v::mod_fps_transferz.evar->arrayValue[0] != NULL) {
+
+	if (v::mod_fps_transferz.evar->arrayValue[0] != NULL || v::mod_fps_transferz.evar->arrayValue[4] != NULL) {
+
+		float &DistanceFromZone = mod_fps.DistanceToTransferZone;
+
+
 		if (isInverted) {
-			CG_FillAngleYaw(-180.f + marker250[0], -180.f + (marker250[0] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,255 });
-			CG_FillAngleYaw(-180.f + marker250[1], -180.f + (marker250[1] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,255 });
+
+
+			DistanceFromZone = (rightmove == false) ? yaw - (-180.f + marker250[0]) : yaw - (-180.f + (marker250[0] + length_marker250));
+
+			if (v::mod_fps_transferz.evar->arrayValue[0] != NULL) {
+				CG_FillAngleYaw(-180.f + marker250[0], -180.f + (marker250[0] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,255 });
+				CG_FillAngleYaw(-180.f + marker250[1], -180.f + (marker250[1] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,255 });
+			}
+		} else {
+
+			DistanceFromZone = (rightmove == false) ? yaw - marker250[0] : yaw - (marker250[0] + length_marker250);
+
+		}
+		if (DistanceFromZone < 0.f)
+			DistanceFromZone = 90.f + DistanceFromZone;
+
+		if (v::mod_fps_transferz.evar->arrayValue[0] != NULL) {
+			CG_FillAngleYaw(marker250[0], (marker250[0] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,255 });
+			CG_FillAngleYaw(marker250[1], (marker250[1] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,255 });
 		}
 
-		CG_FillAngleYaw(marker250[0], (marker250[0] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,255 });
-		CG_FillAngleYaw(marker250[1], (marker250[1] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,255 });
+		DistanceFromZone = fmodf(DistanceFromZone, 90);
 
-		r::R_DrawRect("white", 958, BAR_START_Y - 10, 4, BAR_HEIGHT + 20, vec4_t{ 1,1,1,255 });
+		if (!rightmove)
+			DistanceFromZone = 90.f - DistanceFromZone;
+
+		//char buffer[20];
+		//sprintf_s(buffer, "%.2f", DistanceFromZone);
+
+		//r::R_DrawText(buffer, 945, 400, 2, 2, 0, vec4_t{ 0,255,255,255 }, 1);
+		if (v::mod_fps_transferz.evar->arrayValue[0] != NULL)
+			r::R_DrawRect("white", 958, BAR_START_Y - 10, 4, BAR_HEIGHT + 20, vec4_t{ 1,1,1,255 });
 	}
 }
 void cg::FPS_CalculateSingleBeatDirection(bool& rightmove, const usercmd_s* cmd)

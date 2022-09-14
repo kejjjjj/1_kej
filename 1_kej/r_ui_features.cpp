@@ -108,10 +108,10 @@ void Visual_Features()
 					ImGui::End();
 				}
 			}
-			static bool dummy;
+			static bool dummy = v::mod_fps_transferz.evar->arrayValue[4] != NULL;
 			if (ImGui::Checkbox("Change crosshair color", &dummy)) {
 				v::mod_fps_transferz.evar->arrayValue[4] = (float)dummy;
-			} ImGui::SameLine(); r::MetricsHelpMarker("Crosshair color changes green when you need to strafe change and changes to red if you go past a transfer zone");
+			} ImGui::SameLine(); r::MetricsHelpMarker("Crosshair color changes to green when you should strafe change and changes to red if you go past a transfer zone");
 		}
 		ImGui::EndGroup();
 
