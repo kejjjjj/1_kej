@@ -272,7 +272,11 @@ void Evar_Setup()
 
 
 	float mod_fps_transferz[5] = { 0, 540, 10, 1.f, 0.f };
-	v::mod_fps_transferz.Register	("1_kej_fps_transferz",		evartype_t::EVAR_ARRAY, mod_fps_transferz, 5); //enabled, y, height, fovscale, change crosshair color
+	v::mod_fps_transferz.Register	("1_kej_fps_transferz",		evartype_t::EVAR_ARRAY,		mod_fps_transferz, 5); //enabled, y, height, fovscale, change crosshair color
+
+	float mod_crosshair[] = {0};
+
+	v::mod_crosshair.Register		("1_kej_crosshair",			evartype_t::EVAR_VEC4,		vec4_t{1,1,1,0.5f}); //r,g,b,min alpha
 
 }
 int evar_o::GetInt()

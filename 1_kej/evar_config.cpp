@@ -62,7 +62,13 @@ bool Evar_LoadVector(std::fstream& f, evar_s* evar, vec4_t vec)
 			vec = 0.f;
 			return;
 		}
-		vec = std::stof(var.c_str());
+		try {
+			vec = std::stof(var.c_str());
+		}
+		catch (std::exception& ex) {
+			Com_PrintError(CON_CHANNEL_CONSOLEONLY, "Evar_LoadConfig(): stof failed with [%s], defaulting to 0...\n", ex.what());
+			vec = 0;
+		}
 	}; 
 
 	if (evar->type < evartype_t::EVAR_ARRAY) { //could also work for arrays, but I prefer to have it separate

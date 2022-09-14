@@ -116,6 +116,12 @@ void Visual_Features()
 		ImGui::EndGroup();
 
 	}
+	if (ImGui::CollapsingHeader("Crosshair")) {
+		//ImGui::Text("crosshair color"); ImGui::SameLine();
+		ImGui::ColorEdit3("crosshair color", v::mod_crosshair.evar->vecValue, ImGuiColorEditFlags_NoInputs);
+		ImGui::PushItemWidth(70);
+		ImGui::SliderFloat("Min Alpha", &v::mod_crosshair.evar->vecValue[3], 0, 1, "%.2f"); ImGui::SameLine();  r::MetricsHelpMarker("Minimum amount of transparency the crosshair can have");
+	}
 	if (ImGui::CollapsingHeader("World")) {
 		//ImGui::Text("Advanced");
 		//ImGui::Separator();
