@@ -33,6 +33,12 @@ typedef vec_t vec4_t[4];
 #define SHORT2RAD(a) ((a) * ((float)M_PI / 32768.f))
 #define SHORT2DEG(a) (((a) / 32768.f) * 180.0f)
 
+#define WE GetAsyncKeyState('W') < 0 && GetAsyncKeyState('E') < 0
+#define WQ GetAsyncKeyState('W') < 0 && GetAsyncKeyState('Q') < 0
+
+#define SE GetAsyncKeyState('S') < 0 && GetAsyncKeyState('E') < 0
+#define SQ GetAsyncKeyState('S') < 0 && GetAsyncKeyState('Q') < 0
+
 #pragma warning(disable : 26495)
 
 // add headers that you want to pre-compile here
