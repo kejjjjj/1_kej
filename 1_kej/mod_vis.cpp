@@ -290,3 +290,51 @@ void cg::Mod_DrawWorldAxes()
 		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), IM_COL32(255, 0, 0, 255), 2.f);
 	}
 }
+void cg::Mod_GetAccelerationAngles(const bool rightmove, vec2_t out)
+{
+	static float delta;
+	const float yaw = clients->cgameViewangles[YAW];
+
+
+	if(rightmove)
+		out[0] = getOptAngle(delta);
+	else out[1] = getOptAngle(delta);
+
+	const float maxAngle = 45.f - (delta / 2);
+
+	if(rightmove)
+		out[1] = out[0] - maxAngle;
+	else 
+		out[0] = out[1] + maxAngle;
+}
+void cg::Mod_AngleHelper()
+{
+	if (NOT_SERVER)
+		return;
+
+	const usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
+
+	const float yaw = clients->cgameViewangles[YAW];
+	const dvar_s* cg_fov = Dvar_FindMalleableVar("cg_fov");
+	const dvar_s* cg_fovscale = Dvar_FindMalleableVar("cg_fovscale");
+	vec2_t accel_angles;
+
+	static bool rightmove;
+
+	if (cmd->rightmove > 0)
+		rightmove = true;
+	else if (cmd->rightmove < 0)
+		rightmove = false;
+
+	FPS_CalculateSingleBeatDirection(rightmove, cmd);
+
+	if (!cg_fov || !cg_fovscale)
+		return;
+
+	Mod_GetAccelerationAngles(rightmove, accel_angles);
+
+	const float fov = (cg_fov->current.value * cg_fovscale->current.value);
+
+	CG_FillAngleYaw(accel_angles[0], accel_angles[1], yaw, 300, 20, fov, vec4_t{255,0,0,0.7});
+	r::R_DrawRect("white", 957, 290, 6, 40, vec4_t{ 255,255,255,255 });
+}

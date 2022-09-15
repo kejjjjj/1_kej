@@ -23,6 +23,7 @@ void __cdecl r::CG_DrawActive()
 		Mod_DrawCoordinates();
 		Mod_DrawSurfaceInfo();
 		Mod_DrawFPSHelpers();
+		Mod_AngleHelper();
 	}
 
 	return CG_DrawActive_f();

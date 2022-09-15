@@ -89,3 +89,47 @@ void cg::CG_SetPlayerAngles(vec3_t source, vec3_t target)
 	setYaw(source[1], target[1]);
 	setRoll(source[2], target[2]);
 }
+float cg::getOptAngle(float& perAngle)
+{
+
+	//usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
+
+	char* forwardmove = &input->move;
+	char* sidemove = &input->strafe;
+
+
+	float _speed = glm::length(glm::vec2(clients->cgameVelocity[0], clients->cgameVelocity[1]));
+
+	if (_speed < 1)
+		return -400.0;
+
+	float yaw = *(float*)0x0079E770;
+	const float pspeed = (float)cgs->nextSnap->ps.speed;
+
+	const float accel = 190.f / *(float*)0x0CAEE228;
+
+	float g_speed = (float)cgs->nextSnap->ps.speed;
+	if (_speed < 190)
+		g_speed = 190 - (190 - _speed);
+	else if (GROUND)
+		g_speed = 270.f;
+
+	const float velocityAngle = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 57.2957795f;
+	const float accelerationAng = atan2(-(int)*sidemove, (int)*forwardmove) * 57.2957795f;
+	perAngle = acos((g_speed - accel) / _speed) * 57.2957795f;
+
+	if ((int)*sidemove > 0 || WE || SE) {
+		const float delta = AngleDelta(yaw + accelerationAng, velocityAngle - perAngle) / 2;
+		yaw -= delta;
+	}
+	else if ((int)*sidemove < 0 || WQ || SQ) {
+		const float delta = AngleDelta(yaw + accelerationAng, velocityAngle + perAngle) / 2;
+		yaw -= delta;
+	}
+
+	return yaw;
+}
+float cg::DistanceToOpt(float delta, const float& yaw)
+{
+	return fabs(yaw - delta);
+}
