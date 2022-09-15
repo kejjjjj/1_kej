@@ -24,6 +24,7 @@ namespace cg
 	void CG_SetPlayerAngles(vec3_t source, vec3_t target);
 
 	float getOptAngle(float& delta);
+	float R_getOptAngle(const bool rightmove, float& delta);
 	float DistanceToOpt(float delta, const float& yaw);
 }
 

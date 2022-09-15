@@ -56,7 +56,13 @@ bool fs::Log_WriteWithModule(log_level type, const char* moduleName, const char*
     if (type == LOG_FATAL) {
         char buffer[1024];
         sprintf_s(buffer, "A fatal error has occurred!\nSee the log file in %s\\log.txt for more information.", fs::GetExePath().c_str());
-        exit(-1);
+
+        MessageBoxA(NULL, buffer, "FATAL ERROR", MB_ICONERROR);
+        Sleep(1000);
+        Cbuf_AddText("quit", 0);
+
+        abort();
         
     }
+    return true;
 }

@@ -33,6 +33,7 @@ typedef vec_t vec4_t[4];
 #define SHORT2RAD(a) ((a) * ((float)M_PI / 32768.f))
 #define SHORT2DEG(a) (((a) / 32768.f) * 180.0f)
 
+//hopefully the user has qwerty layout..
 #define WE GetAsyncKeyState('W') < 0 && GetAsyncKeyState('E') < 0
 #define WQ GetAsyncKeyState('W') < 0 && GetAsyncKeyState('Q') < 0
 

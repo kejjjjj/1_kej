@@ -23,7 +23,36 @@ void __cdecl r::CG_DrawActive()
 		Mod_DrawCoordinates();
 		Mod_DrawSurfaceInfo();
 		Mod_DrawFPSHelpers();
-		Mod_AngleHelper();
+		Mod_DrawAngleHelper();
+
+		//float optYaw, test;
+
+		////static DWORD old_ms = Sys_Milliseconds();
+		////DWORD ms = Sys_Milliseconds();
+
+		//if (std::isnan(clients->viewangles[YAW]))
+		//	clients->viewangles[YAW] = 0;
+		//else if (clients->viewangles[YAW] > 3000 || clients->viewangles[YAW] < -3000)
+		//	clients->viewangles[YAW] = fmodf(clients->viewangles[YAW], 360);
+
+		//optYaw = getOptAngle(test);
+		//if (optYaw == -400.f || std::isnan(optYaw))
+		//	return CG_DrawActive_f();
+
+		//uint32_t forwardmove = (uint32_t)input->move;
+		//uint32_t sidemove = (uint32_t)input->strafe;
+
+		//if (GROUND && forwardmove <= 0 || GROUND && sidemove == 0)
+		//	return CG_DrawActive_f();
+
+
+		//if (sidemove != 0 || forwardmove != 0) {
+		//	//UserCMD_SetAngles(angles);
+		//	//if (ms - old_ms > 1000 || GROUND) {
+		//	//	old_ms = ms;
+		//	setYaw(cgs->refdefViewAngles[YAW], optYaw);
+		//	//}
+		//}
 	}
 
 	return CG_DrawActive_f();

@@ -208,6 +208,7 @@ void cg::FPS_CalculateSingleBeatDirection(bool& rightmove, const usercmd_s* cmd)
 {
 	static uint16_t frames = NULL;
 	static vec_t oldYaw = NULL;
+	static bool _rightmove;
 	vec_t newYaw = cgs->refdefViewAngles[YAW];
 
 	frames += 1;
@@ -216,11 +217,13 @@ void cg::FPS_CalculateSingleBeatDirection(bool& rightmove, const usercmd_s* cmd)
 		frames = 0;
 
 		if (oldYaw < newYaw && cmd->forwardmove != 0 && cmd->rightmove == 0 && rightmove)
-			rightmove = false;
+			_rightmove = false;
 		else if (oldYaw > newYaw && cmd->forwardmove != 0 && cmd->rightmove == 0 && !rightmove)
-			rightmove = true;
+			_rightmove = true;
 		oldYaw = newYaw;
 	}
+	if(cmd->rightmove == 0)
+		rightmove = _rightmove;
 }
 void cg::Mod_DrawVelocityDirection()
 {
@@ -290,24 +293,36 @@ void cg::Mod_DrawWorldAxes()
 		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), IM_COL32(255, 0, 0, 255), 2.f);
 	}
 }
-void cg::Mod_GetAccelerationAngles(const bool rightmove, vec2_t out)
+void cg::Mod_GetAccelerationAngles(const usercmd_s* cmd, const bool rightmove, vec2_t out)
 {
 	static float delta;
 	const float yaw = clients->cgameViewangles[YAW];
 
+	const float opt = R_getOptAngle(rightmove, delta);
 
 	if(rightmove)
-		out[0] = getOptAngle(delta);
-	else out[1] = getOptAngle(delta);
+		out[0] = opt;
+	else out[1] = opt;
 
-	const float maxAngle = 45.f - (delta / 2);
+	//delta = (delta > 0) ? delta : -delta;
 
-	if(rightmove)
+	const float maxAngle = 45.f - (delta);
+
+
+
+	if (rightmove) {
 		out[1] = out[0] - maxAngle;
-	else 
+	}
+	else {
 		out[0] = out[1] + maxAngle;
+
+	}
+	//char buffer[40];
+	//sprintf_s(buffer, "delta: %.6f", maxAngle);
+
+	//r::R_DrawText(buffer, 0, 500, 1.5f, 1.5f, 0, vec4_t{ 0,255,0,255 }, 0);
 }
-void cg::Mod_AngleHelper()
+void cg::Mod_DrawAngleHelper()
 {
 	if (NOT_SERVER)
 		return;
@@ -331,10 +346,10 @@ void cg::Mod_AngleHelper()
 	if (!cg_fov || !cg_fovscale)
 		return;
 
-	Mod_GetAccelerationAngles(rightmove, accel_angles);
+	Mod_GetAccelerationAngles(cmd, rightmove, accel_angles);
 
-	const float fov = (cg_fov->current.value * cg_fovscale->current.value);
+	const float fov = (cg_fov->current.value * cg_fovscale->current.value) * v::mod_anglehelper.evar->arrayValue[3];
 
-	CG_FillAngleYaw(accel_angles[0], accel_angles[1], yaw, 300, 20, fov, vec4_t{255,0,0,0.7});
-	r::R_DrawRect("white", 957, 290, 6, 40, vec4_t{ 255,255,255,255 });
+	CG_FillAngleYaw(accel_angles[0], accel_angles[1], yaw, v::mod_anglehelper.evar->arrayValue[1], v::mod_anglehelper.evar->arrayValue[2], fov, vec4_t{255,0,0,0.7});
+	r::R_DrawRect("white", 958, v::mod_anglehelper.evar->arrayValue[1] - 10, 4, v::mod_anglehelper.evar->arrayValue[2] + 20, vec4_t{ 255,255,255,255 });
 }

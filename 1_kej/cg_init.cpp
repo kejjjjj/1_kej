@@ -6,20 +6,27 @@ void cg::cod4x()
 	if (!(DWORD)GetModuleHandleA("cod4x_021.dll")) {
 		Com_Printf(CON_CHANNEL_CONSOLEONLY, "cod4x not 21.1 detected\n");
 		r::WndProcAddr = 0x57BB20;
+		r::CG_DrawActive_fnc = 0x42F7F0;
 		return;
 	}
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, "cod4x 21.1 detected\n");
 
 	hook* a = nullptr;
 
-	a->write_addr(0x452C8E, "\xE8\x5D\xCB\xFD\xFF", 5); //redirect cod4x CG_DrawActive call back to iw3mp
-	a->write_addr(0x56BFF0, "\x51\x53\x8B\x5C\x24", 5); //redirect cod4x Dvar_Reregister hook back to iw3mp
-	a->write_addr(0x56B1B0, "\x55\x8B\xEC\x83\xE4", 5); //redirect cod4x Dvar_SetVariant hook back to iw3mp
+	//a->write_addr(0x452C8E, "\xE8\x5D\xCB\xFD\xFF", 5); //redirect cod4x CG_DrawActive call back to iw3mp
+	//a->write_addr(0x56BFF0, "\x51\x53\x8B\x5C\x24", 5); //redirect cod4x Dvar_Reregister hook back to iw3mp
+	//a->write_addr(0x56B1B0, "\x55\x8B\xEC\x83\xE4", 5); //redirect cod4x Dvar_SetVariant hook back to iw3mp
 
 	r::WndProcAddr = (DWORD)a->find_pattern("cod4x_021.dll", "55 89 E5 53 81 EC 84 00 00 00 C7 04 24 02");
 	BG_WeaponNames = reinterpret_cast<WeaponDef**>(cod4x_entry + 0x443DDE0); 
 	cmd_functions = reinterpret_cast<cmd_function_s*>(cod4x_entry + 0x227A28);
 	Cmd_AddCommand_fnc = (void*)(cod4x_entry + 0x2116C);
+	r::CG_DrawActive_fnc = (DWORD)a->find_pattern("cod4x_021.dll", "55 89 E5 83 EC 18 B8 38 E3 74 00 D9 80 9C F3 04 00 D9 5D F4");
+
+	if (!r::WndProcAddr || !r::CG_DrawActive_fnc) {
+		fs::Log_Write(LOG_FATAL, "Failed to find necessary cod4x 21.1 addresses! Notify the developer about this!\n");
+		return;
+	}
 
 }
 void cg::CG_Init()
@@ -41,13 +48,13 @@ void cg::CG_PrepareHooks()
 {
 	stub						= (void(*)())										(0x54DE59); //scriptmenusresponse
 	stub2						= (void(*)())										(0x46D4CF); //openscriptmenu
-	r::CG_DrawActive_f			= (void(__cdecl*)())								(0x42F7F0); //r_init.cpp
+	r::CG_DrawActive_f			= (void(__cdecl*)())								(r::CG_DrawActive_fnc); //r_init.cpp
 	r::CL_ShutdownRenderer_f	= (void*(__stdcall*)())								(0x46CA40);
 	r::R_RecoverLostDevice_f	= (char(__stdcall*)())								(0x5F5360);
 	r::oWndProc					= (LRESULT(__stdcall*)(HWND, UINT, WPARAM, LPARAM))	(r::WndProcAddr);
 	PM_AirMove_f				= (void(__cdecl*)(pmove_t*, pml_t*))				(0x40F680);
 	Pmove_f						= (void(*)(pmove_t * pmove))						(0x414D10);
-	CG_CalcCrosshairColor_f		= (char(*)())				(0x430A33);
+	CG_CalcCrosshairColor_f		= (char(*)())										(0x430A33);
 }
 void cg::CG_InitForeverHooks()
 {

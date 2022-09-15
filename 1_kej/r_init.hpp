@@ -17,7 +17,7 @@ namespace r
 
 	HRESULT __stdcall draw_func(IDirect3DDevice9* pDevice);
 
-	inline void(__cdecl* CG_DrawActive_f)();
+	inline void(__cdecl* CG_DrawActive_f)(); 	inline DWORD CG_DrawActive_fnc;
 
 	void __cdecl CG_DrawActive();
 

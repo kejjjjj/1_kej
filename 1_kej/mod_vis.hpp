@@ -25,8 +25,8 @@ namespace cg
 
 	};
 	inline anglehelper_s anglehelper;
-	void Mod_GetAccelerationAngles(const bool rightmove, vec2_t accel_angles);
-	void Mod_AngleHelper();
+	void Mod_GetAccelerationAngles(const usercmd_s* cmd, const bool rightmove, vec2_t accel_angles);
+	void Mod_DrawAngleHelper();
 
 	inline fps_s mod_fps;
 }

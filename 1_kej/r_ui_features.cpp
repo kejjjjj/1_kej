@@ -77,6 +77,43 @@ void Visual_Features()
 
 		ImGui::Text("\t"); ImGui::SameLine();
 		ImGui::BeginGroup();
+
+		if (ImGui::CollapsingHeader("Main")) {
+			if (ImGui::Checkbox("enable HUD", &v::mod_anglehelper.evar->enabled)) {
+				float val = (float)v::mod_anglehelper.evar->enabled;
+				v::mod_anglehelper.SetValue(&val, 1, 0);
+			}
+			if (v::mod_anglehelper.evar->arrayValue[0]) {
+				ImGui::SameLine();
+				static bool editing;
+				if (ImGui::Button("modify##04"))
+					editing = !editing;
+
+
+				if (editing) {
+					ImGui::Begin("Modify AH HUD", &editing);
+
+					const ImGuiViewport* viewport = ImGui::GetMainViewport();
+
+					ImGui::SetWindowSize(ImVec2(viewport->Size.x / 3.f, viewport->Size.y / 3.5f), ImGuiCond_FirstUseEver);
+
+					ImGui::PushItemWidth(100);
+					ImGui::DragFloat("y", &v::mod_anglehelper.evar->arrayValue[1], 1.f, 0.f, 1080.f, "%.0f");
+
+					ImGui::PushItemWidth(100);
+					ImGui::DragFloat("height", &v::mod_anglehelper.evar->arrayValue[2], 1.f, 0.f, 1080.f, "%.0f");
+
+					ImGui::PushItemWidth(100);
+					ImGui::DragFloat("fovscale", &v::mod_anglehelper.evar->arrayValue[3], 0.25f, 0.f, 10.f, "%.2f");
+					ImGui::End();
+				}
+			}
+		}
+
+		ImGui::EndGroup();
+
+		ImGui::Text("\t"); ImGui::SameLine();
+		ImGui::BeginGroup();
 		if (ImGui::CollapsingHeader("Transfer Zone")) {
 			if (ImGui::Checkbox("horizontal bar", &v::mod_fps_transferz.evar->enabled)) {
 				float val = (float)v::mod_fps_transferz.evar->enabled;

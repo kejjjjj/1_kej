@@ -23,6 +23,7 @@ namespace v
 		mod_bounceable_surf,
 		mod_elevatable_surf,
 		mod_pmove_fixed,
+		mod_anglehelper,
 		mod_fps_transferz,
 		mod_crosshair,
 		mod_veldirection,

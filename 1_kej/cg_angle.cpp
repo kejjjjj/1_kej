@@ -89,7 +89,7 @@ void cg::CG_SetPlayerAngles(vec3_t source, vec3_t target)
 	setYaw(source[1], target[1]);
 	setRoll(source[2], target[2]);
 }
-float cg::getOptAngle(float& perAngle)
+float cg::R_getOptAngle(const bool rightmove, float& diff)
 {
 
 	//usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
@@ -103,29 +103,86 @@ float cg::getOptAngle(float& perAngle)
 	if (_speed < 1)
 		return -400.0;
 
-	float yaw = *(float*)0x0079E770;
-	const float pspeed = (float)cgs->nextSnap->ps.speed;
-
-	const float accel = 190.f / *(float*)0x0CAEE228;
-
+	float yaw = clients->cgameViewangles[YAW];
 	float g_speed = (float)cgs->nextSnap->ps.speed;
+	const float FPS = *(float*)0x0CAEE228;
+
+	const float accel = FPS / g_speed;
+
 	if (_speed < 190)
 		g_speed = 190 - (190 - _speed);
 	else if (GROUND)
 		g_speed = 270.f;
 
-	const float velocityAngle = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 57.2957795f;
-	const float accelerationAng = atan2(-(int)*sidemove, (int)*forwardmove) * 57.2957795f;
-	perAngle = acos((g_speed - accel) / _speed) * 57.2957795f;
+	const float velocitydirection = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180.f / PI;
+	const float accelerationAng = atan2(-(int)*sidemove, (int)*forwardmove) * 180.f / PI;
+	diff = acos((g_speed - accel) / _speed) * 180.f / PI;
+	const float minAngle = acos(g_speed / _speed) * 180.f / PI;
 
-	if ((int)*sidemove > 0) {
-		const float delta = AngleDelta(yaw + accelerationAng, velocityAngle - perAngle) / 2;
-		yaw -= delta;
+	if (mod_fps.DistanceToTransferZone > 45.f)
+		diff = minAngle + accel;
+
+	float delta = yaw;
+
+
+	if (rightmove) {
+		delta = (velocitydirection - diff - accelerationAng);
+		//_opt = delta - yaw;
 	}
-	else if ((int)*sidemove < 0) {
-		const float delta = AngleDelta(yaw + accelerationAng, velocityAngle + perAngle) / 2;
-		yaw -= delta;
+	else{
+		delta = (velocitydirection + diff - accelerationAng);
+		//_opt = delta - yaw;
 	}
+	diff /= 2;
+	yaw = delta;
+
+	return yaw;
+}
+float cg::getOptAngle(float& _opt)
+{
+
+	//usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
+
+	char* forwardmove = &input->move;
+	char* sidemove = &input->strafe;
+
+
+	float _speed = glm::length(glm::vec2(clients->cgameVelocity[0], clients->cgameVelocity[1]));
+
+	if (_speed < 1)
+		return -400.0;
+
+	float yaw = clients->cgameViewangles[YAW];
+	float g_speed = (float)cgs->nextSnap->ps.speed;
+	const float FPS = *(float*)0x0CAEE228;
+
+	const float accel = FPS / g_speed;
+
+	if (_speed < 190)
+		g_speed = 190 - (190 - _speed);
+	else if (GROUND)
+		g_speed = 270.f;
+
+	const float velocitydirection = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180.f / PI;
+	const float accelerationAng = atan2(-(int)*sidemove, (int)*forwardmove) * 180.f / PI;
+	float diff = acos((g_speed - accel) / _speed) * 180.f / PI;
+	const float minAngle = acos(g_speed / _speed) * 180.f / PI;
+
+	if (mod_fps.DistanceToTransferZone > 45.f)
+		diff = minAngle + accel;
+
+	float delta = yaw;
+
+
+	if ((int)*sidemove > 0 || WE || SE) {
+		delta = (velocitydirection - diff - accelerationAng);
+		_opt = delta - yaw;
+	}
+	else if ((int)*sidemove < 0 || WQ || SQ) {
+		delta = (velocitydirection + diff - accelerationAng);
+		_opt = delta - yaw;
+	}
+	yaw = delta;
 
 	return yaw;
 }
