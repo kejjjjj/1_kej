@@ -102,14 +102,18 @@ void cg::CG_DllEntry()
         if (!monitoring)
             break;
 
-        dvar_s* fs_game = Dvar_FindMalleableVar("fs_game");
-
+        const dvar_s* fs_game = Dvar_FindMalleableVar("fs_game");
+        dvar_s* g_gametype = Dvar_FindMalleableVar("g_gametype");
         if (fs_game) {
             mglobs.isUsing = (!strcmp(fs_game->current.string, "mods/1_kej_v2"));
-
+            if (mglobs.isUsing && ((strcmp(g_gametype->current.string, "cj")) || strcmp(g_gametype->latched.string, "cj")) && clientUI[0].connectionState == CA_DISCONNECTED) {
+                g_gametype->current.string = "cj";
+                g_gametype->latched.string = "cj";
+                Com_PrintWarning(CON_CHANNEL_CONSOLEONLY, "1_kej_v2 is loaded, but the gametype is wrong.. changing gametype to cj\n");
+            }
         }
 
-        Sleep(1000);
+        Sleep(500);
     }
 
 }

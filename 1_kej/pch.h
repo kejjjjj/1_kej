@@ -11,7 +11,7 @@
 #define GROUND *(int*)0x0797520 == 1022
 #define NOT_GROUND *(int*)0x0797520 == 1023
 #define NOT_SERVER *(int*)0x0797520 == 0
-#define VID_ACTIVE *(BYTE*)0x0CC1B704 > 0
+#define VID_ACTIVE (*(BYTE*)0x0CC1B704 != 0)
 
 typedef float vec_t;
 typedef vec_t vec2_t[2];

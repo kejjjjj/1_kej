@@ -47,7 +47,7 @@ bool r::R_ImGui(IDirect3DDevice9* pDevice)
 LRESULT CALLBACK r::WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 
-	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam) || r::should_draw_menu)
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
 		return 1l;
 
 	switch (uMsg) {
