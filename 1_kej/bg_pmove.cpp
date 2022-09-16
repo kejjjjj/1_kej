@@ -9,6 +9,25 @@ void cg::PM_AirMove(pmove_t* pm, pml_t* pml)
 	Mod_JumpAnalyzer(pm, pml);
 
 }
+void cg::PM_Weapon(pml_t* pmll, pmove_t* pmm)
+{
+	static pml_t* pml;
+	static pmove_t* pm;
+	__asm	mov pml, eax;
+	__asm	mov pm, ebp;
+
+	PM_Weapon_f(pml, pm);
+
+	if (pm && pml) {
+
+		Mod_RPGAnalyzer(pm, pml);
+	}
+
+	//if (GetAsyncKeyState(VK_INSERT) & 1)
+	//	std::cout << "hello world!\n";
+
+	return;
+}
 void cg::Pmove(pmove_t* pm)
 {
 

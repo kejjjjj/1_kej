@@ -55,9 +55,6 @@
     <Filter Include="Source Files\evar">
       <UniqueIdentifier>{f95c71fc-cb7a-421a-9ba1-e1b2ce0f54e6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\pmove">
-      <UniqueIdentifier>{15ba53db-9e1d-4345-8108-5e1803a04f76}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\cl">
       <UniqueIdentifier>{21c0fafd-c9d3-42dc-919c-d4f2ff9b14cd}</UniqueIdentifier>
     </Filter>
@@ -69,6 +66,9 @@
     </Filter>
     <Filter Include="Source Files\shared">
       <UniqueIdentifier>{decff074-e5e9-49eb-bbb3-dc09cfe30492}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\bg">
+      <UniqueIdentifier>{15ba53db-9e1d-4345-8108-5e1803a04f76}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -172,7 +172,7 @@
       <Filter>Source Files\mod</Filter>
     </ClInclude>
     <ClInclude Include="bg_pmove.hpp">
-      <Filter>Source Files\pmove</Filter>
+      <Filter>Source Files\bg</Filter>
     </ClInclude>
     <ClInclude Include="g_trace.h">
       <Filter>Source Files\game</Filter>
@@ -197,6 +197,9 @@
     </ClInclude>
     <ClInclude Include="cg_angle.hpp">
       <Filter>Source Files\cg</Filter>
+    </ClInclude>
+    <ClInclude Include="bg_weapon.hpp">
+      <Filter>Source Files\bg</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -288,7 +291,7 @@
       <Filter>Source Files\mod</Filter>
     </ClCompile>
     <ClCompile Include="bg_pmove.cpp">
-      <Filter>Source Files\pmove</Filter>
+      <Filter>Source Files\bg</Filter>
     </ClCompile>
     <ClCompile Include="g_trace.cpp">
       <Filter>Source Files\game</Filter>
@@ -316,6 +319,9 @@
     </ClCompile>
     <ClCompile Include="cg_main.cpp">
       <Filter>Source Files\cg</Filter>
+    </ClCompile>
+    <ClCompile Include="bg_weapon.cpp">
+      <Filter>Source Files\bg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

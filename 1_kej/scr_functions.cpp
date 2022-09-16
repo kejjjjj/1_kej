@@ -141,7 +141,7 @@ void GScr_WeaponExists()
 		Scr_AddInt(0);
 		return;
 	}
-	int wpIdx = ((int(__cdecl*)(const char*))0x416610)(weap);
+	int wpIdx = BG_FindWeaponIndexForName(weap);
 
 	Scr_AddInt(wpIdx > 0);
 	

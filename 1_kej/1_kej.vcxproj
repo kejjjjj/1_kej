@@ -162,6 +162,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="bg_pmove.hpp" />
+    <ClInclude Include="bg_weapon.hpp" />
     <ClInclude Include="cg_angle.hpp" />
     <ClInclude Include="cg_init.hpp" />
     <ClInclude Include="cg_local.h" />
@@ -206,6 +207,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bg_pmove.cpp" />
+    <ClCompile Include="bg_weapon.cpp" />
     <ClCompile Include="cg_angle.cpp" />
     <ClCompile Include="cg_init.cpp" />
     <ClCompile Include="cg_main.cpp" />

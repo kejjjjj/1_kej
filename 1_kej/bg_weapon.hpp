@@ -7,8 +7,13 @@
 
 namespace cg
 {
-	inline void*(__fastcall*BG_GetSpreadForWeapon_f)(float* a3, gclient_s* gameclient, WeaponDef* weapDef, float* spread);
-	void* __fastcall BG_GetSpreadForWeapon(float* a3, gclient_s* gameclient, WeaponDef* weapDef, float* spread);
+
+
+
+	int BG_FindWeaponIndexForName(const char* name);
+
+	inline void (*PM_Weapon_WeaponTimeAdjust_f)();
+	void PM_Weapon_WeaponTimeAdjust();
 }
 
 #endif

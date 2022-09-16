@@ -27,7 +27,9 @@ namespace v
 		mod_fps_transferz,
 		mod_crosshair,
 		mod_veldirection,
-		mod_show_worldaxes;
+		mod_show_worldaxes,
+		mod_rpg_timing,
+		mod_rpg_angle;
 
 
 }

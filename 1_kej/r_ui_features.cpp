@@ -192,6 +192,14 @@ void RPG_Features()
 
 	if(ImGui::Combo("Mode", &rpg_mode, items, 3))
 		v::mod_rpg_mode.SetValue(items[rpg_mode]);
+
+	if (ImGui::Checkbox("RPG timing", &v::mod_rpg_timing.evar->enabled)) {
+		v::mod_rpg_timing.SetValue(v::mod_rpg_timing.isEnabled());
+	} ImGui::SameLine(); r::MetricsHelpMarker("prints the rpg timing (calculated in command time)");
+
+	if (ImGui::Checkbox("RPG angle", &v::mod_rpg_angle.evar->enabled)) {
+		v::mod_rpg_angle.SetValue(v::mod_rpg_angle.isEnabled());
+	} ImGui::SameLine(); r::MetricsHelpMarker("prints the player's pitch angle when they shoot the rpg (and they also bounce)");
 }
 void Jump_Features()
 {

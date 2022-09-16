@@ -278,6 +278,8 @@ void Evar_Setup()
 	v::mod_crosshair.Register		("1_kej_crosshair",			evartype_t::EVAR_VEC4,		vec4_t{1,1,1,0.5f}); //r,g,b,min alpha
 	v::mod_veldirection.Register	("1_kej_veldirection",		evartype_t::EVAR_BOOL,		(float)0);
 	v::mod_show_worldaxes.Register	("1_kej_show_worldaxes",	evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_rpg_timing.Register		("1_kej_rpg_timing",		evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_rpg_angle.Register		("1_kej_rpg_angle",			evartype_t::EVAR_BOOL,		(float)0);
 
 }
 int evar_o::GetInt()

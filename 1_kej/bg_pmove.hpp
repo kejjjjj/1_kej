@@ -12,10 +12,14 @@ namespace cg
 
 
 	inline void(__cdecl* PM_AirMove_f)(pmove_t* pm, pml_t* pml);
+	inline void(__cdecl* PM_Weapon_f)(pml_t* pml, pmove_t* pm);
+
 	inline void(*Pmove_f)(pmove_t* pmove);
 
 
 	void PM_AirMove(pmove_t* pm, pml_t* pml);
+	void PM_Weapon(pml_t* pml, pmove_t* pm);
+
 	void Pmove(pmove_t* pmove);
 
 }

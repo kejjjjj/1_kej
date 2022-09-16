@@ -114,8 +114,9 @@ void Script_OnPositionLoaded()
         if (cg::jumpanalyzer.hasBounced)
             Com_Printf(CON_CHANNEL_OBITUARY, "^6bounce velocity: ^2%i\n", cg::jumpanalyzer.bounceVelocity);
 
-        memset(&cg::jumpanalyzer, 0, sizeof(cg::jumpanalyzer_s));
     }
+    memset(&cg::jumpanalyzer, 0, sizeof(cg::jumpanalyzer_s));
+
 }
 void Script_OnPositionSaved()
 {

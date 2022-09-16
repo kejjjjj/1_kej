@@ -111,7 +111,24 @@ void cg::Mod_DrawSurfaceInfo()
 
 	}
 	else if ((normalX == 1.f || normalY == 1.f) && v::mod_elevatable_surf.isEnabled()) {
-		r::R_DrawText("elevator", 960, 700, 1.6f, 1.6f, 0.f, vec4_t{0,1,0,1}, 0); //can never be true when bounce is true, so draw on top of it
+		char buffer[48];
+		vec3_t endpos{}, out{};
+
+		endpos[0] = rg->viewOrg[0] + trace.fraction * (angles[0] - rg->viewOrg[0]);
+		endpos[1] = rg->viewOrg[1] + trace.fraction * (angles[1] - rg->viewOrg[1]);
+		endpos[2] = rg->viewOrg[2] + trace.fraction * (angles[2] - rg->viewOrg[2]);
+
+		VectorClear(angles);		 
+		angles[YAW] = normalX == 1.f ? (trace.normal[0] > 0  ? -180 : 0) : (trace.normal[1] > 0 ? -90 : 90);
+		AnglesToForward(angles, out);
+		VectorScale(out, 0.125, out);
+		VectorAdd(out, endpos, out);
+		VectorAddAll(out, angles[YAW] < 0 ? 14 : -14, out);
+
+
+		sprintf_s(buffer, "elevator (%c: %.6f)", normalX == 1.f ? 'X' : 'Y', normalX == 1.f ? out[0] : out[1]);
+
+		r::R_DrawText(buffer, 960, 700, 1.6f, 1.6f, 0.f, vec4_t{0,1,0,1}, 0); //can never be true when bounce is true, so draw on top of it
 
 	}
 }

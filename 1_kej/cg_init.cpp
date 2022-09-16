@@ -46,15 +46,17 @@ void cg::CG_Init()
 }
 void cg::CG_PrepareHooks()
 {
-	stub						= (void(*)())										(0x54DE59); //scriptmenusresponse
-	stub2						= (void(*)())										(0x46D4CF); //openscriptmenu
-	r::CG_DrawActive_f			= (void(__cdecl*)())								(r::CG_DrawActive_fnc); //r_init.cpp
-	r::CL_ShutdownRenderer_f	= (void*(__stdcall*)())								(0x46CA40);
-	r::R_RecoverLostDevice_f	= (char(__stdcall*)())								(0x5F5360);
-	r::oWndProc					= (LRESULT(__stdcall*)(HWND, UINT, WPARAM, LPARAM))	(r::WndProcAddr);
-	PM_AirMove_f				= (void(__cdecl*)(pmove_t*, pml_t*))				(0x40F680);
-	Pmove_f						= (void(*)(pmove_t * pmove))						(0x414D10);
-	CG_CalcCrosshairColor_f		= (char(*)())										(0x430A33);
+	stub							= (void(*)())										(0x54DE59); //scriptmenusresponse
+	stub2							= (void(*)())										(0x46D4CF); //openscriptmenu
+	r::CG_DrawActive_f				= (void(__cdecl*)())								(r::CG_DrawActive_fnc); //r_init.cpp
+	r::CL_ShutdownRenderer_f		= (void*(__stdcall*)())								(0x46CA40);
+	r::R_RecoverLostDevice_f		= (char(__stdcall*)())								(0x5F5360);
+	r::oWndProc						= (LRESULT(__stdcall*)(HWND, UINT, WPARAM, LPARAM))	(r::WndProcAddr);
+	PM_AirMove_f					= (void(__cdecl*)(pmove_t*, pml_t*))				(0x40F680);
+	PM_Weapon_f						= (void(__cdecl*)(pml_t*, pmove_t*))				(0x41A470);
+	Pmove_f							= (void(*)(pmove_t * pmove))						(0x414D10);
+	CG_CalcCrosshairColor_f			= (char(*)())										(0x430A33);
+	PM_Weapon_WeaponTimeAdjust_f	= (void(*)())										(0x41A4D8);
 }
 void cg::CG_InitForeverHooks()
 {
@@ -90,11 +92,13 @@ void cg::CG_InitHooks()
 	a->install(&(PVOID&)r::R_RecoverLostDevice_f, r::R_RecoverLostDevice);
 	a->install(&(PVOID&)r::oWndProc, r::WndProc);
 	a->install(&(PVOID&)PM_AirMove_f, PM_AirMove);
+	a->install(&(PVOID&)PM_Weapon_f, PM_Weapon);
 	a->install(&(PVOID&)r::CG_DrawActive_f, r::CG_DrawActive); 
 	a->install(&(PVOID&)Pmove_f, Pmove);
 	a->install(&(PVOID&)stub, Script_ScriptMenuResponse);
 	a->install(&(PVOID&)stub2, Script_OpenScriptMenu);
 	a->install(&(PVOID&)CG_CalcCrosshairColor_f, CG_CalcCrosshairColor);
+	a->install(&(PVOID&)PM_Weapon_WeaponTimeAdjust_f, PM_Weapon_WeaponTimeAdjust);
 
 
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, " done!\n");
@@ -118,11 +122,13 @@ void cg::CG_RemoveHooks()
 	a->remove(&(PVOID&)r::R_RecoverLostDevice_f, r::R_RecoverLostDevice);
 	a->remove(&(PVOID&)r::oWndProc, r::WndProc);
 	a->remove(&(PVOID&)PM_AirMove_f, PM_AirMove);
+	a->remove(&(PVOID&)PM_Weapon_f, PM_Weapon);
 	a->remove(&(PVOID&)r::CG_DrawActive_f, r::CG_DrawActive);
 	a->remove(&(PVOID&)Pmove_f, Pmove);
 	a->remove(&(PVOID&)stub, Script_ScriptMenuResponse);
 	a->remove(&(PVOID&)stub2, Script_OpenScriptMenu);
 	a->remove(&(PVOID&)CG_CalcCrosshairColor_f, CG_CalcCrosshairColor);
+	a->remove(&(PVOID&)PM_Weapon_WeaponTimeAdjust_f, PM_Weapon_WeaponTimeAdjust);
 
 
 	if (r::pEndScene) {
