@@ -66,14 +66,10 @@ void cg::Mod_RPGAnalyzer(pmove_t* pm, pml_t* pml)
 	if (!timing_enabled && !v::mod_rpg_angle.isEnabled())
 		return;
 
-	static bool wait_until_fired = false, wait_ground;
+	static bool wait_until_fired = false, wait_ground, wait_until_rpg_done;
 	static DWORD shot_started(0);
 	static bool check_fire_state_next_frame(0);
-
-	if (GetAsyncKeyState(VK_INSERT) & 1) {
-		std::cout << "current weap: " << pm->ps->weapon << '\n';
-		std::cout << "rpg_sustain_mp: " << BG_FindWeaponIndexForName("rpg_sustain_mp") << '\n';
-	}
+	static float pitch_before_shot(0);
 
 	if (GROUND) {
 		wait_ground = false;
@@ -88,13 +84,13 @@ void cg::Mod_RPGAnalyzer(pmove_t* pm, pml_t* pml)
 			rpg = BG_FindWeaponIndexForName("rpg_sustain_mp");
 
 		if (pm->ps->weapon == rpg) {
+			wait_until_rpg_done = true;
 			wait_until_fired = true;
 
 			shot_started = pm->ps->commandTime;
 			wait_ground = true;
 		}
 	} else if (wait_until_fired && jumpanalyzer.weapon_cant_fire) {
-
 		if (check_fire_state_next_frame) {
 			if (jumpanalyzer.hasBounced) {
 				const bool timing_enabled = v::mod_rpg_timing.isEnabled();
@@ -104,7 +100,7 @@ void cg::Mod_RPGAnalyzer(pmove_t* pm, pml_t* pml)
 
 				if(v::mod_rpg_angle.isEnabled())
 					Com_Printf(CON_CHANNEL_OBITUARY, "^3pitch: %.3f\n", pm->ps->viewangles[PITCH]);
-
+		
 
 			}
 			else {
@@ -113,9 +109,18 @@ void cg::Mod_RPGAnalyzer(pmove_t* pm, pml_t* pml)
 				wait_until_fired = false;
 			}
 			wait_until_fired = false;
+			//setPitch(pm->ps->viewangles[PITCH], pitch_before_shot);
+
 		}
 		check_fire_state_next_frame = !check_fire_state_next_frame;
 
 	}
+	//else if ((wait_until_fired || wait_until_rpg_done) && cg->ads_animation_state > 0.7) {
+	//	setPitch(pm->ps->viewangles[PITCH], 85);
+	//}
+	//else {
+	//	pitch_before_shot = pm->ps->viewangles[PITCH];
+	//	wait_until_rpg_done = false;
+	//}
 
 }

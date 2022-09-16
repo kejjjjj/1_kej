@@ -163,6 +163,20 @@ void Visual_Features()
 				v::mod_show_worldaxes.SetValue(v::mod_show_worldaxes.isEnabled());
 
 			} ImGui::SameLine(); r::MetricsHelpMarker("Draw the XY world axes underneath the player to give an understanding of current angles (useful with angled jumps)");
+
+			if (!v::mod_show_worldaxes.isEnabled())
+				ImGui::BeginDisabled();
+
+			ImGui::Text("\t"); ImGui::SameLine();
+
+			if (ImGui::Checkbox("Include optimal angle", &v::mod_worldaxes_opt.evar->enabled)) {
+				v::mod_worldaxes_opt.SetValue(v::mod_worldaxes_opt.isEnabled());
+
+			}
+
+			if (!v::mod_show_worldaxes.isEnabled())
+				ImGui::EndDisabled();
+
 		}	
 		ImGui::EndGroup();
 	}

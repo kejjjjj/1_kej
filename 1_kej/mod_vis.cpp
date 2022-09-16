@@ -88,7 +88,7 @@ void cg::Mod_DrawSurfaceInfo()
 		out[2] = -xsin;
 	};
 	AnglesToForward(clients->cgameViewangles, angles);
-	VectorScale(angles, 99999, angles);
+	VectorScale(angles, 999999, angles);
 	CG_TracePoint(maxs, &trace, rg->viewOrg, mins, angles, cgs->clientNum, MASK_PLAYERSOLID, 0, 1);
 
 	const float normalX = trace.normal[0] >= 0.f ? trace.normal[0] : -trace.normal[0];
@@ -287,8 +287,9 @@ void cg::Mod_DrawWorldAxes()
 	}
 	VectorCopy(clients->cgameOrigin, forwardStart);
 	forwardStart[2] -= 1000;
-	//Y
 
+
+	//Y
 	forwardStart[1] -= DIRECTION_LENGTH;
 	if (pitch < 0) {
 		start[1] -= fabs(pitch) * 50;
@@ -305,6 +306,22 @@ void cg::Mod_DrawWorldAxes()
 	if (r::WorldToScreen(forwardStart, self_xy) && r::WorldToScreen(start, end_xy)) {
 		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), IM_COL32(255, 0, 0, 255), 2.f);
 	}
+
+	VectorCopy(clients->cgameOrigin, forwardStart);
+	forwardStart[2] -= 1000;
+
+	if (!v::mod_worldaxes_opt.isEnabled())
+		return;
+
+	float delta;
+	const float opt = getOptAngle(delta);
+	vec3_t opt3;
+	AnglesToForward(vec3_t{ 0, opt, 0 }, forwardStart, DIRECTION_LENGTH, opt3);
+
+	if (r::WorldToScreen(opt3, self_xy) && r::WorldToScreen(start, end_xy)) {
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), IM_COL32(255, 255, 0, 255), 2.f);
+	}
+
 }
 void cg::Mod_GetAccelerationAngles(const usercmd_s* cmd, const bool rightmove, vec2_t out)
 {

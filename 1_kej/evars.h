@@ -28,6 +28,7 @@ namespace v
 		mod_crosshair,
 		mod_veldirection,
 		mod_show_worldaxes,
+		mod_worldaxes_opt,
 		mod_rpg_timing,
 		mod_rpg_angle;
 
