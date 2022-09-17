@@ -89,6 +89,7 @@ void cg::CG_SetPlayerAngles(vec3_t source, vec3_t target)
 	setYaw(source[1], target[1]);
 	setRoll(source[2], target[2]);
 }
+//more suited for visual stuff
 float cg::R_getOptAngle(const bool rightmove, float& diff)
 {
 
@@ -189,4 +190,60 @@ float cg::getOptAngle(float& _opt)
 float cg::DistanceToOpt(float delta, const float& yaw)
 {
 	return fabs(yaw - delta);
+}
+
+axis_s cg::CG_GetNearestWorldAxisFromYaw(float yawangle)
+{
+	if (yawangle > 180 || yawangle < -180)
+		yawangle = AngleNormalize180(yawangle);
+
+	axis_s ax;
+
+
+	if (yawangle >= 135 || yawangle <= -135) {
+		ax.axis = axis_e::xNegative;
+		ax.angle = 180;
+		return ax;
+	}
+	else if (yawangle <= -45 && yawangle >= -135) {
+		ax.axis = axis_e::yNegative;
+		ax.angle = 270;
+		return ax;
+	}
+	else if (yawangle >= 45 && yawangle <= 135) {
+		ax.axis = axis_e::yPositive;
+		ax.angle = 90;
+		return ax;
+	}
+	ax.axis = axis_e::xPositive;
+	ax.angle = 0;
+	return ax;  //X backward
+
+
+}
+axis_s cg::CG_GetNearestWorldAxisFromYaw()
+{
+	axis_s ax;
+
+	const float yawangle = clients->cgameViewangles[YAW];
+
+	if (yawangle >= 135 || yawangle <= -135) {
+		ax.axis = axis_e::xNegative;
+		ax.angle = 180;
+		return ax;
+	}
+	else if (yawangle <= -45 && yawangle >= -135) {
+		ax.axis = axis_e::yNegative;
+		ax.angle = 270;
+		return ax;
+	}
+	else if (yawangle >= 45 && yawangle <= 135) {
+		ax.axis = axis_e::yPositive;
+		ax.angle = 90;
+		return ax;
+	}
+	ax.axis = axis_e::xPositive;
+	ax.angle = 0;
+	return ax;  //X backward
+
 }

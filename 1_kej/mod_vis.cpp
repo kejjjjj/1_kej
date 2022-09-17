@@ -74,12 +74,12 @@ void cg::Mod_DrawSurfaceInfo()
 	const vec3_t maxs = { 1, 1, 1 };
 	vec3_t angles;
 
-	const auto AnglesToForward = [](vec3_t angles, vec3_t out) -> void {
-		float fwd = angles[1] * 0.01745329238474369;
+	const auto _AnglesToForward = [](vec3_t angles, vec3_t out) -> void { //loses a lot of precision when scaled a lot
+		float fwd = angles[1] * (PI / 180);
 		const float ycos = cos(fwd);
 		const float ysin = sin(fwd);
 
-		fwd = angles[0] * 0.01745329238474369;
+		fwd = angles[0] * (PI / 180);
 		const float xcos = cos(fwd);
 		const float xsin = sin(fwd);
 
@@ -87,8 +87,10 @@ void cg::Mod_DrawSurfaceInfo()
 		out[1] = xcos * ysin;
 		out[2] = -xsin;
 	};
-	AnglesToForward(clients->cgameViewangles, angles);
-	VectorScale(angles, 999999, angles);
+
+	//_AnglesToForward(clients->cgameViewangles, angles);
+	//VectorScale(angles, 999999, angles);
+	AnglesToForward(clients->cgameViewangles, rg->viewOrg, 99999, angles);
 	CG_TracePoint(maxs, &trace, rg->viewOrg, mins, angles, cgs->clientNum, MASK_PLAYERSOLID, 0, 1);
 
 	const float normalX = trace.normal[0] >= 0.f ? trace.normal[0] : -trace.normal[0];
@@ -120,7 +122,7 @@ void cg::Mod_DrawSurfaceInfo()
 
 		VectorClear(angles);		 
 		angles[YAW] = normalX == 1.f ? (trace.normal[0] > 0  ? -180 : 0) : (trace.normal[1] > 0 ? -90 : 90);
-		AnglesToForward(angles, out);
+		_AnglesToForward(angles, out);
 		VectorScale(out, 0.125, out);
 		VectorAdd(out, endpos, out);
 		VectorAddAll(out, angles[YAW] < 0 ? 14 : -14, out);
@@ -222,7 +224,7 @@ void cg::FPS_CalculateSingleBeatDirection(bool& rightmove, const usercmd_s* cmd)
 	static uint16_t frames = NULL;
 	static vec_t oldYaw = NULL;
 	static bool _rightmove;
-	vec_t newYaw = cgs->refdefViewAngles[YAW];
+	const vec_t newYaw = cgs->refdefViewAngles[YAW];
 
 	frames += 1;
 
@@ -243,7 +245,7 @@ void cg::Mod_DrawVelocityDirection()
 	if (!v::mod_veldirection.isEnabled() || NOT_SERVER)
 		return;
 
-	float velAngle = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180 / PI;
+	const float velAngle = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180.f / PI;
 	vec3_t angles = { 0, velAngle, 0 }, end;
 	AnglesToForward(angles, clients->cgameOrigin, 100, end);
 	vec2_t self_xy, end_xy;
@@ -273,7 +275,7 @@ void cg::Mod_DrawWorldAxes()
 		start[0] -= fabs(pitch) * 50;
 	}
 
-	vec2_t self_xy, end_xy;
+	vec2_t self_xy, end_xy, nearest_xy;
 	if (r::WorldToScreen(forwardStart, self_xy) && r::WorldToScreen(start, end_xy)) {
 		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), IM_COL32(255, 0, 0, 255), 2.f);
 	}
@@ -313,12 +315,29 @@ void cg::Mod_DrawWorldAxes()
 	if (!v::mod_worldaxes_opt.isEnabled())
 		return;
 
+	const usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
+
+	static bool rightmove;
+
+	if (cmd->rightmove > 0)
+		rightmove = true;
+	else if (cmd->rightmove < 0)
+		rightmove = false;
+
+	FPS_CalculateSingleBeatDirection(rightmove, cmd);
+
 	float delta;
-	const float opt = getOptAngle(delta);
-	vec3_t opt3;
+	const float opt = R_getOptAngle(rightmove, delta);
+	vec3_t opt3, nearestAxis3;
 	AnglesToForward(vec3_t{ 0, opt, 0 }, forwardStart, DIRECTION_LENGTH, opt3);
 
-	if (r::WorldToScreen(opt3, self_xy) && r::WorldToScreen(start, end_xy)) {
+	axis_s nearestAxis = CG_GetNearestWorldAxisFromYaw(opt);
+
+	AnglesToForward(vec3_t{ 0, nearestAxis.angle, 0 }, forwardStart, DIRECTION_LENGTH, nearestAxis3);
+
+
+	if (r::WorldToScreen(opt3, self_xy) && r::WorldToScreen(start, end_xy) && r::WorldToScreen(nearestAxis3, nearest_xy) ) {
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), ImVec2(nearest_xy[0], nearest_xy[1]), IM_COL32(255, 255, 0, 110));
 		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), IM_COL32(255, 255, 0, 255), 2.f);
 	}
 
