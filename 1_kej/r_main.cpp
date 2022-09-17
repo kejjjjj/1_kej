@@ -24,7 +24,7 @@ void __cdecl r::CG_DrawActive()
 		Mod_DrawSurfaceInfo();
 		Mod_DrawFPSHelpers();
 		Mod_DrawAngleHelper();
-
+		Mod_DrawCurveSpeed();
 		//float optYaw, test;
 
 		////static DWORD old_ms = Sys_Milliseconds();

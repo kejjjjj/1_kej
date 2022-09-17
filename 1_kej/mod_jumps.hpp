@@ -22,5 +22,6 @@ namespace cg {
 	void Mod_JumpAnalyzer(pmove_t* pm, pml_t* pml);
 	void Mod_RPGAnalyzer(pmove_t* pm, pml_t* pml);
 
+
 }
 #endif

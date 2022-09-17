@@ -18,15 +18,10 @@ namespace cg
 	void Mod_DrawVelocityDirection();
 	void Mod_DrawWorldAxes();
 	void FPS_CalculateSingleBeatDirection(bool& rightmove, const usercmd_s* cmd);
-
 	void Mod_DrawFPSHelpers();
-
-	struct anglehelper_s {
-
-	};
-	inline anglehelper_s anglehelper;
 	void Mod_GetAccelerationAngles(const usercmd_s* cmd, const bool rightmove, vec2_t accel_angles);
 	void Mod_DrawAngleHelper();
+	void Mod_DrawCurveSpeed();
 
 	inline fps_s mod_fps;
 }

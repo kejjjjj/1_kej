@@ -402,3 +402,28 @@ void cg::Mod_DrawAngleHelper()
 	CG_FillAngleYaw(accel_angles[0], accel_angles[1], yaw, v::mod_anglehelper.evar->arrayValue[1], v::mod_anglehelper.evar->arrayValue[2], fov, vec4_t{255,0,0,0.7});
 	r::R_DrawRect("white", 958, v::mod_anglehelper.evar->arrayValue[1] - 10, 4, v::mod_anglehelper.evar->arrayValue[2] + 20, vec4_t{ 255,255,255,255 });
 }
+void cg::Mod_DrawCurveSpeed()
+{
+
+	if (!v::mod_curve_speed.isEnabled())
+		return;
+
+	static float yawPrevious = clients->cgameViewangles[YAW] < 0 ? -clients->cgameViewangles[YAW] : clients->cgameViewangles[YAW];
+	const float yawNow = clients->cgameViewangles[YAW] < 0 ? -clients->cgameViewangles[YAW] : clients->cgameViewangles[YAW];
+	static int32_t oldCommandTime = clients->snap.ps.commandTime;
+	static float difference = yawNow - yawPrevious;
+	if (clients->snap.ps.commandTime > oldCommandTime + 50) {
+		difference = yawNow - yawPrevious;
+		oldCommandTime = clients->snap.ps.commandTime;
+		yawPrevious = clients->cgameViewangles[YAW] < 0 ? -clients->cgameViewangles[YAW] : clients->cgameViewangles[YAW];
+		
+		difference = difference < 0 ? -difference : difference;
+	}
+
+
+	char buffer[24];
+
+	sprintf_s(buffer, "%.2f", difference);
+
+	r::R_DrawText(buffer, 700, 200, 2, 2, 0, vec4_t{ 1,1,1,1 }, 0);
+}

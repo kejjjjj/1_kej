@@ -42,6 +42,12 @@ void cg::SV_Map()
 			return;
 		}
 
+		dvar_s* sv_punkbuster = Dvar_FindMalleableVar("sv_punkbuster");
+		dvar_s* cl_punkbuster = Dvar_FindMalleableVar("cl_punkbuster");
+
+		if (sv_punkbuster) { sv_punkbuster->current.integer = 0; sv_punkbuster->current.enabled = 0; }
+		if (cl_punkbuster) { cl_punkbuster->current.integer = 0; cl_punkbuster->current.enabled = 0; }
+
 		if (!strcmp(fs_game->current.string, "mods/1_kej_v2") && (!strcmp(g_gametype->current.string, "cj") || !strcmp(g_gametype->latched.string, "cj"))) {
 			Com_Printf(CON_CHANNEL_CONSOLEONLY, "Loading 1_kej features..\n");
 			std::cout << "Loading 1_kej features..\n";

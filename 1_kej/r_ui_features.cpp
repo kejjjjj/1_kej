@@ -177,6 +177,12 @@ void Visual_Features()
 			if (!v::mod_show_worldaxes.isEnabled())
 				ImGui::EndDisabled();
 
+
+			if (ImGui::Checkbox("Curve Speed", &v::mod_curve_speed.evar->enabled)) {
+				v::mod_curve_speed.SetValue(v::mod_curve_speed.isEnabled());
+
+			} ImGui::SameLine(); r::MetricsHelpMarker("draw the difference in angle every 50 snapshots");
+
 		}	
 		ImGui::EndGroup();
 	}
