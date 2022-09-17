@@ -45,7 +45,6 @@ void cg::Mod_HitAnalyzer(pmove_t* pm, pml_t* pml)
 void cg::Mod_JumpAnalyzer(pmove_t* pm, pml_t* pml)
 {
 
-
 	static bool wait_ground = NULL;
 
 	if (GROUND && wait_ground) {

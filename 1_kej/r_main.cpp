@@ -55,5 +55,7 @@ void __cdecl r::CG_DrawActive()
 		//}
 	}
 
+
+
 	return CG_DrawActive_f();
 }

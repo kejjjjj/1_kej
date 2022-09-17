@@ -25,9 +25,23 @@ void cg::Mod_EditMemory(bool forceDisable)
 
 void cg::SV_Map()
 {
+
+	SV_Map_f();
+
 	const dvar_s* fs_game = Dvar_FindMalleableVar("fs_game");
 	const dvar_s* g_gametype = Dvar_FindMalleableVar("g_gametype");
-	if (fs_game && g_gametype) {
+	const dvar_s* sv_running = Dvar_FindMalleableVar("sv_running");
+
+	if (fs_game && g_gametype && sv_running) {
+
+		if (sv_cmd_args->argc[sv_cmd_args->nesting] < 1)
+			return;
+
+		if (!sv_running->current.enabled) {
+			Com_PrintError(CON_CHANNEL_CONSOLEONLY, "failed to [%s] because '%s' is missing\n", *(sv_cmd_args->argv[sv_cmd_args->nesting] + 0), *(sv_cmd_args->argv[sv_cmd_args->nesting] + 1));
+			return;
+		}
+
 		if (!strcmp(fs_game->current.string, "mods/1_kej_v2") && (!strcmp(g_gametype->current.string, "cj") || !strcmp(g_gametype->latched.string, "cj"))) {
 			Com_Printf(CON_CHANNEL_CONSOLEONLY, "Loading 1_kej features..\n");
 			std::cout << "Loading 1_kej features..\n";
@@ -44,5 +58,5 @@ void cg::SV_Map()
 		}
 	}
 
-	return SV_Map_f();
+	return;
 }

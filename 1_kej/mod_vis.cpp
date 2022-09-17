@@ -337,7 +337,7 @@ void cg::Mod_DrawWorldAxes()
 
 
 	if (r::WorldToScreen(opt3, self_xy) && r::WorldToScreen(start, end_xy) && r::WorldToScreen(nearestAxis3, nearest_xy) ) {
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), ImVec2(nearest_xy[0], nearest_xy[1]), IM_COL32(255, 255, 0, 110));
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), ImVec2(nearest_xy[0], nearest_xy[1]), IM_COL32(255, 255, 0, 25));
 		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), IM_COL32(255, 255, 0, 255), 2.f);
 	}
 

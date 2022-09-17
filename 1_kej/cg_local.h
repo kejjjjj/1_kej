@@ -7764,6 +7764,14 @@ enum ShockViewTypes
 	SHELLSHOCK_VIEWTYPE_FLASHED = 0x1,
 	SHELLSHOCK_VIEWTYPE_NONE = 0x2,
 };
+struct CmdArgs
+{
+	int nesting;
+	int localClientNum[8];
+	int controllerIndex[8];
+	int argc[8];
+	const char** argv[8];
+};
 
 struct $59BC949CAD00C1270469FCBABD8F5215
 {

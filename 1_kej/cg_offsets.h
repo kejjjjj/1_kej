@@ -165,6 +165,8 @@ namespace cg
 	inline 	char* argv_6BFEA7 = reinterpret_cast<char*>(0x6BFEA7);
 	inline int* argv_1410BA4 = reinterpret_cast<int*>(0x1410BA4);
 
+	inline CmdArgs* sv_cmd_args = reinterpret_cast<CmdArgs*>(0x1433408);
+
 	inline cmd_function_s* cmd_functions = reinterpret_cast<cmd_function_s*>(0x1410B3C);
 	inline void* Cmd_AddCommand_fnc;
 	//SCR_DrawSmallStringExt_t	SCR_DrawSmallStringExt = (SCR_DrawSmallStringExt_t)0x474C30;
