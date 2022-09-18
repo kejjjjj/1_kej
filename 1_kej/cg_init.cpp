@@ -57,6 +57,8 @@ void cg::CG_PrepareHooks()
 	Pmove_f							= (void(*)(pmove_t * pmove))						(0x414D10);
 	CG_CalcCrosshairColor_f			= (char(*)())										(0x430A33);
 	PM_Weapon_WeaponTimeAdjust_f	= (void(*)())										(0x41A4D8);
+	PmoveSingle_stub_f				= (void(*)())										(0x414BB4);
+	PM_SlideMove_f					= (BOOL(*)(pmove_t*, pml_t*, int))					(0x414F40);
 }
 void cg::CG_InitForeverHooks()
 {
@@ -99,6 +101,8 @@ void cg::CG_InitHooks()
 	a->install(&(PVOID&)stub2, Script_OpenScriptMenu);
 	a->install(&(PVOID&)CG_CalcCrosshairColor_f, CG_CalcCrosshairColor);
 	a->install(&(PVOID&)PM_Weapon_WeaponTimeAdjust_f, PM_Weapon_WeaponTimeAdjust);
+	a->install(&(PVOID&)PmoveSingle_stub_f, PmoveSingle_stub);
+	a->install(&(PVOID&)PM_SlideMove_f, PM_SlideMove);
 
 
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, " done!\n");
@@ -129,6 +133,8 @@ void cg::CG_RemoveHooks()
 	a->remove(&(PVOID&)stub2, Script_OpenScriptMenu);
 	a->remove(&(PVOID&)CG_CalcCrosshairColor_f, CG_CalcCrosshairColor);
 	a->remove(&(PVOID&)PM_Weapon_WeaponTimeAdjust_f, PM_Weapon_WeaponTimeAdjust);
+	a->remove(&(PVOID&)PmoveSingle_stub_f, PmoveSingle_stub);
+	a->remove(&(PVOID&)PM_SlideMove_f, PM_SlideMove);
 
 
 	if (r::pEndScene) {

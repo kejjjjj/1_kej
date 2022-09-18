@@ -281,7 +281,11 @@ void Evar_Setup()
 	v::mod_worldaxes_opt.Register	("1_kej_worldaxes_opt",		evartype_t::EVAR_BOOL,		(float)0);
 	v::mod_rpg_timing.Register		("1_kej_rpg_timing",		evartype_t::EVAR_BOOL,		(float)0);
 	v::mod_rpg_angle.Register		("1_kej_rpg_angle",			evartype_t::EVAR_BOOL,		(float)0);
-	v::mod_curve_speed.Register		("1_kej_curve_speed",		evartype_t::EVAR_BOOL, (float)0);
+	v::mod_curve_speed.Register		("1_kej_curve_speed",		evartype_t::EVAR_BOOL,		(float)0);
+
+	v::mod_jumpv_forcepos.Register	("1_kej_jumpv_forcepos",	evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_jumpv_path.Register		("1_kej_jumpv_path",		evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_jumpv_hitbox.Register	("1_kej_jumpv_hitbox",		evartype_t::EVAR_BOOL, (float)0);
 
 }
 int evar_o::GetInt()

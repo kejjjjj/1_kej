@@ -1,5 +1,7 @@
 #include "pch.h"
 
+
+
 HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 {
 	r::device_needs_reset = false;
@@ -10,10 +12,15 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 			//ImGui::GetBackgroundDrawList()->Addline
 			Mod_DrawVelocityDirection();
 			Mod_DrawWorldAxes();
-			
+			Mod_DrawJumpPath();
+			Mod_DrawJumpHitbox();
 		}
 		R_EndRender();
 	}
+
+	if (GetAsyncKeyState(VK_MENU) & 1 && !analyzer.isRecording() && VID_ACTIVE && !analyzer.isPreviewing())
+		analyzer.StartRecording();
+
 	return pEndScene(pDevice);
 }
 void __cdecl r::CG_DrawActive()
@@ -25,6 +32,10 @@ void __cdecl r::CG_DrawActive()
 		Mod_DrawFPSHelpers();
 		Mod_DrawAngleHelper();
 		Mod_DrawCurveSpeed();
+
+		if (analyzer.isRecording())
+			R_DrawText("Recording", 0, 800, 2, 2, 0, vec4_t{ 1,1,1,1 }, 0);
+
 		//float optYaw, test;
 
 		////static DWORD old_ms = Sys_Milliseconds();

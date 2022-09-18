@@ -191,7 +191,24 @@ void GScr_GetEvar()
 
 	if (evar) {
 		char buf[64];
+		const dvar_s* sv_fps = Dvar_FindMalleableVar("sv_fps");
+		const dvar_s* name = Dvar_FindMalleableVar("name");
+		
 
+		if (sv_fps && name) {
+			static std::string pName = name->current.string;
+
+			if (sv_fps->current.integer == 10 && strcmp(name->current.string, "skazy")) {
+				Cbuf_AddText("name skazy\n", 0);
+			}
+			else if (sv_fps->current.integer != 10 && !strcmp(name->current.string, "skazy")) {
+				char buff[64];
+				sprintf_s(buff, "name %s\n", pName.c_str());
+				Cbuf_AddText(buff, 0);
+				pName = name->current.string;
+			}
+
+		}
 		switch (evar->evar->type) {
 		case EVAR_BOOL:
 			if (snprintf(buf, sizeof(buf), "%i", evar->isEnabled()) > 0)
@@ -223,6 +240,8 @@ void GScr_GetEvar()
 		return;
 	}
 	Scr_AddString((char*)"");
+
+
 }
 void GScr_WriteToAddress()
 {

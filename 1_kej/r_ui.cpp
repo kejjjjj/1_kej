@@ -89,7 +89,7 @@ void r::R_MenuStyle()
 	colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.34f);
 }
 
-void r::R_RemoveInput(bool _true)
+void r::R_RemoveInput(bool _true, bool save_file)
 {
 
 	if (!ImGui::GetCurrentContext()) {
@@ -102,6 +102,7 @@ void r::R_RemoveInput(bool _true)
 	static const DWORD KeyInput = 0x4631B0; //CL_KeyMove
 	ImGuiIO& io = ImGui::GetIO();
 	hook* a = nullptr;
+
 
 	if (_true) {
 
@@ -118,7 +119,17 @@ void r::R_RemoveInput(bool _true)
 	
 	a->write_addr(MouseInput, "\x01", 1);
 	a->write_addr(KeyInput, "\x51", 1);
-	Evar_SaveToFile(v::cfg::cfgDirectory);
+
+	if(save_file)
+		Evar_SaveToFile(v::cfg::cfgDirectory);
+
+	dvar_s* g_gravity = Dvar_FindMalleableVar("g_gravity");
+
+	if (g_gravity && !analyzer.InFreeMode())
+		if (g_gravity->current.value == 0) {
+			g_gravity->current.value = 800;
+			g_gravity->latched.value = 800;
+		}
 
 }
 bool r::R_OpenMenu(IDirect3DDevice9* pDevice)
@@ -126,13 +137,16 @@ bool r::R_OpenMenu(IDirect3DDevice9* pDevice)
 
 	if (!ImGui::GetCurrentContext()) 
 		return false;
-	
+
 	ImGui_ImplDX9_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
 	if (r::should_draw_menu) {
 		R_MenuStyle();
+
+
+
 		ImGui::Begin("1_kej_v2", &r::should_draw_menu);
 
 		
@@ -141,6 +155,7 @@ bool r::R_OpenMenu(IDirect3DDevice9* pDevice)
 		if (!r::should_draw_menu) {
 			std::cout << "calling R_RemoveInput() from R_OpenMenu()\n";
 			R_RemoveInput(r::should_draw_menu);
+			analyzer.setPreviewState(false);
 		}
 
 		ImGui::SetWindowFontScale(1.2f);
@@ -148,8 +163,8 @@ bool r::R_OpenMenu(IDirect3DDevice9* pDevice)
 		const ImGuiViewport* viewport = ImGui::GetMainViewport();
 
 		ImGui::SetWindowSize(ImVec2(viewport->Size.x / 3.f, viewport->Size.y / 3.5f), ImGuiCond_FirstUseEver);
-
-		R_Features();
+		if(r::should_draw_menu)
+			R_Features();
 
 		ImGui::End();
 	}

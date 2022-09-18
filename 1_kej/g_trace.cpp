@@ -132,7 +132,7 @@ char cg::BG_AdvanceTrace(BulletTraceResults* br, BulletFireParams* bpp, float _f
 	}
 	return success;
 }
-void __cdecl cg::CG_TracePoint(const vec3_t maxs, trace_t* trace, const vec3_t start, const vec3_t mins, const vec3_t end, int entityNum, int contentMask, uint8_t unknw0, int8_t traceStaticModels)
+void __cdecl cg::CG_TracePoint(const vec3_t maxs, trace_t* trace, const vec3_t start, const vec3_t mins, const vec3_t end, int entityNum, int contentMask, int unknw0, int traceStaticModels)
 {
 
 	_asm

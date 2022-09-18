@@ -20,10 +20,28 @@ namespace r
 	void R_DrawText(const char* text, const char* font, float x, float y, float xScale, float yScale, float rotation, float* color, int style);
 	void R_DrawText(const char* text, float x, float y, float xScale, float yScale, float rotation, float* color, int style);
 
+	std::string R_UserCmdKeysPressed(char forwardmove, char sidemove);
+
 	float X(float pos);
 	float Y(float pos);
 
 	void MetricsHelpMarker(const char* desc);
+
+	struct box_s
+	{
+		vec2_t lowA;
+		vec2_t lowB;
+		vec2_t lowC;
+		vec2_t lowD;
+
+		vec2_t highA;
+		vec2_t highB;
+		vec2_t highC;
+		vec2_t highD;
+
+	};
+
+	box_s R_ConstructBoxFromBounds(vec3_t origin, vec3_t mins, vec3_t maxs);
 }
 
 #endif

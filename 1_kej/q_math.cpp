@@ -191,3 +191,13 @@ void VectorInverse(vec3_t v) {
 	v[1] = -v[1];
 	v[2] = -v[2];
 }
+float GetAverage(float* arr, size_t size)
+{
+	float average = 0.f;
+	for (int n = 0; n < size; n++)
+		average += arr[n];
+
+	average /= (float)size;
+
+	return average;
+}

@@ -189,6 +189,7 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="koukku.hpp" />
+    <ClInclude Include="mod_analyzer.hpp" />
     <ClInclude Include="mod_jumps.hpp" />
     <ClInclude Include="mod_vis.hpp" />
     <ClInclude Include="pch.h" />
@@ -250,6 +251,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="koukku.cpp" />
+    <ClCompile Include="mod_analyzer.cpp" />
     <ClCompile Include="mod_jumps.cpp" />
     <ClCompile Include="mod_vis.cpp" />
     <ClCompile Include="pch.cpp">
@@ -263,6 +265,7 @@
     <ClCompile Include="r_init.cpp" />
     <ClCompile Include="r_main.cpp" />
     <ClCompile Include="r_ui_features.cpp" />
+    <ClCompile Include="r_ui_jumpanalyzer.cpp" />
     <ClCompile Include="r_world.cpp" />
     <ClCompile Include="scr_cmd.cpp" />
     <ClCompile Include="scr_functions.cpp" />

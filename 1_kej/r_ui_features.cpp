@@ -3,7 +3,6 @@
 void Visual_Features();
 void RPG_Features();
 void Jump_Features();
-
 void Visual_Features()
 {
 	//ImGui::Text("Basic");
@@ -267,6 +266,25 @@ void Jump_Features()
 	}
 	//////////////////////////////////////////
 
+	if (ImGui::CollapsingHeader("Jump view")) {
+		static bool isOpen = false;
+
+
+		ImGui::Text("\t");
+		ImGui::SameLine();
+		if (ImGui::Button("open editor")) {
+			isOpen = !isOpen;
+			dvar_s* g_gravity = Dvar_FindMalleableVar("g_gravity");
+
+			if (g_gravity) {
+				g_gravity->current.value = (isOpen == true) ? 0 : 800;
+			}
+		}
+
+		r::R_JumpView(isOpen);
+
+	}
+
 
 }
 void r::R_Features()
@@ -289,3 +307,4 @@ void r::R_Features()
 	}
 	ImGui::EndTabBar();
 }
+

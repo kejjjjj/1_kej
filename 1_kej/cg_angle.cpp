@@ -187,6 +187,50 @@ float cg::getOptAngle(float& _opt)
 
 	return yaw;
 }
+float cg::getOptForAnalyzer(jump_data* data)
+{
+
+	char* forwardmove = &input->move;
+	char* sidemove = &input->strafe;
+
+
+	float _speed = glm::length(glm::vec2(data->velocity[0], data->velocity[1]));
+
+	if (_speed < 1)
+		return -400.0;
+
+	float yaw = data->angles[YAW];
+	float g_speed = (float)cgs->nextSnap->ps.speed;
+	const float FPS = data->FPS;
+
+	const float accel = FPS / g_speed;
+
+	if (_speed < 190)
+		g_speed = 190 - (190 - _speed);
+	else if (GROUND)
+		g_speed = 270.f;
+
+	const float velocitydirection = atan2(data->velocity[1], data->velocity[0]) * 180.f / PI;
+	const float accelerationAng = atan2((int)-data->rightmove, (int)data->forwardmove) * 180.f / PI;
+	float diff = acos((g_speed - accel) / _speed) * 180.f / PI;
+	const float minAngle = acos(g_speed / _speed) * 180.f / PI;
+
+	if (mod_fps.DistanceToTransferZone > 45.f)
+		diff = minAngle + accel;
+
+	float delta = yaw;
+
+
+	if ((int)data->rightmove > 0) {
+		delta = (velocitydirection - diff - accelerationAng);
+	}
+	else if ((int)data->rightmove < 0) {
+		delta = (velocitydirection + diff - accelerationAng);
+	}
+	yaw = delta;
+
+	return yaw;
+}
 float cg::DistanceToOpt(float delta, const float& yaw)
 {
 	return fabs(yaw - delta);

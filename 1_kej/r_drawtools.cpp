@@ -117,3 +117,77 @@ void r::MetricsHelpMarker(const char* desc)
 		ImGui::EndTooltip();
 	}
 }
+std::string r::R_UserCmdKeysPressed(char forwardmove, char sidemove)
+{
+	std::string key;
+
+	if (forwardmove < 0)
+		key.push_back('S');
+	else if (forwardmove > 0)
+		key.push_back('W');
+	else 
+		key.push_back('\0');
+
+
+
+	if (sidemove < 0)
+		key.push_back('A');
+	else if (sidemove > 0)
+		key.push_back('D');
+	else 
+		key.push_back('\0');
+
+
+	return key;
+}
+r::box_s r::R_ConstructBoxFromBounds(vec3_t origin, vec3_t mins, vec3_t maxs)
+{
+	box_s box{};
+
+	vec3_t lowA, lowB, lowC, lowD;
+	vec3_t highA, highB, highC, highD;
+
+	lowA[0] = origin[0] - mins[0];
+	lowA[1] = origin[1] - mins[1];
+	lowA[2] = origin[2] - mins[2];
+
+	lowB[0] = origin[0] + mins[0];
+	lowB[1] = origin[1] + mins[1];
+	lowB[2] = origin[2] - mins[2];
+
+	lowC[0] = origin[0] - mins[0];
+	lowC[1] = origin[1] + mins[1];
+	lowC[2] = origin[2] - mins[2];
+
+	lowD[0] = origin[0] + mins[0];
+	lowD[1] = origin[1] - mins[1];
+	lowD[2] = origin[2] - mins[2];
+
+	highA[0] = lowA[0];
+	highA[1] = lowA[1];
+	highA[2] = origin[2] + maxs[2];
+
+	highB[0] = lowB[0];
+	highB[1] = lowB[1];
+	highB[2] = origin[2] + maxs[2];
+
+	highC[0] = lowC[0];
+	highC[1] = lowC[1];
+	highC[2] = origin[2] + maxs[2];
+
+	highD[0] = lowD[0];
+	highD[1] = lowD[1];
+	highD[2] = origin[2] + maxs[2];
+
+	WorldToScreen(lowA, box.lowA);
+	WorldToScreen(lowB, box.lowB);
+	WorldToScreen(lowC, box.lowC);
+	WorldToScreen(lowD, box.lowD);
+
+	WorldToScreen(highA, box.highA);
+	WorldToScreen(highB, box.highB);
+	WorldToScreen(highC, box.highC);
+	WorldToScreen(highD, box.highD);
+
+	return box;
+}

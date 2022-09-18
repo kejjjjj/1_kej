@@ -41,6 +41,10 @@ typedef vec_t vec4_t[4];
 #define SE GetAsyncKeyState('S') < 0 && GetAsyncKeyState('E') < 0
 #define SQ GetAsyncKeyState('S') < 0 && GetAsyncKeyState('Q') < 0
 
+
+#define	VALUE2COLOR(x,y)	((x/y)*128)
+
+
 #pragma warning(disable : 26495)
 
 // add headers that you want to pre-compile here
@@ -100,6 +104,11 @@ typedef vec_t vec4_t[4];
 #include "cg_local.h"
 #include "cg_offsets.h"
 #include "cg_init.hpp"
+
+#include "mod_vis.hpp"
+#include "mod_jumps.hpp"
+#include "mod_analyzer.hpp"
+
 #include "cg_angle.hpp"
 #include "cg_main.hpp"
 
@@ -135,8 +144,6 @@ typedef vec_t vec4_t[4];
 
 #include "sys_tools.hpp"
 
-#include "mod_vis.hpp"
-#include "mod_jumps.hpp"
 
 using namespace std::chrono_literals;
 

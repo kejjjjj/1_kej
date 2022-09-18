@@ -28,4 +28,6 @@ float AngleDelta(float angle1, float angle2);
 vec_t VectorNormalize(vec3_t v);       // returns vector length
 vec_t VectorNormalize2(const vec3_t v, vec3_t out);
 void VectorInverse(vec3_t v);
+
+float GetAverage(float* arr, size_t size);
 #endif

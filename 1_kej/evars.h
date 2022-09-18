@@ -31,7 +31,10 @@ namespace v
 		mod_worldaxes_opt,
 		mod_rpg_timing,
 		mod_rpg_angle,
-		mod_curve_speed;
+		mod_curve_speed,
+		mod_jumpv_forcepos,
+		mod_jumpv_path,
+		mod_jumpv_hitbox;
 
 
 }

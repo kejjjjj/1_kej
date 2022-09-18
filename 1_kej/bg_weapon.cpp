@@ -4,7 +4,7 @@ int cg::BG_FindWeaponIndexForName(const char* name)
 {
 	return ((int(__cdecl*)(const char*))0x416610)(name);
 }
-//int cg::PM_Weapon_WeaponTimeAdjust(pml_t* pml, pmove_t* pm)
+//int cg::PM_Weapon_WeaponTimeAdjust(pml_t* pml, pmove_t* pm) //can't really call this because this function also sets animations
 //{
 //	if (!pml || !pm)
 //		return false;
@@ -21,7 +21,6 @@ int cg::BG_FindWeaponIndexForName(const char* name)
 //
 //	}
 //	return value;
-//	//return ((int32_t(*)(pml_t*, pmove_t*))0x418C80)(pml, pm);
 //}
 void test(int delay)
 {

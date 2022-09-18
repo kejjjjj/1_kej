@@ -201,6 +201,9 @@
     <ClInclude Include="bg_weapon.hpp">
       <Filter>Source Files\bg</Filter>
     </ClInclude>
+    <ClInclude Include="mod_analyzer.hpp">
+      <Filter>Source Files\mod</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -322,6 +325,12 @@
     </ClCompile>
     <ClCompile Include="bg_weapon.cpp">
       <Filter>Source Files\bg</Filter>
+    </ClCompile>
+    <ClCompile Include="mod_analyzer.cpp">
+      <Filter>Source Files\mod</Filter>
+    </ClCompile>
+    <ClCompile Include="r_ui_jumpanalyzer.cpp">
+      <Filter>Source Files\render\ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

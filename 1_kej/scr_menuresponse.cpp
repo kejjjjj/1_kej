@@ -60,6 +60,7 @@ void Script_ParseMenuResponse(char* text)
 
     Script_OnMenuResponse(sv_serverId, menu, response);
 
+
 }
 __declspec(naked) void Script_ScriptMenuResponse()
 {
@@ -114,11 +115,22 @@ void Script_OnPositionLoaded()
         if (cg::jumpanalyzer.hasBounced)
             Com_Printf(CON_CHANNEL_OBITUARY, "^6bounce velocity: ^2%i\n", cg::jumpanalyzer.bounceVelocity);
 
+
     }
+    analyzer.StopRecording();
+
+    jump_data* data = analyzer.FetchFrameData(0);
+
+    if (data) {
+        std::cout << "maxs[2]: " << data->maxs[2] << '\n';
+    }
+    else
+        std::cout << "null data\n";
+
     memset(&cg::jumpanalyzer, 0, sizeof(cg::jumpanalyzer_s));
 
 }
 void Script_OnPositionSaved()
 {
-    
+    analyzer.StopRecording();
 }

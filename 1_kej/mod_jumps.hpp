@@ -15,6 +15,7 @@ namespace cg {
 		DWORD bounceTime;
 		bool hasJumped;
 		bool weapon_cant_fire;
+		bool velocity_clipped;
 
 	};
 	inline jumpanalyzer_s jumpanalyzer;
@@ -22,6 +23,7 @@ namespace cg {
 	void Mod_JumpAnalyzer(pmove_t* pm, pml_t* pml);
 	void Mod_RPGAnalyzer(pmove_t* pm, pml_t* pml);
 
+	void Mod_JumpView(pmove_t* pm, pml_t* pml);
 
 }
 #endif

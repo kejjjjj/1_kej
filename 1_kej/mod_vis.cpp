@@ -427,3 +427,108 @@ void cg::Mod_DrawCurveSpeed()
 
 	r::R_DrawText(buffer, 700, 200, 2, 2, 0, vec4_t{ 1,1,1,1 }, 0);
 }
+
+void cg::Mod_DrawJumpPath()
+{
+
+	if (!analyzer.RecordingExists() || !v::mod_jumpv_path.isEnabled())
+		return;
+
+	const auto OriginsToScreen = [](std::vector<jump_data> data, std::vector<ImVec2>* color) -> std::vector<ImVec2> {
+		std::vector<ImVec2> points;
+		color->clear();
+		color->resize(1);
+		color->erase(color->begin(), color->end());
+
+		int validPoints{ 0 };
+		vec2_t xy;
+
+		for (unsigned i = 0; i < data.size(); i++) {
+			if (r::WorldToScreen(data[i].origin, xy)) {
+				points.push_back(ImVec2(xy[0], xy[1]));
+
+				ImVec2 fcolor;
+
+				float col = VALUE2COLOR(glm::length(glm::vec2(data[i].velocity[0], data[i].velocity[1])), analyzer.average_velocity);
+
+				fcolor.x = 255.f - col;
+				fcolor.y = col;
+				if (col > 255) {
+					fcolor.x = 0;
+					fcolor.y = 255; //green because we got more speed
+				}
+				color->push_back(fcolor);
+				validPoints += 1;
+			}
+		}
+		points.resize(validPoints);
+		color->resize(validPoints);
+		return points;
+	};
+
+	std::vector<ImVec2> color;
+	std::vector<ImVec2> points = OriginsToScreen(analyzer.data, &color);
+	if (points.size() > 1)
+		for (int i = 0; i < points.size() - 1; i++)
+			ImGui::GetBackgroundDrawList()->AddLine(points[i], points[i + 1], IM_COL32(color[i].x, color[i].y, 0, 255), 1.f);
+
+
+	vec2_t xy;
+	jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+
+	if (jData) {
+		if (r::WorldToScreen(jData->origin, xy)) {
+			ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(xy[0], xy[1]), 10.f, IM_COL32(255, 255, 255, 255));
+		}
+	}
+	
+
+
+}
+void cg::Mod_DrawJumpHitbox()
+{
+	if (!analyzer.RecordingExists() ||  !v::mod_jumpv_hitbox.isEnabled())
+		return;
+
+	jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+
+	if (jData) {
+
+		r::box_s box = r::R_ConstructBoxFromBounds(jData->origin, jData->mins, jData->maxs);
+
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.lowC[0], box.lowC[1]), IM_COL32(255, 255, 0, 255), 1.f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.lowD[0], box.lowD[1]), IM_COL32(255, 255, 0, 255), 1.f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowC[0], box.lowC[1]), ImVec2(box.lowB[0], box.lowB[1]), IM_COL32(255, 255, 0, 255), 1.f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowD[0], box.lowD[1]), ImVec2(box.lowA[0], box.lowA[1]), IM_COL32(255, 255, 0, 255), 1.f);
+
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.highA[0], box.highA[1]), ImVec2(box.highC[0], box.highC[1]), IM_COL32(255, 255, 0, 255), 1.f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.highB[0], box.highB[1]), ImVec2(box.highD[0], box.highD[1]), IM_COL32(255, 255, 0, 255), 1.f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.highC[0], box.highC[1]), ImVec2(box.highB[0], box.highB[1]), IM_COL32(255, 255, 0, 255), 1.f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.highD[0], box.highD[1]), ImVec2(box.highA[0], box.highA[1]), IM_COL32(255, 255, 0, 255), 1.f);
+
+
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.highA[0], box.highA[1]), IM_COL32(255, 255, 0, 255), 1.f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.highB[0], box.highB[1]), IM_COL32(255, 255, 0, 255), 1.f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowC[0], box.lowC[1]), ImVec2(box.highC[0], box.highC[1]), IM_COL32(255, 255, 0, 255), 1.f);
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowD[0], box.lowD[1]), ImVec2(box.highD[0], box.highD[1]), IM_COL32(255, 255, 0, 255), 1.f);
+
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.highC[0], box.highC[1]), ImVec2(box.lowC[0], box.lowC[1]), IM_COL32(255, 255, 0, 50));
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.highA[0], box.highA[1]), ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.highC[0], box.highC[1]), IM_COL32(255, 255, 0, 50));
+
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.highD[0], box.highD[1]), ImVec2(box.lowD[0], box.lowD[1]), IM_COL32(255, 255, 0, 50));
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.highB[0], box.highB[1]), ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.highD[0], box.highD[1]), IM_COL32(255, 255, 0, 50));
+
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowC[0], box.lowC[1]), ImVec2(box.highB[0], box.highB[1]), ImVec2(box.lowB[0], box.lowB[1]), IM_COL32(255, 255, 0, 50));
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.highC[0], box.highC[1]), ImVec2(box.lowC[0], box.lowC[1]), ImVec2(box.highB[0], box.highB[1]), IM_COL32(255, 255, 0, 50));
+
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowD[0], box.lowD[1]), ImVec2(box.highA[0], box.highA[1]), ImVec2(box.lowA[0], box.lowA[1]), IM_COL32(255, 255, 0, 50));
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.highD[0], box.highD[1]), ImVec2(box.lowD[0], box.lowD[1]), ImVec2(box.highA[0], box.highA[1]), IM_COL32(255, 255, 0, 50));
+
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.highA[0], box.highA[1]), ImVec2(box.highB[0], box.highB[1]), ImVec2(box.highC[0], box.highC[1]), IM_COL32(255, 255, 0, 50));
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.highA[0], box.highA[1]), ImVec2(box.highB[0], box.highB[1]), ImVec2(box.highD[0], box.highD[1]), IM_COL32(255, 255, 0, 50));
+
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.lowC[0], box.lowC[1]), IM_COL32(255, 255, 0, 50));
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.lowD[0], box.lowD[1]), IM_COL32(255, 255, 0, 50));
+
+	}
+}

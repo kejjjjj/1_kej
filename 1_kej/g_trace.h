@@ -11,7 +11,7 @@ namespace cg
 	//Allows script to do a point trace with MASK_SHOT.
 	char CG_BulletTrace(BulletTraceResults* trace, BulletFireParams* fireParams, centity_s* ignore, int depthSurfaceType);
 	char BG_AdvanceTrace(BulletTraceResults* br, BulletFireParams* bpp, float a3);
-	void __cdecl CG_TracePoint(const vec3_t maxs, trace_t* trace, const vec3_t start, const vec3_t mins, const vec3_t end, int entityNum, int contentMask, uint8_t unknw0, int8_t traceStaticModels);
+	void __cdecl CG_TracePoint(const vec3_t maxs, trace_t* trace, const vec3_t start, const vec3_t mins, const vec3_t end, int entityNum, int contentMask, int unknw0, int traceStaticModels);
 
 	//basically just CG_TracePoint except the last 2 params are set to 0
 	inline void (*CG_Trace)(trace_t* result, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int skipEntity, int tracemask) = (void(__cdecl*)(trace_t*, const vec3_t, const vec3_t, const vec3_t, const vec3_t, int, int))0x45A230;
