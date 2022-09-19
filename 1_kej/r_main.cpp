@@ -12,8 +12,12 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 			//ImGui::GetBackgroundDrawList()->Addline
 			Mod_DrawVelocityDirection();
 			Mod_DrawWorldAxes();
-			Mod_DrawJumpPath();
-			Mod_DrawJumpHitbox();
+			if (analyzer.RecordingExists() && !analyzer.isRecording()) {
+				Mod_DrawJumpPath();
+				Mod_DrawJumpHitbox();
+				Mod_DrawJumpDirection();
+			}
+
 		}
 		R_EndRender();
 	}

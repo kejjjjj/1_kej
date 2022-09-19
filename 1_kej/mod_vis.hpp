@@ -24,6 +24,7 @@ namespace cg
 	void Mod_DrawCurveSpeed();
 	void Mod_DrawJumpPath();
 	void Mod_DrawJumpHitbox();
+	void Mod_DrawJumpDirection();
 
 	inline fps_s mod_fps;
 }

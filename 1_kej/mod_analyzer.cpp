@@ -17,8 +17,15 @@ auto jAnalyzer::GetData()
 void jAnalyzer::StartRecording()
 {
 	current_frame = 0;
+	preview_frame = 0;
 	is_recording = true;
+	jAnalyzer::setPreviewState(false);
+	jAnalyzer::SetFreeMode(false);
+
+	data.erase(data.begin(), data.end());
 	data.clear();
+	data.resize(0);
+
 }
 bool jAnalyzer::isRecording()
 {
@@ -40,7 +47,7 @@ void jAnalyzer::StopRecording()
 }
 void cg::jAnalyzer::OnFrameUpdate()
 {
-	if (current_frame >= std::numeric_limits<int32_t>().max()) {
+	if (current_frame >= std::numeric_limits<int32_t>().max() - 1) {
 		Com_PrintError(CON_CHANNEL_ERROR, "exceeded maximum amount of frames!\n");
 		StopRecording();
 	}
@@ -56,7 +63,7 @@ jump_data* jAnalyzer::FetchFrameData(uint32_t frame)
 	if (data.size() > frame)
 		return &data[frame];
 
-	std::cout << data.size() << " > " << frame << '\n';
+	//std::cout << data.size() << " > " << frame << '\n';
 	return nullptr;
 }
 bool jAnalyzer::RecordingExists()

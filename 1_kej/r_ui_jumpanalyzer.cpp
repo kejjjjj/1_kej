@@ -5,6 +5,11 @@ void r::R_JumpView_Main()
 {
 	static int& menu_frame = analyzer.preview_frame;
 	static DWORD ms = Sys_MilliSeconds();
+	static bool isPlayback;
+
+
+	if (!analyzer.InFreeMode())
+		cgs->snap->ps.velocity[2] = 0;
 
 	ImGui::Text("press [spacebar] to toggle free mode");
 
@@ -27,6 +32,38 @@ void r::R_JumpView_Main()
 
 	ImGui::PushItemWidth(100);
 	ImGui::SliderInt("Frame", &menu_frame, 0, analyzer.GetTotalFrames(), "%u", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
+
+	ImGui::SameLine();
+	if (ImGui::Button("R")) {
+		isPlayback = false;
+		menu_frame = 0;
+	}
+	dvar_s* g_gravity = Dvar_FindMalleableVar("g_gravity");
+
+
+	if (g_gravity) {
+		g_gravity->current.value = 0;
+	}
+
+	const char* character = isPlayback == false ? ">" : "P";
+
+	ImGui::SameLine();
+	if (ImGui::Button(character)) {
+		if (!isPlayback)
+			isPlayback = true;
+		else isPlayback = false;
+	}
+	if (isPlayback) {
+		dvar_s* com_maxfps = Dvar_FindMalleableVar("com_maxfps");
+		if (com_maxfps && g_gravity) {
+			com_maxfps->current.integer = 1000.f / 4;
+			g_gravity->current.value = 0;
+		}
+
+		if (menu_frame < analyzer.GetTotalFrames())
+			menu_frame++;
+		else isPlayback = false;
+	}
 
 	ImGui::SameLine();
 	ImGui::Button("+");
@@ -110,6 +147,8 @@ void r::R_JumpView(bool& isOpen)
 
 
 	ImGui::Begin("Jump View", &isOpen);
+
+
 
 	ImGui::SetWindowSize(ImVec2(500, 300), ImGuiCond_FirstUseEver);
 

@@ -6,7 +6,24 @@ void cg::Mod_DrawVelocity()
 	if (!v::mod_velometer.isEnabled())
 		return;
 
-	const int32_t velocity = (int32_t)glm::length(glm::vec2(cg::clients->cgameVelocity[0], cg::clients->cgameVelocity[1]));
+
+	int32_t velocity;
+
+	if (analyzer.isPreviewing() && analyzer.RecordingExists()) {
+		jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+		
+		float x{}, y{};
+
+		if (jData) {
+			x = jData->velocity[0];
+			y = jData->velocity[1];
+		}
+
+		velocity = (int32_t)glm::length(glm::vec2(x, y));
+	}
+	else 
+		velocity = (int32_t)glm::length(glm::vec2(cg::clients->cgameVelocity[0], cg::clients->cgameVelocity[1]));
+
 	static int32_t velocity_prev_frame = velocity;
 
 	static DWORD ms = Sys_MilliSeconds();
@@ -478,7 +495,7 @@ void cg::Mod_DrawJumpPath()
 
 	if (jData) {
 		if (r::WorldToScreen(jData->origin, xy)) {
-			ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(xy[0], xy[1]), 10.f, IM_COL32(255, 255, 255, 255));
+			ImGui::GetBackgroundDrawList()->AddCircle(ImVec2(xy[0], xy[1]), 10.f, IM_COL32(255, 255, 255, 255), 3);
 		}
 	}
 	
@@ -488,6 +505,9 @@ void cg::Mod_DrawJumpPath()
 void cg::Mod_DrawJumpHitbox()
 {
 	if (!analyzer.RecordingExists() ||  !v::mod_jumpv_hitbox.isEnabled())
+		return;
+
+	if (!analyzer.InFreeMode() && v::mod_jumpv_forcepos.isEnabled())
 		return;
 
 	jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
@@ -506,11 +526,11 @@ void cg::Mod_DrawJumpHitbox()
 		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.highC[0], box.highC[1]), ImVec2(box.highB[0], box.highB[1]), IM_COL32(255, 255, 0, 255), 1.f);
 		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.highD[0], box.highD[1]), ImVec2(box.highA[0], box.highA[1]), IM_COL32(255, 255, 0, 255), 1.f);
 
-
 		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.highA[0], box.highA[1]), IM_COL32(255, 255, 0, 255), 1.f);
 		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.highB[0], box.highB[1]), IM_COL32(255, 255, 0, 255), 1.f);
 		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowC[0], box.lowC[1]), ImVec2(box.highC[0], box.highC[1]), IM_COL32(255, 255, 0, 255), 1.f);
 		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowD[0], box.lowD[1]), ImVec2(box.highD[0], box.highD[1]), IM_COL32(255, 255, 0, 255), 1.f);
+
 
 		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.highC[0], box.highC[1]), ImVec2(box.lowC[0], box.lowC[1]), IM_COL32(255, 255, 0, 50));
 		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.highA[0], box.highA[1]), ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.highC[0], box.highC[1]), IM_COL32(255, 255, 0, 50));
@@ -531,4 +551,39 @@ void cg::Mod_DrawJumpHitbox()
 		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.lowD[0], box.lowD[1]), IM_COL32(255, 255, 0, 50));
 
 	}
+}
+void cg::Mod_DrawJumpDirection()
+{
+	if (!analyzer.isPreviewing() || !analyzer.RecordingExists())
+		return;
+
+	jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+
+	if (!jData)
+		return;
+
+	vec3_t velocity, origin;
+	VectorCopy(jData->velocity, velocity);
+	VectorCopy(jData->origin, origin);
+
+	//VectorNormalize(velocity);
+	//VectorScale(velocity, 180, velocity);
+
+	vectoangles(velocity, velocity);
+
+
+	origin[2] += jData->maxs[2] / 2;
+
+	AnglesToForward(velocity, origin, 50, velocity);
+
+	vec2_t org_xy, end_xy;
+
+	if (r::WorldToScreen(origin, org_xy) && r::WorldToScreen(velocity, end_xy)) {
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(org_xy[0], org_xy[1]), ImVec2(end_xy[0], end_xy[1]), IM_COL32(255, 255, 0, 255), 2);
+		
+	}
+
+
+	
+
 }

@@ -105,7 +105,7 @@ void cg::Mod_JumpView(pmove_t* pm, pml_t* pml)
 	}
 	
 
-	if (pm->cmd.serverTime > old_cmdTime + 5) {
+	if (pm->cmd.serverTime > old_cmdTime + 3) {
 		old_cmdTime = pm->cmd.serverTime;
 		jump_data jData;
 

@@ -89,6 +89,13 @@ void OpenMenu_f()
 
     r::should_draw_menu = !r::should_draw_menu;
 
+    if (!r::should_draw_menu) {
+        std::cout << "calling R_RemoveInput() from R_OpenMenu()\n";
+        r::R_RemoveInput(r::should_draw_menu);
+        analyzer.setPreviewState(false);
+        return;
+    }
+
     r::R_RemoveInput(r::should_draw_menu);
 }
 void Cmd_Init()

@@ -126,7 +126,7 @@ std::string r::R_UserCmdKeysPressed(char forwardmove, char sidemove)
 	else if (forwardmove > 0)
 		key.push_back('W');
 	else 
-		key.push_back('\0');
+		key.push_back(' ');
 
 
 
@@ -135,7 +135,7 @@ std::string r::R_UserCmdKeysPressed(char forwardmove, char sidemove)
 	else if (sidemove > 0)
 		key.push_back('D');
 	else 
-		key.push_back('\0');
+		key.push_back(' ');
 
 
 	return key;
