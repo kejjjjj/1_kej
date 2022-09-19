@@ -68,6 +68,7 @@ typedef vec_t vec4_t[4];
 #include <format>
 #include <stdio.h>
 #include <timeapi.h>
+#include <set>
 
 //#include <glm/vec2.hpp>
 //#include <glm/vec3.hpp>

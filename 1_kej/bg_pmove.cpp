@@ -17,6 +17,20 @@ void cg::PM_AirMove(pmove_t* pm, pml_t* pml)
 	Mod_JumpAnalyzer(pm, pml);
 
 }
+void cg::PM_UFOMove(pmove_t* pmm, pml_t* pmll)
+{
+	static pml_t* pml;
+	static pmove_t* pm;
+	__asm	mov pml, edx;
+	__asm	mov pm, eax;
+
+	PM_UFOMove_f(pmm, pmll);
+
+	jumpanalyzer.commandTime = pm->ps->commandTime;
+	jumpanalyzer.serverTime = pm->cmd.serverTime;
+
+	return;
+}
 void cg::PM_Weapon(pml_t* pmll, pmove_t* pmm)
 {
 	static pml_t* pml;
@@ -84,18 +98,26 @@ void cg::Pmove(pmove_t* pm)
 }
 void cg::Mod_JumpView(pmove_t* pm, pml_t* pml)
 {
-	
+	jumpanalyzer.commandTime = pm->ps->commandTime;
+	jumpanalyzer.serverTime  = pm->cmd.serverTime;
+	if (analyzer.InRecordingMode() && !analyzer.isRecording() 
+		&& !analyzer.isPreviewing() && analyzer.LastRecordingStoppedTime() + 200 < clients->snap.ps.commandTime
+		&& (pm->cmd.forwardmove != NULL || pm->cmd.rightmove != NULL) && VID_ACTIVE)
+
+		analyzer.StartRecording();
+
 	if (!analyzer.isRecording() || !pm || !pml)
 		return;
 
 
 
 	static int32_t old_cmdTime = pm->cmd.serverTime;
-	static bool hasBounced = false, hasShotRPG;
+	static bool hasBounced, hasShotRPG/*, hasCollided*/;
 
 	if (analyzer.current_frame == 0) {
 		hasBounced = false;
 		hasShotRPG = false;
+	//	hasCollided = false;
 	}
 	else if (!hasBounced)
 		hasBounced = jumpanalyzer.bounceTime == pm->ps->commandTime;
@@ -103,7 +125,8 @@ void cg::Mod_JumpView(pmove_t* pm, pml_t* pml)
 	if (!hasShotRPG) {
 		hasShotRPG = jumpanalyzer.weapon_cant_fire && (pm->ps->weapon == BG_FindWeaponIndexForName("rpg_mp") || pm->ps->weapon == BG_FindWeaponIndexForName("rpg_sustain_mp"));
 	}
-	
+	//if (!hasCollided)
+	//	hasCollided = jumpanalyzer.velocity_clipped;
 
 	if (pm->cmd.serverTime > old_cmdTime + 3) {
 		old_cmdTime = pm->cmd.serverTime;
@@ -119,11 +142,12 @@ void cg::Mod_JumpView(pmove_t* pm, pml_t* pml)
 		jData.rpg_fired = hasShotRPG;
 		jData.bounced = hasBounced;
 		jData.colliding = jumpanalyzer.velocity_clipped;
+		
+		if (hasShotRPG) {	hasShotRPG = false;}
+		if (hasBounced) {	analyzer.bounceFrames.insert(analyzer.current_frame);		hasBounced = false; }
+		//if (hasCollided) {	analyzer.collisionFrames.insert(analyzer.current_frame);	hasCollided = false; }
 
-		if (hasShotRPG) hasShotRPG = false;
-		if (hasBounced) hasBounced = false;
-
-		jData.FPS = (int)(1000.f / (cgs->frametime == NULL ? 1 : cgs->frametime));
+		jData.FPS = (int)(1000.f / (cls->frametime == NULL ? 1 : cls->frametime));
 
 		analyzer.SaveFrameData(jData); 
 		analyzer.OnFrameUpdate();

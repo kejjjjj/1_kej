@@ -22,6 +22,12 @@ void jAnalyzer::StartRecording()
 	jAnalyzer::setPreviewState(false);
 	jAnalyzer::SetFreeMode(false);
 
+	bounceFrames.erase(bounceFrames.begin(), bounceFrames.end());
+	bounceFrames.clear();
+
+	//collisionFrames.erase(bounceFrames.begin(), bounceFrames.end());
+	//collisionFrames.clear();
+
 	data.erase(data.begin(), data.end());
 	data.clear();
 	data.resize(0);
@@ -42,7 +48,7 @@ void jAnalyzer::StopRecording()
 	if (data.size() > 0 && avg.size() > 0) {
 		average_velocity = GetAverage(avg.data(), avg.size());
 	}
-
+	analyzer.SetLastRecordingStopTime(clients->snap.ps.commandTime);
 	is_recording = false;
 }
 void cg::jAnalyzer::OnFrameUpdate()
@@ -122,4 +128,20 @@ void jAnalyzer::SetFreeMode(bool isTrue)
 float jAnalyzer::GetAverageVelocity()
 {
 	return average_velocity;
+}
+bool jAnalyzer::InRecordingMode()
+{
+	return in_recording_mode;
+}
+void jAnalyzer::SetRecordingMode(bool isRecording)
+{
+	in_recording_mode = isRecording;
+}
+DWORD jAnalyzer::LastRecordingStoppedTime()
+{
+	return time_since_last_recording;
+}
+void jAnalyzer::SetLastRecordingStopTime(DWORD time)
+{
+	time_since_last_recording = time;
 }

@@ -87,6 +87,9 @@ cg::cmd_function_s* Cmd_RemoveCommand(const char* cmdname)
 void OpenMenu_f()
 {
 
+    if (analyzer.isRecording())
+        analyzer.StopRecording();
+
     r::should_draw_menu = !r::should_draw_menu;
 
     if (!r::should_draw_menu) {

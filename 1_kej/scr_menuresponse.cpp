@@ -29,6 +29,15 @@ void Script_OnMenuResponse(int serverId, int menu, const char* response)
 
         else if (!strcmp(response, "load"))
             Script_OnPositionLoaded();
+
+        else if (!strcmp(response, "record")) {
+            analyzer.SetRecordingMode(!analyzer.InRecordingMode());
+            Com_Printf(CON_CHANNEL_OBITUARY, "Recording mode %s\n", analyzer.InRecordingMode() == true ? "^2enabled" : "^1disabled");
+
+            if (!analyzer.InRecordingMode() && analyzer.isRecording())
+                analyzer.StopRecording();
+
+        }
     }
 
     //printf("menu[" "%s" "], response[" "%s" "]\n", menu_name, response);
@@ -118,14 +127,6 @@ void Script_OnPositionLoaded()
 
     }
     analyzer.StopRecording();
-
-    jump_data* data = analyzer.FetchFrameData(0);
-
-    if (data) {
-        std::cout << "maxs[2]: " << data->maxs[2] << '\n';
-    }
-    else
-        std::cout << "null data\n";
 
     memset(&cg::jumpanalyzer, 0, sizeof(cg::jumpanalyzer_s));
 

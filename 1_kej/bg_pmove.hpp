@@ -12,6 +12,7 @@ namespace cg
 
 
 	inline void(__cdecl* PM_AirMove_f)(pmove_t* pm, pml_t* pml);
+	inline void(__cdecl* PM_UFOMove_f)(pmove_t* pm, pml_t* pml);
 	inline void(__cdecl* PM_Weapon_f)(pml_t* pml, pmove_t* pm);
 	inline BOOL(*PM_SlideMove_f)(pmove_t* pm, pml_t* pml, int gravity);
 
@@ -20,6 +21,7 @@ namespace cg
 
 
 	void PM_AirMove(pmove_t* pm, pml_t* pml);
+	void PM_UFOMove(pmove_t* pm, pml_t* pml);
 	void PM_Weapon(pml_t* pml, pmove_t* pm);
 	BOOL PM_SlideMove(pmove_t* pm, pml_t* pml, int gravity);
 

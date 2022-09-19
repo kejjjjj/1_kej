@@ -24,18 +24,22 @@ void cg::Mod_HitAnalyzer(pmove_t* pm, pml_t* pml)
 
 	}
 	if (pml->groundTrace.normal[2] > .3f && pml->groundTrace.normal[2] < .7f) {
-		if ((pm->ps->pm_flags & PMF_JUMPING) == 0 && NOT_GROUND && pm->ps->jumpTime > 500 && !wait_ground) {
-			const int32_t hit_velocity = (int32_t)glm::length(glm::vec2(pm->ps->velocity[0], pm->ps->velocity[1]));
-			const int32_t old_vel = (int32_t)glm::length(glm::vec2(pm->ps->oldVelocity[0], pm->ps->oldVelocity[1]));
-			jumpanalyzer.bounceVelocity = old_vel;
-			jumpanalyzer.hasBounced = true;
-			jumpanalyzer.bounceTime = pm->ps->commandTime;
-			wait_ground = true;
+		if ((pm->ps->pm_flags & PMF_JUMPING) == 0 && NOT_GROUND && pm->ps->jumpTime > 500) {
 
-			const int32_t difference = hit_velocity - old_vel;
+			if (!wait_ground) {
+				jumpanalyzer.bounceTime = pm->ps->commandTime;
 
-			if(v::mod_hitanalyzer.isEnabled())
-				Com_Printf(CON_CHANNEL_OBITUARY, "^2%i\n", difference);
+				const int32_t hit_velocity = (int32_t)glm::length(glm::vec2(pm->ps->velocity[0], pm->ps->velocity[1]));
+				const int32_t old_vel = (int32_t)glm::length(glm::vec2(pm->ps->oldVelocity[0], pm->ps->oldVelocity[1]));
+				jumpanalyzer.bounceVelocity = old_vel;
+				jumpanalyzer.hasBounced = true;
+				wait_ground = true;
+
+				const int32_t difference = hit_velocity - old_vel;
+
+				if (v::mod_hitanalyzer.isEnabled())
+					Com_Printf(CON_CHANNEL_OBITUARY, "^2%i\n", difference);
+			}
 
 
 		}

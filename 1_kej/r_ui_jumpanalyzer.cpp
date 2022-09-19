@@ -3,6 +3,8 @@
 
 void r::R_JumpView_Main()
 {
+	//this function might need some cleanup
+
 	static int& menu_frame = analyzer.preview_frame;
 	static DWORD ms = Sys_MilliSeconds();
 	static bool isPlayback;
@@ -13,7 +15,7 @@ void r::R_JumpView_Main()
 
 	ImGui::Text("press [spacebar] to toggle free mode");
 
-	if (GetAsyncKeyState(VK_SPACE) & 1) {
+	if (GetAsyncKeyState(VK_SPACE) & 1 && VID_ACTIVE) {
 		analyzer.SetFreeMode(!analyzer.InFreeMode());
 
 		const bool isUFO = clients->snap.ps.pm_type == PM_UFO;
@@ -33,7 +35,7 @@ void r::R_JumpView_Main()
 	ImGui::PushItemWidth(100);
 	ImGui::SliderInt("Frame", &menu_frame, 0, analyzer.GetTotalFrames(), "%u", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 
-	ImGui::SameLine();
+	//ImGui::SameLine();
 	if (ImGui::Button("R")) {
 		isPlayback = false;
 		menu_frame = 0;
@@ -54,15 +56,20 @@ void r::R_JumpView_Main()
 		else isPlayback = false;
 	}
 	if (isPlayback) {
+		static int32_t oldServerTime = jumpanalyzer.serverTime;
 		dvar_s* com_maxfps = Dvar_FindMalleableVar("com_maxfps");
-		if (com_maxfps && g_gravity) {
-			com_maxfps->current.integer = 1000.f / 4;
+		jump_data* jData = analyzer.FetchFrameData(menu_frame);
+		if (com_maxfps && g_gravity && jumpanalyzer.serverTime > oldServerTime + 3 && jData) {
+			com_maxfps->current.integer = jData->FPS;
 			g_gravity->current.value = 0;
+			oldServerTime = jumpanalyzer.serverTime;
+
+			if (menu_frame < analyzer.GetTotalFrames())
+				menu_frame++;
+			else isPlayback = false;
 		}
 
-		if (menu_frame < analyzer.GetTotalFrames())
-			menu_frame++;
-		else isPlayback = false;
+
 	}
 
 	ImGui::SameLine();
@@ -100,7 +107,12 @@ void r::R_JumpView_Main()
 		ImGui::Text("rpg fired: %i", jData->rpg_fired);
 		ImGui::Text("bounced: %i", jData->bounced);
 		ImGui::Text("keys: %s", r::R_UserCmdKeysPressed(jData->forwardmove, jData->rightmove).c_str());
-		ImGui::Text("strafe accuracy: %.3f", DistanceToOpt(opt, jData->angles[YAW]));
+
+		if(jData->rightmove != NULL)
+			ImGui::Text("strafe accuracy: %.3f", DistanceToOpt(opt, jData->angles[YAW]));
+		else
+			ImGui::Text("strafe accuracy: N/A");
+
 		ImGui::Text("colliding: %i", jData->colliding);
 		const vec3_t empty = { 0,0,0 };
 
@@ -118,13 +130,95 @@ void r::R_JumpView_Main()
 	ImGui::Text("Events");
 	ImGui::Separator();
 
+	static int32_t bounce_indx(0);
 
-	if (ImGui::Button("on bounce"))
-		menu_frame = analyzer.FindBounceFrame();
+	R_JumpView_BounceButtons(menu_frame);
+
 	if (ImGui::Button("on rpg shot"))
 		menu_frame = analyzer.FindRpgShot();
 	if (ImGui::Button("highest point"))
 		menu_frame = analyzer.FindHighestPoint();
+
+	
+
+
+}
+void r::R_JumpView_BounceButtons(int& menu_frame)
+{
+
+	static std::set<int>::iterator it = analyzer.bounceFrames.begin();
+	static DWORD end_recording_time = analyzer.LastRecordingStoppedTime();
+
+	if (analyzer.LastRecordingStoppedTime() != end_recording_time) { // a way to track if this is a new run
+		it = analyzer.bounceFrames.begin();
+		end_recording_time = analyzer.LastRecordingStoppedTime();
+	}
+
+	if (analyzer.bounceFrames.size() > 0) {
+		ImGui::Text("bounce");
+
+
+		ImGui::SameLine();
+
+		if (analyzer.bounceFrames.size() > 1) {
+			if (ImGui::Button("<##01")) {
+
+
+				int32_t closest_frame(menu_frame); //find the closest bounce frame from current frame 
+				int32_t closest(menu_frame);
+
+				for (auto& i : analyzer.bounceFrames) {
+
+					if (i > menu_frame) //only want to search backwards
+						break;
+
+					if (i == menu_frame)
+						continue;
+
+					const int32_t dist = glm::distance((float)i, (float)menu_frame);
+
+					if (closest > dist) {
+						closest = dist;
+						closest_frame = i;
+					}
+				}
+
+				menu_frame = closest_frame;
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button(">##01")) {
+
+				int32_t closest_frame(analyzer.GetTotalFrames()); //find the closest bounce frame from current frame 
+				int32_t closest(analyzer.GetTotalFrames());
+
+				for (auto& i : analyzer.bounceFrames) {
+
+					if (i <= menu_frame || i == analyzer.GetTotalFrames()) //only want to search forwards
+						continue;
+
+					const int32_t dist = glm::distance((float)i, (float)menu_frame);
+
+					if (closest > dist) {
+						closest = dist;
+						closest_frame = i;
+					}
+				}
+
+				menu_frame = closest_frame;
+			}
+
+		}
+		else
+			if (ImGui::Button("Go")) {
+				menu_frame = *it;
+			}
+
+
+
+	}
+
 }
 void r::R_JumpView_Preferences()
 {

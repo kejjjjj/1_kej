@@ -12,7 +12,7 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 			//ImGui::GetBackgroundDrawList()->Addline
 			Mod_DrawVelocityDirection();
 			Mod_DrawWorldAxes();
-			if (analyzer.RecordingExists() && !analyzer.isRecording()) {
+			if (analyzer.RecordingExists() && !analyzer.isRecording() && analyzer.InRecordingMode() && analyzer.isPreviewing()) {
 				Mod_DrawJumpPath();
 				Mod_DrawJumpHitbox();
 				Mod_DrawJumpDirection();
@@ -21,9 +21,6 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 		}
 		R_EndRender();
 	}
-
-	if (GetAsyncKeyState(VK_MENU) & 1 && !analyzer.isRecording() && VID_ACTIVE && !analyzer.isPreviewing())
-		analyzer.StartRecording();
 
 	return pEndScene(pDevice);
 }

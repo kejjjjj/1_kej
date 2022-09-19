@@ -35,11 +35,15 @@ namespace cg
 		void OnFrameUpdate();
 		bool RecordingExists();
 		bool isPreviewing();
+		bool InRecordingMode();
+		void SetRecordingMode(bool isRecording);
 		void setPreviewState(bool isPreviewing);
 		int32_t GetTotalFrames();
 		bool InFreeMode();
 		void SetFreeMode(bool isTrue);
 		float GetAverageVelocity();
+		DWORD LastRecordingStoppedTime();
+		void SetLastRecordingStopTime(DWORD time);
 
 		void SaveFrameData(jump_data& jdata);
 		jump_data* FetchFrameData(uint32_t frame);
@@ -50,12 +54,16 @@ namespace cg
 
 		//std::unique_ptr<analyzer_data> ptr_data;
 		std::vector<jump_data> data;
+		std::set<int> bounceFrames;
+		//std::set<int> collisionFrames;
 		uint32_t current_frame; //when recording
 		bool is_recording;
 		bool is_previewing;
 		bool is_free_mode;
 		float average_velocity;
 		int32_t preview_frame; //in frame editor
+		bool in_recording_mode;
+		DWORD time_since_last_recording;
 	};
 	inline jAnalyzer analyzer;
 }
