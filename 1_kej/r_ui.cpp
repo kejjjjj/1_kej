@@ -106,8 +106,8 @@ void r::R_RemoveInput(bool _true, bool save_file)
 
 	if (_true) {
 
-			io.MouseDrawCursor = true;
-			io.WantCaptureMouse = true;
+		io.MouseDrawCursor = true;
+		io.WantCaptureMouse = true;
 		
 		a->write_addr(MouseInput, "\x00", 1);
 		a->write_addr(KeyInput, "\xC3", 1);

@@ -16,21 +16,12 @@ auto jAnalyzer::GetData()
 
 void jAnalyzer::StartRecording()
 {
-	current_frame = 0;
-	preview_frame = 0;
-	is_recording = true;
+
 	jAnalyzer::setPreviewState(false);
 	jAnalyzer::SetFreeMode(false);
+	ClearData();
+	is_recording = true;
 
-	bounceFrames.erase(bounceFrames.begin(), bounceFrames.end());
-	bounceFrames.clear();
-
-	//collisionFrames.erase(bounceFrames.begin(), bounceFrames.end());
-	//collisionFrames.clear();
-
-	data.erase(data.begin(), data.end());
-	data.clear();
-	data.resize(0);
 
 }
 bool jAnalyzer::isRecording()
@@ -50,6 +41,28 @@ void jAnalyzer::StopRecording()
 	}
 	analyzer.SetLastRecordingStopTime(clients->snap.ps.commandTime);
 	is_recording = false;
+}
+void jAnalyzer::ClearData()
+{
+	current_frame = 0;
+	preview_frame = 0;
+
+	bounceFrames.erase(bounceFrames.begin(), bounceFrames.end());
+	bounceFrames.clear();
+
+	//collisionFrames.erase(bounceFrames.begin(), bounceFrames.end());
+	//collisionFrames.clear();
+
+	data.erase(data.begin(), data.end());
+	data.clear();
+	data.resize(0);
+
+	SetLastRecordingStopTime(0);
+	average_velocity = 0;
+	is_recording = false;
+
+
+
 }
 void cg::jAnalyzer::OnFrameUpdate()
 {

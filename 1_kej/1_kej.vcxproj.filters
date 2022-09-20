@@ -126,30 +126,6 @@
     <ClInclude Include="sys_tools.hpp">
       <Filter>Source Files\sys</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\imgui_impl_win32.h">
-      <Filter>Header Files\lib\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_internal.h">
-      <Filter>Header Files\lib\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imstb_rectpack.h">
-      <Filter>Header Files\lib\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imstb_textedit.h">
-      <Filter>Header Files\lib\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imstb_truetype.h">
-      <Filter>Header Files\lib\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imconfig.h">
-      <Filter>Header Files\lib\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui.h">
-      <Filter>Header Files\lib\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_impl_dx9.h">
-      <Filter>Header Files\lib\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="mod_vis.hpp">
       <Filter>Source Files\mod</Filter>
     </ClInclude>
@@ -204,6 +180,30 @@
     <ClInclude Include="mod_analyzer.hpp">
       <Filter>Source Files\mod</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_dx9.h">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_win32.h">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_internal.h">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_rectpack.h">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_textedit.h">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_truetype.h">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imconfig.h">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui.h">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -250,27 +250,6 @@
     </ClCompile>
     <ClCompile Include="sys_tools.cpp">
       <Filter>Source Files\sys</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_impl_win32.cpp">
-      <Filter>Header Files\lib\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_tables.cpp">
-      <Filter>Header Files\lib\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_widgets.cpp">
-      <Filter>Header Files\lib\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui.cpp">
-      <Filter>Header Files\lib\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_demo.cpp">
-      <Filter>Header Files\lib\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_draw.cpp">
-      <Filter>Header Files\lib\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_impl_dx9.cpp">
-      <Filter>Header Files\lib\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="mod_vis.cpp">
       <Filter>Source Files\mod</Filter>
@@ -331,6 +310,30 @@
     </ClCompile>
     <ClCompile Include="r_ui_jumpanalyzer.cpp">
       <Filter>Source Files\render\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="mod_analyzer_io.cpp">
+      <Filter>Source Files\mod</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_demo.cpp">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_draw.cpp">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_dx9.cpp">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_win32.cpp">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_tables.cpp">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_widgets.cpp">
+      <Filter>Header Files\lib\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui.cpp">
+      <Filter>Header Files\lib\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

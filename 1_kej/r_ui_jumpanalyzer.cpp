@@ -9,6 +9,7 @@ void r::R_JumpView_Main()
 	static DWORD ms = Sys_MilliSeconds();
 	static bool isPlayback;
 
+	ImGui::BeginGroup();
 
 	if (!analyzer.InFreeMode())
 		cgs->snap->ps.velocity[2] = 0;
@@ -140,7 +141,9 @@ void r::R_JumpView_Main()
 		menu_frame = analyzer.FindHighestPoint();
 
 	
-
+	ImGui::EndGroup();
+	ImGui::SameLine();
+	R_JumpView_IO();
 
 }
 void r::R_JumpView_BounceButtons(int& menu_frame)
@@ -230,6 +233,34 @@ void r::R_JumpView_Preferences()
 
 	if (ImGui::Checkbox("Show Hitbox", &v::mod_jumpv_hitbox.evar->enabled))
 		v::mod_jumpv_hitbox.SetValue(v::mod_jumpv_hitbox.isEnabled());
+
+}
+void r::R_JumpView_IO()
+{
+	ImGui::Text("\t"); ImGui::SameLine();
+	ImGui::BeginGroup();
+	ImGui::Text("File");
+	ImGui::BeginChild("child01", ImVec2(300, 140), true);
+	static char buff[MAX_PATH];
+	ImGui::PushItemWidth(150);
+	ImGui::InputText("file name", buff, MAX_PATH, ImGuiTextFlags_None);
+	if (ImGui::Button("Save Data")) {
+		if (!analyzer.IO_WriteData(buff, analyzer.data)) {
+			Com_PrintError(CON_CHANNEL_OBITUARY, "See console or log file for more information\n");
+		}
+	}
+
+	static char buff2[MAX_PATH];
+	ImGui::PushItemWidth(150);
+	ImGui::InputText("file name##01", buff2, MAX_PATH, ImGuiTextFlags_None);
+	if (ImGui::Button("Read Data")) {
+		if (!analyzer.IO_ReadData(buff2)) {
+			Com_PrintError(CON_CHANNEL_OBITUARY, "See console or log file for more information\n");
+		}
+	}
+
+	ImGui::EndChild();
+	ImGui::EndGroup();
 
 }
 void r::R_JumpView(bool& isOpen)

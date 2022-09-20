@@ -72,6 +72,7 @@ void cg::CG_InitForeverHooks()
 
 	hook* a = nullptr;
 
+	a->nop(0x4D76DA); //setstat: developer_script must be false.
 
 	a->install(&(PVOID&)CL_Disconnect_f, CL_Disconnect);
 	a->install(&(PVOID&)SV_Map_f, SV_Map);

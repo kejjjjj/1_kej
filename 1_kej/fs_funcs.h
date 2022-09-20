@@ -15,10 +15,21 @@ namespace fs
 		FILE_BINARY = 32
 	};
 
+	struct file_s
+	{
+		DWORD lines_read;
+		DWORD current_column;
+		char current_character;
+
+	};
+
 	std::string GetExeFileName();
 	std::string GetExePath();
 
+	bool F_isValidFileName(const std::string file_name);
+
 	bool F_DirectoryExists(std::string directory_path);
+	bool F_FileExists(std::string directory, std::string file_name);
 
 	bool F_OpenFile(std::fstream& fp, std::string path, fileopen type);
 	bool F_CloseFile(std::fstream& fp);
@@ -37,7 +48,11 @@ namespace fs
 	uint64_t F_ReadAddress(std::fstream& fp);
 	std::string F_ReadUntil(std::fstream& fp, char end);
 
-
+	char F_Get(std::fstream& fp);
+	void F_Reset();
+	void F_SyntaxError(const char* message, ...);
+	std::string _GetLastError();
+	inline file_s file;
 }
 
 #endif

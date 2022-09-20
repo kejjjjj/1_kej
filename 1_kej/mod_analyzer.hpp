@@ -32,6 +32,7 @@ namespace cg
 		void StartRecording();
 		bool isRecording();
 		void StopRecording();
+		void ClearData();
 		void OnFrameUpdate();
 		bool RecordingExists();
 		bool isPreviewing();
@@ -52,16 +53,27 @@ namespace cg
 		int32_t FindRpgShot();
 		int32_t FindHighestPoint();
 
+		bool IO_WriteData(const std::string run_name, const std::vector<jump_data>& _data);
+		bool IO_ReadData(const std::string run_name);
+		bool IO_StartReadingData(std::fstream& fp);
+		template <typename t>
+		bool IO_ReadVector1(std::fstream& fp, t& value);
+		bool IO_ReadVector2(std::fstream& fp, vec2_t value);
+		bool IO_ReadVector3(std::fstream& fp, vec3_t value);
 		//std::unique_ptr<analyzer_data> ptr_data;
 		std::vector<jump_data> data;
 		std::set<int> bounceFrames;
 		//std::set<int> collisionFrames;
 		uint32_t current_frame; //when recording
+		int32_t preview_frame; //in frame editor
+		float average_velocity;
+
+		
+
+	private:
 		bool is_recording;
 		bool is_previewing;
 		bool is_free_mode;
-		float average_velocity;
-		int32_t preview_frame; //in frame editor
 		bool in_recording_mode;
 		DWORD time_since_last_recording;
 	};

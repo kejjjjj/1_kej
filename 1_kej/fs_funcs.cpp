@@ -15,6 +15,20 @@ bool fs::F_DirectoryExists(std::string directory_path)
 {
 	return _fs::exists(directory_path);
 }
+bool fs::F_FileExists(std::string directory, std::string file_name)
+{
+	if (!_fs::exists(directory)) {
+		return false;
+	}
+	for (const auto& entry : _fs::directory_iterator(directory)) {
+		
+		Com_Printf(CON_CHANNEL_CONSOLEONLY, "^5%s == %s\n", entry.path().filename().c_str(), file_name.c_str());
+
+		if (entry.path().filename() == file_name)
+			return true;
+	}
+	return false;
+}
 bool fs::F_WriteToFile(std::fstream& fp, std::string text)
 {
 	if (!fp.is_open())
@@ -139,13 +153,13 @@ std::string fs::F_GetFileName(std::string fullpath)
 //assuming we are now at the character before the 0x
 uint64_t fs::F_ReadAddress(std::fstream& f) 
 {
-	f.get();
-	char ch = f.get();
+	F_Get(f);
+	char ch = F_Get(f);
 
 	if (ch != 'x')
 		return 0;
 
-	//f.get(); //skip the x
+	//F_Get(f); //skip the x
 
 	std::string addr = F_ReadUntil(f, '\n');
 
@@ -161,7 +175,7 @@ std::string fs::F_ReadUntil(std::fstream& fp, char end)
 	std::string txt;
 
 	while (fp.good()) {
-		ch = fp.get();
+		ch = F_Get(fp);
 		if (ch == end)
 			break;
 		txt.push_back(ch);
@@ -169,8 +183,66 @@ std::string fs::F_ReadUntil(std::fstream& fp, char end)
 
 	if (txt.size() < 1)
 		return "N/A";
-
+	
 	
 
 	return txt;
+}
+bool fs::F_isValidFileName(const std::string file_name)
+{
+
+	for (const auto& i : file_name) {
+		if (!std::isalnum(i) && i != '-' && i != '_')
+			return false;
+
+	}
+	return true;
+}
+std::string fs::_GetLastError()
+{
+	const DWORD errorMessageID = ::GetLastError();
+	char* messageBuffer = nullptr;
+
+	size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL, errorMessageID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (char*)&messageBuffer, 0, NULL);
+
+	Com_PrintError(CON_CHANNEL_CONSOLEONLY, "IO_WriteData failed with: %s\n", messageBuffer);
+
+	std::string output = std::string(messageBuffer, size);
+
+	LocalFree(messageBuffer);
+	return output;
+}
+
+//F_Get keeps track of read contents
+char fs::F_Get(std::fstream& fp)
+{
+
+	file.current_character = fp.get();
+	file.current_column++;
+	if (file.current_character == '\n') {
+		file.lines_read++;
+		file.current_column = 0;
+	}
+	
+	return file.current_character;
+}
+void fs::F_Reset()
+{
+	memset(&file, 0, sizeof(file_s));
+}
+void fs::F_SyntaxError(const char* msg, ...)
+{
+	char v2[4096];
+	va_list va;
+
+	va_start(va, msg);
+	_vsnprintf_s(v2, 0x1000u, msg, va);
+	v2[4095] = 0;
+
+	Com_PrintError(CON_CHANNEL_CONSOLEONLY , "Syntax error on line [%i, %i] with reason: [%s]\n", file.lines_read, file.current_column, v2);
+
+	F_Reset();
+
+
 }

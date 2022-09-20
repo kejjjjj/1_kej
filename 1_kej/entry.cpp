@@ -29,8 +29,8 @@ void _init()
     if (hooked)
         return;
 
-    //AllocConsole();
-    //freopen_s(&_con, "CONOUT$", "w", stdout);
+    AllocConsole();
+    freopen_s(&_con, "CONOUT$", "w", stdout);
 
     std::thread(cg::CG_DllEntry).detach();
     std::cout << "requesting to inject\n";
