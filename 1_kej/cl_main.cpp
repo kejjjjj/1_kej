@@ -8,6 +8,11 @@ void cg::CL_Disconnect(int localClientNum)
 		Cmd_RemoveCommand("1_kej_openmenu");
 		CG_RemoveHooks();
 
+		if (analyzer.isRecording())
+			analyzer.StopRecording();
+
+		analyzer.ClearData();
+
 		Mod_EditMemory(true);
 	}
 

@@ -58,6 +58,10 @@ void r::R_JumpView_Main()
 	}
 	if (isPlayback) {
 		static int32_t oldServerTime = jumpanalyzer.serverTime;
+
+		if (glm::distance((float)oldServerTime, (float)jumpanalyzer.serverTime) > 100) //true on map restart
+			oldServerTime = jumpanalyzer.serverTime;
+
 		dvar_s* com_maxfps = Dvar_FindMalleableVar("com_maxfps");
 		jump_data* jData = analyzer.FetchFrameData(menu_frame);
 		if (com_maxfps && g_gravity && jumpanalyzer.serverTime > oldServerTime + 3 && jData) {
@@ -142,7 +146,6 @@ void r::R_JumpView_Main()
 
 	
 	ImGui::EndGroup();
-	ImGui::SameLine();
 	R_JumpView_IO();
 
 }
@@ -237,30 +240,112 @@ void r::R_JumpView_Preferences()
 }
 void r::R_JumpView_IO()
 {
-	ImGui::Text("\t"); ImGui::SameLine();
-	ImGui::BeginGroup();
+	
+	ImGui::NewLine();
 	ImGui::Text("File");
-	ImGui::BeginChild("child01", ImVec2(300, 140), true);
-	static char buff[MAX_PATH];
-	ImGui::PushItemWidth(150);
-	ImGui::InputText("file name", buff, MAX_PATH, ImGuiTextFlags_None);
-	if (ImGui::Button("Save Data")) {
-		if (!analyzer.IO_WriteData(buff, analyzer.data)) {
-			Com_PrintError(CON_CHANNEL_OBITUARY, "See console or log file for more information\n");
-		}
+	ImGui::Separator();
+
+	static bool is_saving, is_loading;
+	static std::vector<std::string> existingRuns;
+	static std::vector<const char*> existingRuns_c;
+
+	if (analyzer.RecordingExists()) {
+		if (ImGui::Button("Save Run"))
+			is_saving = !is_saving;
 	}
 
-	static char buff2[MAX_PATH];
-	ImGui::PushItemWidth(150);
-	ImGui::InputText("file name##01", buff2, MAX_PATH, ImGuiTextFlags_None);
-	if (ImGui::Button("Read Data")) {
-		if (!analyzer.IO_ReadData(buff2)) {
-			Com_PrintError(CON_CHANNEL_OBITUARY, "See console or log file for more information\n");
+	if (ImGui::Button("Load Run")) {
+		is_loading = !is_loading;
+
+		if (is_loading) {
+			dvar_s* mapname = Dvar_FindMalleableVar("mapname");
+
+			if (!mapname) {
+				Com_PrintError(CON_CHANNEL_OBITUARY, "mapname dvar does not exist!\n");
+				is_loading = false;
+			}
+			else {
+				existingRuns.erase(existingRuns.begin(), existingRuns.end());
+				existingRuns.clear();
+				existingRuns.resize(0);
+
+				existingRuns_c.erase(existingRuns_c.begin(), existingRuns_c.end());
+				existingRuns_c.clear();
+				existingRuns_c.resize(0);
+
+				if (!analyzer.IO_FindExistingRuns(mapname->current.string, existingRuns)) {
+					Com_PrintError(CON_CHANNEL_OBITUARY, "See console or log file for more information\n");
+					is_loading = false;
+				}
+
+
+
+			}
+
 		}
+
 	}
 
-	ImGui::EndChild();
-	ImGui::EndGroup();
+
+	if (is_saving) {
+
+		ImGui::Begin("Give the run a name", &is_saving, ImGuiWindowFlags_AlwaysAutoResize);
+
+		static char buff[MAX_PATH];
+		ImGui::PushItemWidth(300);
+		ImGui::InputText("Run name", buff, MAX_PATH, ImGuiTextFlags_None);
+
+		if (ButtonCentered("Save##02")) {
+			if (!analyzer.IO_WriteData(buff, analyzer.data)) {
+				Com_PrintError(CON_CHANNEL_OBITUARY, "See console or log file for more information\n");
+			}
+			is_saving = false;
+		}
+
+		ImGui::End();
+
+
+	}
+
+	if (is_loading && existingRuns.size() > 0) {
+
+		ImGui::Begin("Select a run", &is_loading, ImGuiWindowFlags_AlwaysAutoResize);
+
+		static int selected_map(0);
+
+
+
+		if (existingRuns_c.size() == NULL) {
+			for (int i = 0; i < existingRuns.size(); i++)
+				existingRuns_c.push_back(existingRuns[i].c_str());
+		}
+		ImGui::PushItemWidth(50 + 7 * strlen(existingRuns_c[selected_map]));
+		ImGui::Combo("Available Runs", &selected_map, existingRuns_c.data(), existingRuns_c.size());
+
+
+		if (ButtonCentered("Load Run##02")) {
+			if (!analyzer.IO_ReadData(existingRuns_c[selected_map])) {
+				Com_PrintError(CON_CHANNEL_OBITUARY, "See console or log file for more information\n");
+			}
+			is_loading = false;
+		}
+	
+
+
+		ImGui::End();
+
+
+	}
+
+	//static char buff2[MAX_PATH];
+	//ImGui::PushItemWidth(150);
+	//ImGui::InputText("file name##01", buff2, MAX_PATH, ImGuiTextFlags_None);
+	//if (ImGui::Button("Read Data")) {
+	//	if (!analyzer.IO_ReadData(buff2)) {
+	//		Com_PrintError(CON_CHANNEL_OBITUARY, "See console or log file for more information\n");
+	//	}
+	//}
+
 
 }
 void r::R_JumpView(bool& isOpen)
@@ -277,9 +362,10 @@ void r::R_JumpView(bool& isOpen)
 
 	ImGui::SetWindowSize(ImVec2(500, 300), ImGuiCond_FirstUseEver);
 
-	if (!analyzer.RecordingExists())
-		ImGui::Text("nothing has been recorded yet!\n");
-
+	if (!analyzer.RecordingExists()) {
+		ImGui::Text("nothing has been recorded yet!\nYou can load existing recordings however (if there are any)");
+		R_JumpView_IO();
+	}
 	else {
 
 

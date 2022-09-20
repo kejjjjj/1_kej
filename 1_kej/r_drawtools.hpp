@@ -42,6 +42,7 @@ namespace r
 	};
 
 	box_s R_ConstructBoxFromBounds(vec3_t origin, vec3_t mins, vec3_t maxs);
+	bool ButtonCentered(const char* label, float alignment = 0.5f);
 }
 
 #endif

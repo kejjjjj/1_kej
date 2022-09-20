@@ -186,6 +186,7 @@ bool Evar_LoadFromFile(std::string directory)
 		fs::F_ReadUntil(f, '\n');
 
 	}
+	fs::F_CloseFile(f);
 	std::cout << "total evars loaded: " << vars_read << '\n';
 	return true;
 }

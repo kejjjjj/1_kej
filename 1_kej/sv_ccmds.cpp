@@ -59,6 +59,9 @@ void cg::SV_Map()
 				//MessageBoxA(NULL, "failed to hook renderer", "FATAL ERROR", MB_ICONERROR);
 				fs::Log_Write(LOG_FATAL, "failed to hook renderer\n");
 			}
+			analyzer.ClearData();
+
+
 			Com_Printf(CON_CHANNEL_CONSOLEONLY, "^2Done!\n");
 
 		}

@@ -56,10 +56,12 @@ namespace cg
 		bool IO_WriteData(const std::string run_name, const std::vector<jump_data>& _data);
 		bool IO_ReadData(const std::string run_name);
 		bool IO_StartReadingData(std::fstream& fp);
+		bool IO_ReadMapName(std::fstream& fp, const char* run_name, std::string& buffer);
 		template <typename t>
 		bool IO_ReadVector1(std::fstream& fp, t& value);
 		bool IO_ReadVector2(std::fstream& fp, vec2_t value);
 		bool IO_ReadVector3(std::fstream& fp, vec3_t value);
+		bool IO_FindExistingRuns(const char* mapname, std::vector<std::string>& runs);
 		//std::unique_ptr<analyzer_data> ptr_data;
 		std::vector<jump_data> data;
 		std::set<int> bounceFrames;
@@ -71,10 +73,10 @@ namespace cg
 		
 
 	private:
-		bool is_recording;
+		bool is_recording; //currently recording a clip
 		bool is_previewing;
 		bool is_free_mode;
-		bool in_recording_mode;
+		bool in_recording_mode; //true when the recording mode keybind is toggled on 
 		DWORD time_since_last_recording;
 	};
 	inline jAnalyzer analyzer;

@@ -54,7 +54,7 @@ bool jAnalyzer::IO_WriteData(const std::string run_name, const std::vector<jump_
 	std::set<int>::iterator it = bounceFrames.begin();
 
 
-	//f << mapname->current.string << '\n';
+	f << mapname->current.string << '\n';
 	for (int32_t i = 0; i < data.size(); i++) {
 
 		f << '{' << data[i].angles[PITCH]		<< "," << data[i].angles[YAW]			<< "," << data[i].angles[ROLL]		<< '}';
@@ -67,7 +67,8 @@ bool jAnalyzer::IO_WriteData(const std::string run_name, const std::vector<jump_
 		f << '{' << data[i].FPS					<< "}{" << data[i].colliding			<< '}';
 		f << '{' << (*it == i) << "}\n";
 
-		it++;
+		if(*it == i)
+			it++;
 	}
 
 	fs::F_CloseFile(f);
@@ -106,7 +107,11 @@ bool jAnalyzer::IO_ReadData(const std::string run_name)
 
 	if (!success)
 		ClearData();
-
+	else
+	{
+		analyzer.SetRecordingMode(true);
+		analyzer.setPreviewState(true);
+	}
 	fs::F_CloseFile(f);
 
 	return success;
@@ -116,9 +121,11 @@ bool jAnalyzer::IO_StartReadingData(std::fstream& fp)
 	ClearData();
 	vec3_t angles, origin, velocity, mins, maxs;
 	vec3_t value;
+	fs::F_ReadUntil(fp, '\n'); //skip mapname
 	fs::F_Get(fp);
 	bool success;
 	bool isBounceFrame;
+
 	while (fp.good() && !fp.eof()) {
 
 		jump_data jData;
@@ -255,5 +262,74 @@ bool jAnalyzer::IO_ReadVector3(std::fstream& fp, vec3_t value)
 		value = 0;
 		F_SyntaxError("IO_ReadVector3: value for key [2] is not a number ['%s']", current_str.c_str());
 		return false;
+	}
+}
+
+bool jAnalyzer::IO_ReadMapName(std::fstream& fp, const char* run_name, std::string& buffer)
+{
+	const std::string game_path = fs::GetExePath() + "\\1_kej";
+
+	if (!fs::F_FileExists(game_path, std::string(run_name) + ".kej")) {
+		Com_PrintError(CON_CHANNEL_CONSOLEONLY, "IO_ReadMapName failed with: non existent file\n");
+		return false;
+	}
+
+	const std::string mapName = fs::F_ReadUntil(fp, '\n');
+
+	if (mapName == "N/A") {
+		Com_PrintError(CON_CHANNEL_CONSOLEONLY, "IO_ReadMapName: Failure to read to read mapname because read string had a size of < 1\n");
+		return false;
+	}
+	else if (mapName.find("mp_") == std::string::npos) {
+		Com_PrintError(CON_CHANNEL_CONSOLEONLY, "IO_ReadMapName: invalid mapname\n");
+		return false;
+	}
+
+	buffer = mapName;
+
+	return true;
+
+}
+bool jAnalyzer::IO_FindExistingRuns(const char* mapname, std::vector<std::string>& runs)
+{
+	const std::string game_path = fs::GetExePath() + "\\1_kej";
+	std::vector<std::string> dir;
+	fs::F_FilesInThisDirectory(game_path, &dir);
+	std::fstream f;
+	std::string read_mapname;
+	if (dir.size() < 1) {
+		Com_PrintError(CON_CHANNEL_CONSOLEONLY, "IO_FindExistingRuns failed because there are no existing runs\n");
+		return false;
+	}
+
+	for (auto& i : dir) {
+
+		if (fs::GetFileExtension(i).find("kej") == std::string::npos) {
+			continue;
+		}
+
+		if (!fs::F_OpenFile(f, i, fs::fileopen::FILE_IN)) {
+			Com_PrintError(CON_CHANNEL_CONSOLEONLY, "IO_FindExistingRuns failure to open file [%s] in read mode\n", i.c_str());
+			return false;
+		}
+		std::string only_name = fs::F_GetFileName(i);
+		only_name = fs::removeFileExtension(only_name, 4); //4 because .kej
+
+		if (!IO_ReadMapName(f, only_name.c_str(), read_mapname)) {
+			fs::F_CloseFile(f);
+			return false;
+		}
+		fs::F_CloseFile(f);
+
+		if (read_mapname.size() < 1) {
+			Com_PrintError(CON_CHANNEL_CONSOLEONLY, "IO_FindExistingRuns read mapname length was < 1\n");
+			return false;
+		}
+		
+		if (!read_mapname.compare(mapname)) {
+			runs.push_back(only_name);
+			std::cout << "found: " << only_name << "from map: " << read_mapname << '\n';
+		}
+
 	}
 }
