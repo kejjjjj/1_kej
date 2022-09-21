@@ -487,7 +487,7 @@ void cg::Mod_DrawJumpPath()
 	std::vector<ImVec2> points = OriginsToScreen(analyzer.data, &color);
 	if (points.size() > 1)
 		for (int i = 0; i < points.size() - 1; i++)
-			ImGui::GetBackgroundDrawList()->AddLine(points[i], points[i + 1], IM_COL32(color[i].x, color[i].y, 0, 255), 1.f);
+			ImGui::GetBackgroundDrawList()->AddLine(points[i], points[i + 1], IM_COL32(color[i].x, color[i].y, 0, 255), 3.f);
 
 
 	vec2_t xy;

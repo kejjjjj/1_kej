@@ -52,6 +52,8 @@ bool jAnalyzer::IO_WriteData(const std::string run_name, const std::vector<jump_
 		return false;
 	}
 	std::set<int>::iterator it = bounceFrames.begin();
+	std::set<int>::iterator it_rpg = rpgFrames.begin();
+	std::set<int>::iterator it_jump = rpgFrames.begin();
 
 
 	f << mapname->current.string << '\n';
@@ -65,10 +67,16 @@ bool jAnalyzer::IO_WriteData(const std::string run_name, const std::vector<jump_
 		f << '{' << (int)data[i].forwardmove	<< "}{" << (int)data[i].rightmove		<< '}';
 		f << '{' << data[i].rpg_fired			<< "}{" << data[i].bounced				<< '}';
 		f << '{' << data[i].FPS					<< "}{" << data[i].colliding			<< '}';
-		f << '{' << (*it == i) << "}\n";
+		f << '{' << (*it == i)					<< "}{" << (*it_rpg == i)				<< "}{" << (*it_jump == i) << "}\n";
 
 		if(*it == i)
 			it++;
+
+		if (*it_rpg == i)
+			it_rpg++;
+
+		if (*it_jump == i)
+			it_jump++;
 	}
 
 	fs::F_CloseFile(f);
@@ -119,12 +127,10 @@ bool jAnalyzer::IO_ReadData(const std::string run_name)
 bool jAnalyzer::IO_StartReadingData(std::fstream& fp)
 {
 	ClearData();
-	vec3_t angles, origin, velocity, mins, maxs;
-	vec3_t value;
 	fs::F_ReadUntil(fp, '\n'); //skip mapname
 	fs::F_Get(fp);
 	bool success;
-	bool isBounceFrame;
+	bool isBounceFrame, isRpgFrame, isJumpFrame;
 
 	while (fp.good() && !fp.eof()) {
 
@@ -142,9 +148,15 @@ bool jAnalyzer::IO_StartReadingData(std::fstream& fp)
 		success = IO_ReadVector1<int>(fp, jData.FPS);			if (!success) return false;
 		success = IO_ReadVector1<bool>(fp, jData.colliding);	if (!success) return false;
 		success = IO_ReadVector1<bool>(fp, isBounceFrame);		if (!success) return false;
+		success = IO_ReadVector1<bool>(fp, isRpgFrame);			if (!success) return false;
+		success = IO_ReadVector1<bool>(fp, isJumpFrame);		if (!success) return false;
 
 		if (isBounceFrame)
 			bounceFrames.insert(data.size() - 1);
+		if (isRpgFrame)
+			rpgFrames.insert(data.size() - 1);
+		if (isJumpFrame)
+			jumpFrame.insert(data.size() - 1);
 
 		fs::F_Get(fp); // skip newline
 
@@ -317,7 +329,7 @@ bool jAnalyzer::IO_FindExistingRuns(const char* mapname, std::vector<std::string
 
 		if (!IO_ReadMapName(f, only_name.c_str(), read_mapname)) {
 			fs::F_CloseFile(f);
-			return false;
+			continue;
 		}
 		fs::F_CloseFile(f);
 

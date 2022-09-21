@@ -20,6 +20,7 @@ namespace cg
 		bool bounced;
 		int32_t FPS;
 		bool colliding;
+		bool jumped;
 	};
 	class jAnalyzer 
 	{
@@ -65,6 +66,8 @@ namespace cg
 		//std::unique_ptr<analyzer_data> ptr_data;
 		std::vector<jump_data> data;
 		std::set<int> bounceFrames;
+		std::set<int> rpgFrames;
+		std::set<int> jumpFrame;
 		//std::set<int> collisionFrames;
 		uint32_t current_frame; //when recording
 		int32_t preview_frame; //in frame editor

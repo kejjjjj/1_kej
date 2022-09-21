@@ -8,6 +8,12 @@ void r::R_JumpView_Main()
 	static int& menu_frame = analyzer.preview_frame;
 	static DWORD ms = Sys_MilliSeconds();
 	static bool isPlayback;
+	const ImGuiIO& io = ImGui::GetIO();
+
+	if (!VID_ACTIVE) {
+		ImGui::Text("WINDOW NOT ACTIVE\n");
+		return;
+	}
 
 	ImGui::BeginGroup();
 
@@ -23,6 +29,14 @@ void r::R_JumpView_Main()
 
 		r::R_RemoveInput(!analyzer.InFreeMode(), false);
 
+		dvar_s* g_gravity = Dvar_FindMalleableVar("g_gravity");
+
+		if (g_gravity && !analyzer.InFreeMode())
+			if (g_gravity->current.value == 0) {
+				g_gravity->current.value = 800;
+				g_gravity->latched.value = 800;
+			}
+
 		if (analyzer.InFreeMode() && !isUFO) {
 			Cbuf_AddText("ufo\n", cgs->clientNum);
 		}
@@ -30,14 +44,19 @@ void r::R_JumpView_Main()
 			Cbuf_AddText("ufo\n", cgs->clientNum);
 
 	}
+	//else if (GetAsyncKeyState('F') & 1) {
+	//	v::mod_jumpv_forcepos.SetValue(!v::mod_jumpv_forcepos.isEnabled());
 
+	//	if (v::mod_jumpv_forcepos.isEnabled() && analyzer.InFreeMode())
+	//		analyzer.SetFreeMode(false);
+	//}
 	ImGui::NewLine();
 
 	ImGui::PushItemWidth(100);
 	ImGui::SliderInt("Frame", &menu_frame, 0, analyzer.GetTotalFrames(), "%u", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 
 	//ImGui::SameLine();
-	if (ImGui::Button("R")) {
+	if (ImGui::Button("R") || GetAsyncKeyState('R') & 1) {
 		isPlayback = false;
 		menu_frame = 0;
 	}
@@ -51,7 +70,7 @@ void r::R_JumpView_Main()
 	const char* character = isPlayback == false ? ">" : "P";
 
 	ImGui::SameLine();
-	if (ImGui::Button(character)) {
+	if (ImGui::Button(character) || GetAsyncKeyState('P') & 1) {
 		if (!isPlayback)
 			isPlayback = true;
 		else isPlayback = false;
@@ -94,6 +113,9 @@ void r::R_JumpView_Main()
 		}
 	}
 
+	menu_frame += GetAsyncKeyState(VK_RIGHT) & 1 == true;
+	menu_frame -= GetAsyncKeyState(VK_LEFT) & 1 == true;
+
 	ImGui::Text("Jump Data");
 	ImGui::Separator();
 
@@ -119,9 +141,10 @@ void r::R_JumpView_Main()
 			ImGui::Text("strafe accuracy: N/A");
 
 		ImGui::Text("colliding: %i", jData->colliding);
+		ImGui::Text("jumped: %i", jData->jumped);
 		const vec3_t empty = { 0,0,0 };
 
-		if (!analyzer.InFreeMode() && v::mod_jumpv_forcepos.isEnabled()) {
+		if (!analyzer.InFreeMode() && v::mod_jumpv_forcepos.isEnabled() || GetAsyncKeyState('C') & 1) {
 			CG_SetPlayerAngles(clients->cgameViewangles, jData->angles);
 			VectorCopy(jData->origin, ps_loc->origin);
 			VectorCopy(empty, ps_loc->velocity);
@@ -139,8 +162,6 @@ void r::R_JumpView_Main()
 
 	R_JumpView_BounceButtons(menu_frame);
 
-	if (ImGui::Button("on rpg shot"))
-		menu_frame = analyzer.FindRpgShot();
 	if (ImGui::Button("highest point"))
 		menu_frame = analyzer.FindHighestPoint();
 
@@ -152,7 +173,7 @@ void r::R_JumpView_Main()
 void r::R_JumpView_BounceButtons(int& menu_frame)
 {
 
-	static std::set<int>::iterator it = analyzer.bounceFrames.begin();
+	static std::set<int>::iterator it = analyzer.bounceFrames.begin(), it_rpg = analyzer.rpgFrames.begin();
 	static DWORD end_recording_time = analyzer.LastRecordingStoppedTime();
 
 	if (analyzer.LastRecordingStoppedTime() != end_recording_time) { // a way to track if this is a new run
@@ -165,67 +186,89 @@ void r::R_JumpView_BounceButtons(int& menu_frame)
 
 
 		ImGui::SameLine();
-
-		if (analyzer.bounceFrames.size() > 1) {
-			if (ImGui::Button("<##01")) {
-
-
-				int32_t closest_frame(menu_frame); //find the closest bounce frame from current frame 
-				int32_t closest(menu_frame);
-
-				for (auto& i : analyzer.bounceFrames) {
-
-					if (i > menu_frame) //only want to search backwards
-						break;
-
-					if (i == menu_frame)
-						continue;
-
-					const int32_t dist = glm::distance((float)i, (float)menu_frame);
-
-					if (closest > dist) {
-						closest = dist;
-						closest_frame = i;
-					}
-				}
-
-				menu_frame = closest_frame;
-			}
-
-			ImGui::SameLine();
-
-			if (ImGui::Button(">##01")) {
-
-				int32_t closest_frame(analyzer.GetTotalFrames()); //find the closest bounce frame from current frame 
-				int32_t closest(analyzer.GetTotalFrames());
-
-				for (auto& i : analyzer.bounceFrames) {
-
-					if (i <= menu_frame || i == analyzer.GetTotalFrames()) //only want to search forwards
-						continue;
-
-					const int32_t dist = glm::distance((float)i, (float)menu_frame);
-
-					if (closest > dist) {
-						closest = dist;
-						closest_frame = i;
-					}
-				}
-
-				menu_frame = closest_frame;
-			}
-
-		}
-		else
-			if (ImGui::Button("Go")) {
+		if (!R_JumpView_EventButtons(analyzer.bounceFrames, menu_frame, "<##01", ">##01")) {
+			if (ImGui::Button("Go##00")) {
 				menu_frame = *it;
 			}
+		}
+	}
+	if (analyzer.rpgFrames.size() > 0) {
+		ImGui::Text("rpg  ");
 
+		ImGui::SameLine();
+		if (!R_JumpView_EventButtons(analyzer.rpgFrames, menu_frame, "<##02", ">##02")) {
+			if (ImGui::Button("Go##01")) {
+				menu_frame = *it_rpg;
+			}
+		}
+	}
+	if (analyzer.jumpFrame.size() > 0) {
+		ImGui::Text("jump ");
 
-
+		ImGui::SameLine();
+		if (!R_JumpView_EventButtons(analyzer.jumpFrame, menu_frame, "<##03", ">##03")) {
+			if (ImGui::Button("Go##02")) {
+				menu_frame = *it_rpg;
+			}
+		}
 	}
 
 }
+bool r::R_JumpView_EventButtons(std::set<int>& eventV, int& menu_frame, const char* prevBut, const char* nextBut)
+{
+	if (eventV.size() > 1) {
+		if (ImGui::Button(prevBut)) {
+
+
+			int32_t closest_frame(menu_frame); //find the closest bounce frame from current frame 
+			int32_t closest(menu_frame);
+
+			for (auto& i : eventV) {
+
+				if (i > menu_frame) //only want to search backwards
+					break;
+
+				if (i == menu_frame)
+					continue;
+
+				const int32_t dist = glm::distance((float)i, (float)menu_frame);
+
+				if (closest > dist) {
+					closest = dist;
+					closest_frame = i;
+				}
+			}
+
+			menu_frame = closest_frame;
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button(nextBut)) {
+
+			int32_t closest_frame(analyzer.GetTotalFrames()); //find the closest bounce frame from current frame 
+			int32_t closest(analyzer.GetTotalFrames());
+
+			for (auto& i : eventV) {
+
+				if (i <= menu_frame || i == analyzer.GetTotalFrames()) //only want to search forwards
+					continue;
+
+				const int32_t dist = glm::distance((float)i, (float)menu_frame);
+
+				if (closest > dist) {
+					closest = dist;
+					closest_frame = i;
+				}
+			}
+
+			menu_frame = closest_frame;
+		}
+		return true;
+	}
+	return false;
+}
+
 void r::R_JumpView_Preferences()
 {
 	if (ImGui::Checkbox("Force Position", &v::mod_jumpv_forcepos.evar->enabled))
@@ -354,13 +397,23 @@ void r::R_JumpView(bool& isOpen)
 	if (!isOpen)
 		return;
 
-
+	static ImVec2 old_size;
 
 	ImGui::Begin("Jump View", &isOpen);
-
-
-
 	ImGui::SetWindowSize(ImVec2(500, 300), ImGuiCond_FirstUseEver);
+
+	static bool transparent;
+
+	if (GetAsyncKeyState(VK_MENU) & 1) {
+		transparent = !transparent;
+
+		if (transparent) {
+			old_size = ImGui::GetWindowSize();
+			ImGui::SetWindowSize(ImVec2(1, 1));
+		}else
+			ImGui::SetWindowSize(old_size);
+
+	}
 
 	if (!analyzer.RecordingExists()) {
 		ImGui::Text("nothing has been recorded yet!\nYou can load existing recordings however (if there are any)");
@@ -378,8 +431,11 @@ void r::R_JumpView(bool& isOpen)
 				R_JumpView_Preferences();
 				ImGui::EndTabItem();
 
-			}
+			}if (ImGui::BeginTabItem("Help")) {
+				R_JumpView_Help();
+				ImGui::EndTabItem();
 
+			}
 
 		}
 		ImGui::EndTabBar();

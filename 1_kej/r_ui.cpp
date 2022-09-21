@@ -123,14 +123,6 @@ void r::R_RemoveInput(bool _true, bool save_file)
 	if(save_file)
 		Evar_SaveToFile(v::cfg::cfgDirectory);
 
-	dvar_s* g_gravity = Dvar_FindMalleableVar("g_gravity");
-
-	if (g_gravity && !analyzer.InFreeMode())
-		if (g_gravity->current.value == 0) {
-			g_gravity->current.value = 800;
-			g_gravity->latched.value = 800;
-		}
-
 }
 bool r::R_OpenMenu(IDirect3DDevice9* pDevice)
 {
@@ -145,28 +137,49 @@ bool r::R_OpenMenu(IDirect3DDevice9* pDevice)
 	if (r::should_draw_menu) {
 		R_MenuStyle();
 
+		static bool wantsEditor = false;
+
+		if (!wantsEditor) {
+			ImGui::Begin("1_kej_v2 - github.com/kejjjjj/", &r::should_draw_menu);
+
+			ImGui::SetWindowFontScale(1.2f);
+
+			const ImGuiViewport* viewport = ImGui::GetMainViewport();
+
+			ImGui::SetWindowSize(ImVec2(viewport->Size.x / 3.f, viewport->Size.y / 3.5f), ImGuiCond_FirstUseEver);
+			if (r::should_draw_menu)
+				R_Features(wantsEditor);
+
+			ImGui::End();
+		}
+		else {
+			//wantsEditor = true;
 
 
-		ImGui::Begin("1_kej_v2", &r::should_draw_menu);
 
-		
+			R_JumpView(wantsEditor);
 
+			if (!wantsEditor)
+				r::should_draw_menu = false;
+
+
+
+		}
 
 		if (!r::should_draw_menu) {
 			std::cout << "calling R_RemoveInput() from R_OpenMenu()\n";
 			R_RemoveInput(r::should_draw_menu);
 			analyzer.setPreviewState(false);
+
+			dvar_s* g_gravity = Dvar_FindMalleableVar("g_gravity");
+
+			if (g_gravity) {
+				g_gravity->latched.value = 800;
+				g_gravity->current.value = 800;
+			}
+			CG_SetPlayerAngles(clients->viewangles, r::angles_before_menu);
+
 		}
-
-		ImGui::SetWindowFontScale(1.2f);
-
-		const ImGuiViewport* viewport = ImGui::GetMainViewport();
-
-		ImGui::SetWindowSize(ImVec2(viewport->Size.x / 3.f, viewport->Size.y / 3.5f), ImGuiCond_FirstUseEver);
-		if(r::should_draw_menu)
-			R_Features();
-
-		ImGui::End();
 	}
 
 	return true;

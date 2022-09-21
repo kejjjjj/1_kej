@@ -112,12 +112,16 @@ void cg::Mod_JumpView(pmove_t* pm, pml_t* pml)
 
 
 	static int32_t old_cmdTime = pm->cmd.serverTime;
-	static bool hasBounced, hasShotRPG/*, hasCollided*/;
+
+	if (glm::distance((float)old_cmdTime, (float)pm->cmd.serverTime) > 100) //true on map restart
+		old_cmdTime = pm->cmd.serverTime;
+
+	static bool hasBounced, hasShotRPG, hasJumped;
 
 	if (analyzer.current_frame == 0) {
 		hasBounced = false;
 		hasShotRPG = false;
-	//	hasCollided = false;
+		hasJumped  = false;
 	}
 	else if (!hasBounced)
 		hasBounced = jumpanalyzer.bounceTime == pm->ps->commandTime;
@@ -125,8 +129,20 @@ void cg::Mod_JumpView(pmove_t* pm, pml_t* pml)
 	if (!hasShotRPG) {
 		hasShotRPG = jumpanalyzer.weapon_cant_fire && (pm->ps->weapon == BG_FindWeaponIndexForName("rpg_mp") || pm->ps->weapon == BG_FindWeaponIndexForName("rpg_sustain_mp"));
 	}
-	//if (!hasCollided)
-	//	hasCollided = jumpanalyzer.velocity_clipped;
+
+
+
+	static bool wait_ground = false;
+	if (!hasJumped && !wait_ground) {
+		if (move->jump) {
+			hasJumped = pm->ps->groundEntityNum == 1023;
+			wait_ground = true;
+		}
+	}
+	if (pm->ps->groundEntityNum == 1022)
+		wait_ground = false;
+
+
 
 	if (pm->cmd.serverTime > old_cmdTime + 3) {
 		old_cmdTime = pm->cmd.serverTime;
@@ -135,16 +151,19 @@ void cg::Mod_JumpView(pmove_t* pm, pml_t* pml)
 		VectorCopy(pm->ps->viewangles, jData.angles);
 		VectorCopy(pm->ps->origin, jData.origin);
 		VectorCopy(pm->ps->velocity, jData.velocity);
-		jData.forwardmove = pm->cmd.forwardmove;
-		jData.rightmove = pm->cmd.rightmove;
+		jData.forwardmove	= pm->cmd.forwardmove;
+		jData.rightmove		= pm->cmd.rightmove;
 		VectorCopy(pm->mins, jData.mins);
 		VectorCopy(pm->maxs, jData.maxs);
-		jData.rpg_fired = hasShotRPG;
-		jData.bounced = hasBounced;
-		jData.colliding = jumpanalyzer.velocity_clipped;
-		
-		if (hasShotRPG) {	hasShotRPG = false;}
-		if (hasBounced) {	analyzer.bounceFrames.insert(analyzer.current_frame);		hasBounced = false; }
+		jData.rpg_fired		= hasShotRPG;
+		jData.bounced		= hasBounced;
+		jData.colliding		= jumpanalyzer.velocity_clipped;
+		jData.jumped		= hasJumped;
+
+		if (hasShotRPG) {	analyzer.rpgFrames.insert(analyzer.current_frame);				hasShotRPG = false; }
+		if (hasBounced) {	analyzer.bounceFrames.insert(analyzer.current_frame);			hasBounced = false; }
+		if (hasJumped) {	analyzer.jumpFrame.insert(analyzer.current_frame);				hasJumped = false; }
+
 		//if (hasCollided) {	analyzer.collisionFrames.insert(analyzer.current_frame);	hasCollided = false; }
 
 		jData.FPS = (int)(1000.f / (cls->frametime == NULL ? 1 : cls->frametime));

@@ -50,6 +50,12 @@ void jAnalyzer::ClearData()
 	bounceFrames.erase(bounceFrames.begin(), bounceFrames.end());
 	bounceFrames.clear();
 
+	rpgFrames.erase(rpgFrames.begin(), rpgFrames.end());
+	rpgFrames.clear();
+
+	jumpFrame.erase(jumpFrame.begin(), jumpFrame.end());
+	jumpFrame.clear();
+
 	//collisionFrames.erase(bounceFrames.begin(), bounceFrames.end());
 	//collisionFrames.clear();
 

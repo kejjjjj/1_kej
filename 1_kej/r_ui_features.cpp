@@ -266,31 +266,68 @@ void Jump_Features()
 	}
 	//////////////////////////////////////////
 
-	if (ImGui::CollapsingHeader("Jump view")) {
-		static bool isOpen = false;
+	//if (ImGui::CollapsingHeader("Jump view")) {
+	//	static bool isOpen = false;
 
 
-		ImGui::Text("\t");
-		ImGui::SameLine();
-		if (ImGui::Button("open editor")) {
-			isOpen = !isOpen;
-			dvar_s* g_gravity = Dvar_FindMalleableVar("g_gravity");
+	//	ImGui::Text("\t");
+	//	ImGui::SameLine();
+	//	if (ImGui::Button("open editor")) {
+	//		isOpen = !isOpen;
+	//		dvar_s* g_gravity = Dvar_FindMalleableVar("g_gravity");
 
-			if (g_gravity) {
-				g_gravity->current.value = (isOpen == true) ? 0 : 800;
-			}
-		}
+	//		if (g_gravity) {
+	//			g_gravity->current.value = (isOpen == true) ? 0 : 800;
+	//		}
+	//	}
 
-		r::R_JumpView(isOpen);
+	//	r::R_JumpView(isOpen);
 
-	}
+	//}
 
 
 }
-void r::R_Features()
+
+/*
+
+void    ImGui::SetTabItemClosed(const char* label)
 {
+	ImGuiContext& g = *GImGui;
+	bool is_within_manual_tab_bar = g.CurrentTabBar && !(g.CurrentTabBar->Flags & ImGuiTabBarFlags_DockNode);
+	if (is_within_manual_tab_bar)
+	{
+		ImGuiTabBar* tab_bar = g.CurrentTabBar;
+		ImGuiID tab_id = TabBarCalcTabID(tab_bar, label);
+		if (ImGuiTabItem* tab = TabBarFindTabByID(tab_bar, tab_id))
+			tab->WantClose = true; // Will be processed by next call to TabBarLayout()
+	}
+}
+
+void MakeTabVisible(const char* window_name)
+{
+	ImGuiWindow* window = ImGui::FindWindowByName(window_name);
+	if (window == NULL || window->DockNode == NULL || window->DockNode->TabBar == NULL)
+		return;
+	window->DockNode->TabBar->NextSelectedTabId = window->ID;;
+}
+
+if (ImGui::Button("Log"))
+   MakeTabVisible("Example: Log");
+if (ImGui::Button("Console"))
+   MakeTabVisible("Example: Console");
+
+*/
+void r::R_Features(bool& wantsEditor)
+{
+
+	static ImGuiID tab_id;
+	static ImGuiTabBar* tab;
+	ImGuiContext& g = *GImGui;
+
 	if (ImGui::BeginTabBar("##tabs", ImGuiTabBarFlags_None)) {
 		if (ImGui::BeginTabItem("Visual")) {
+			tab_id = ImGui::GetActiveID();
+			tab = g.CurrentTabBar;
 			Visual_Features();
 			ImGui::EndTabItem();
 
@@ -302,9 +339,35 @@ void r::R_Features()
 			Jump_Features();
 			ImGui::EndTabItem();
 		}
+		ImGui::SameLine();
+		if (ImGui::Button("Jump Preview")) {
+			dvar_s* g_gravity = Dvar_FindMalleableVar("g_gravity");
+
+			if (g_gravity) {
+				g_gravity->current.value = 0;
+			}
+			wantsEditor = !wantsEditor;
+		}
 
 
 	}
 	ImGui::EndTabBar();
 }
 
+void r::R_JumpView_Help()
+{
+	ImGui::NewLine();
+	ImGui::Text("Keybinds");
+	ImGui::Separator();
+
+	//ImGui::ShowDemoWindow();
+
+	ImGui::BulletText("[SPACEBAR]	 - Toggle free mode");
+	ImGui::BulletText("[P]			- Toggle playback");
+	ImGui::BulletText("[C]			- Move to current frame");
+	ImGui::BulletText("[->]		   - Next Frame");
+	ImGui::BulletText("[<-]		   - Previous Frame");
+	//ImGui::BulletText("[F]		    - Toggle Force Position");
+	ImGui::BulletText("[ALT]		  - Toggle Menu Drawing");
+
+}
