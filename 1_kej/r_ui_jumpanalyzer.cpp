@@ -83,6 +83,7 @@ void r::R_JumpView_Main()
 
 		dvar_s* com_maxfps = Dvar_FindMalleableVar("com_maxfps");
 		jump_data* jData = analyzer.FetchFrameData(menu_frame);
+
 		if (com_maxfps && g_gravity && jumpanalyzer.serverTime > oldServerTime + 3 && jData) {
 			com_maxfps->current.integer = jData->FPS;
 			g_gravity->current.value = 0;
@@ -113,8 +114,10 @@ void r::R_JumpView_Main()
 		}
 	}
 
-	menu_frame += GetAsyncKeyState(VK_RIGHT) & 1 == true;
-	menu_frame -= GetAsyncKeyState(VK_LEFT) & 1 == true;
+	if(menu_frame + 1 <= analyzer.GetTotalFrames())
+		menu_frame += ((GetAsyncKeyState(VK_RIGHT) & 1) == true);
+	if(menu_frame - 1 > 0)
+		menu_frame -= ((GetAsyncKeyState(VK_LEFT) & 1) == true);
 
 	ImGui::Text("Jump Data");
 	ImGui::Separator();
@@ -128,7 +131,7 @@ void r::R_JumpView_Main()
 		const float opt = getOptForAnalyzer(jData);
 
 		ImGui::Text("fps: %i", jData->FPS);
-		ImGui::Text("velocity: %i", velocity);
+		ImGui::Text("velocity: %i (Z: %.6f)", velocity, jData->velocity[2]);
 		ImGui::Text("origin: %.3f, %.3f, %.3f", jData->origin[0], jData->origin[1], jData->origin[2]);
 		ImGui::Text("angles: %.3f, %.3f", jData->angles[0], jData->angles[1]);
 		ImGui::Text("rpg fired: %i", jData->rpg_fired);
@@ -193,7 +196,7 @@ void r::R_JumpView_BounceButtons(int& menu_frame)
 		}
 	}
 	if (analyzer.rpgFrames.size() > 0) {
-		ImGui::Text("rpg  ");
+		ImGui::Text("rpg   ");
 
 		ImGui::SameLine();
 		if (!R_JumpView_EventButtons(analyzer.rpgFrames, menu_frame, "<##02", ">##02")) {
@@ -203,7 +206,7 @@ void r::R_JumpView_BounceButtons(int& menu_frame)
 		}
 	}
 	if (analyzer.jumpFrame.size() > 0) {
-		ImGui::Text("jump ");
+		ImGui::Text("jump  ");
 
 		ImGui::SameLine();
 		if (!R_JumpView_EventButtons(analyzer.jumpFrame, menu_frame, "<##03", ">##03")) {
@@ -359,10 +362,10 @@ void r::R_JumpView_IO()
 
 
 		if (existingRuns_c.size() == NULL) {
-			for (int i = 0; i < existingRuns.size(); i++)
+			for (size_t i = 0; i < existingRuns.size(); i++)
 				existingRuns_c.push_back(existingRuns[i].c_str());
 		}
-		ImGui::PushItemWidth(50 + 7 * strlen(existingRuns_c[selected_map]));
+		ImGui::PushItemWidth(50.f + 7 * (float)strlen(existingRuns_c[selected_map]));
 		ImGui::Combo("Available Runs", &selected_map, existingRuns_c.data(), existingRuns_c.size());
 
 

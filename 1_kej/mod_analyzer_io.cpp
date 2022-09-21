@@ -275,6 +275,8 @@ bool jAnalyzer::IO_ReadVector3(std::fstream& fp, vec3_t value)
 		F_SyntaxError("IO_ReadVector3: value for key [2] is not a number ['%s']", current_str.c_str());
 		return false;
 	}
+
+	return true;
 }
 
 bool jAnalyzer::IO_ReadMapName(std::fstream& fp, const char* run_name, std::string& buffer)
@@ -293,7 +295,7 @@ bool jAnalyzer::IO_ReadMapName(std::fstream& fp, const char* run_name, std::stri
 		return false;
 	}
 	else if (mapName.find("mp_") == std::string::npos) {
-		Com_PrintError(CON_CHANNEL_CONSOLEONLY, "IO_ReadMapName: invalid mapname\n");
+		Com_PrintError(CON_CHANNEL_CONSOLEONLY, "IO_ReadMapName: invalid mapname '%s'\n", mapName.c_str());
 		return false;
 	}
 
@@ -344,4 +346,5 @@ bool jAnalyzer::IO_FindExistingRuns(const char* mapname, std::vector<std::string
 		}
 
 	}
+	return true;
 }

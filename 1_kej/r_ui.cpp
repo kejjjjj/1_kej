@@ -166,7 +166,9 @@ bool r::R_OpenMenu(IDirect3DDevice9* pDevice)
 
 		}
 
-		if (!r::should_draw_menu) {
+		if (!r::should_draw_menu || GetAsyncKeyState(VK_ESCAPE) < 0 && should_draw_menu) {
+			should_draw_menu = false;
+			wantsEditor = false;
 			std::cout << "calling R_RemoveInput() from R_OpenMenu()\n";
 			R_RemoveInput(r::should_draw_menu);
 			analyzer.setPreviewState(false);
@@ -177,7 +179,7 @@ bool r::R_OpenMenu(IDirect3DDevice9* pDevice)
 				g_gravity->latched.value = 800;
 				g_gravity->current.value = 800;
 			}
-			CG_SetPlayerAngles(clients->viewangles, r::angles_before_menu);
+			//CG_SetPlayerAngles(clients->viewangles, r::angles_before_menu);
 
 		}
 	}

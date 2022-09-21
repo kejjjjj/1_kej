@@ -1888,7 +1888,7 @@ struct MaterialInfo
 };
 #pragma pack(pop)
 
-enum MaterialTechniqueType
+enum class MaterialTechniqueType
 {
 	TECHNIQUE_DEPTH_PREPASS = 0x0,
 	TECHNIQUE_BUILD_FLOAT_Z = 0x1,

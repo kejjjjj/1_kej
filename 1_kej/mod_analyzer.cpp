@@ -118,8 +118,9 @@ int32_t jAnalyzer::FindRpgShot()
 int32_t jAnalyzer::FindHighestPoint()
 {
 	int32_t highestFrame(0);
-	float highestHeight(0);
-	for (int i = 0; i < data.size(); i++) {
+	//float highestHeight = std::numeric_limits<float>().min();
+	float highestHeight = -FLT_MAX;
+	for (size_t i = 0; i < data.size(); i++) {
 
 		if (data[i].origin[2] > highestHeight) {
 			highestHeight = data[i].origin[2];
