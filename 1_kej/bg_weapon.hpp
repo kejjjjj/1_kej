@@ -14,6 +14,9 @@ namespace cg
 
 	inline void (*PM_Weapon_WeaponTimeAdjust_f)();
 	void PM_Weapon_WeaponTimeAdjust();
+
+	void __cdecl G_SelectWeaponIndex(int clientNum, int iWeaponIndex);
+	size_t G_GetWeaponsList(int* weapons);
 }
 
 #endif

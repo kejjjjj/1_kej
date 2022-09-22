@@ -233,7 +233,11 @@ float cg::getOptForAnalyzer(jump_data* data)
 }
 float cg::DistanceToOpt(float delta, const float& yaw)
 {
-	return fabs(yaw - delta);
+	float opt = fabs(yaw - delta);
+
+	opt = opt > 90 == true ? 360.f - opt : opt;
+	return opt;
+
 }
 
 axis_s cg::CG_GetNearestWorldAxisFromYaw(float yawangle)

@@ -130,7 +130,29 @@ void r::R_JumpView_Main()
 
 	jump_data* jData = analyzer.FetchFrameData(menu_frame);
 
-	if (jData) {
+	int maxAllowedPrediction = analyzer.GetTotalFrames() - menu_frame;
+	int futureFrame = maxAllowedPrediction;
+	static int rpg_frames_min, rpg_frames_max;
+	if (futureFrame >= 200)
+		futureFrame = 200;
+
+	jump_data* jPredictedData = analyzer.FetchFrameData(menu_frame + futureFrame);
+
+	bool RPGprePrediction = false;
+	const std::set<int>::iterator it_rpg = analyzer.rpgFrames.begin();
+
+	if (analyzer.rpgFrames.size() > 0)
+		if (*it_rpg < 200)
+			RPGprePrediction = true;
+
+	if(jPredictedData->rpg_fired || RPGprePrediction)
+	{
+		rpg_frames_min = menu_frame;
+		rpg_frames_max = menu_frame + 400;
+	
+	}
+
+	if (jData && jPredictedData) {
 
 		const int32_t velocity = (int32_t)glm::length(glm::vec2(jData->velocity[0], jData->velocity[1]));
 
@@ -156,8 +178,42 @@ void r::R_JumpView_Main()
 		if (!analyzer.InFreeMode() && v::mod_jumpv_forcepos.isEnabled() || GetAsyncKeyState('C') & 1) {
 			CG_SetPlayerAngles(clients->cgameViewangles, jData->angles);
 			VectorCopy(jData->origin, ps_loc->origin);
+			ps_loc->origin[2] -= (70.f - jData->maxs[2]);
 			VectorCopy(empty, ps_loc->velocity);
 		}
+		const int rpg = BG_FindWeaponIndexForName("rpg_mp");
+		const int rpg_sustain = BG_FindWeaponIndexForName("rpg_sustain_mp");
+		const playerState_s ps = clients->snap.ps;
+		static bool rpg_used;
+
+		if (menu_frame > rpg_frames_min && menu_frame < rpg_frames_max && (ps.weapon != rpg && ps.weapon != rpg_sustain) && !rpg_used) {
+			//switch to rpg if it used during the frame
+			int weapons[64];
+			size_t count = G_GetWeaponsList(weapons);
+
+			for (size_t i = 0; i < count; i++) {
+
+
+				if (!strcmp(BG_WeaponNames[weapons[i]]->szInternalName, "rpg_mp")) {
+					rpg_used = true;
+					Cbuf_AddText("+actionslot 4\n", cgs->clientNum);
+					//G_SelectWeaponIndex(rpg, -1); //apparently doesn't work with custom maps
+				}
+				else if (!strcmp(BG_WeaponNames[weapons[i]]->szInternalName, "rpg_sustain_mp")) {
+					rpg_used = true;
+
+					Cbuf_AddText("+actionslot 4\n", cgs->clientNum);
+					//G_SelectWeaponIndex(rpg_sustain, -1); //apparently doesn't work with custom maps
+				}
+			}
+		}
+		else if ((menu_frame < rpg_frames_min || menu_frame > rpg_frames_max) && (ps.weapon == rpg || ps.weapon == rpg_sustain)) {
+			rpg_used = false;
+			Cbuf_AddText("weapnext\n", cgs->clientNum);
+
+		}
+
+
 	}
 	else {
 		ImGui::Text("ERROR: invalid frame data\n");
@@ -196,9 +252,9 @@ void r::R_JumpView_BounceButtons(int& menu_frame)
 
 		ImGui::SameLine();
 		if (!R_JumpView_EventButtons(analyzer.bounceFrames, menu_frame, "<##01", ">##01")) {
-			if (ImGui::Button("Go##00")) {
-				menu_frame = *it;
-			}
+			//if (ImGui::Button("Go##00")) {
+			//	menu_frame = *it;
+			//}
 		}
 	}
 	if (analyzer.rpgFrames.size() > 0) {
@@ -206,9 +262,9 @@ void r::R_JumpView_BounceButtons(int& menu_frame)
 
 		ImGui::SameLine();
 		if (!R_JumpView_EventButtons(analyzer.rpgFrames, menu_frame, "<##02", ">##02")) {
-			if (ImGui::Button("Go##01")) {
-				menu_frame = *it_rpg;
-			}
+			//if (ImGui::Button("Go##01")) {
+			//	menu_frame = *it_rpg;
+			//}
 		}
 	}
 	if (analyzer.jumpFrame.size() > 0) {
@@ -216,13 +272,14 @@ void r::R_JumpView_BounceButtons(int& menu_frame)
 
 		ImGui::SameLine();
 		if (!R_JumpView_EventButtons(analyzer.jumpFrame, menu_frame, "<##03", ">##03")) {
-			if (ImGui::Button("Go##02")) {
-				menu_frame = *it_jump;
-			}
+			//if (ImGui::Button("Go##02")) {
+			//	menu_frame = *it_jump;
+			//}
 		}
 	}
 
 }
+//go to the closest event from current frame
 bool r::R_JumpView_EventButtons(std::set<int>& eventV, int& menu_frame, const char* prevBut, const char* nextBut)
 {
 	if (eventV.size() > 1) {
@@ -403,14 +460,19 @@ void r::R_JumpView(bool& isOpen)
 
 	static bool transparent;
 
-	if (GetAsyncKeyState('M') & 1) {
+	if (GetAsyncKeyState('M') & 1 && VID_ACTIVE) { //toggle menu drawing 
 		transparent = !transparent;
 
 		if (transparent) {
 			old_size = ImGui::GetWindowSize();
 			ImGui::SetWindowSize(ImVec2(1, 1));
-		}else
-			ImGui::SetWindowSize(old_size);
+		}
+		else {
+			if (old_size.x == 1 || old_size.y == 1)
+				ImGui::SetWindowSize(ImVec2(400, 600)); //fix the menu size if old size is 1
+			else
+				ImGui::SetWindowSize(old_size);
+		}
 
 	}
 
@@ -423,6 +485,7 @@ void r::R_JumpView(bool& isOpen)
 
 		if (ImGui::BeginTabBar("##jumpview_tabs", ImGuiTabBarFlags_None)) {
 			if (ImGui::BeginTabItem("Main view")) {
+
 				R_JumpView_Main();
 				ImGui::EndTabItem();
 

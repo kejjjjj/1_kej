@@ -53,7 +53,7 @@ bool jAnalyzer::IO_WriteData(const std::string run_name, const std::vector<jump_
 	}
 	std::set<int>::iterator it = bounceFrames.begin();
 	std::set<int>::iterator it_rpg = rpgFrames.begin();
-	std::set<int>::iterator it_jump = rpgFrames.begin();
+	std::set<int>::iterator it_jump = jumpFrame.begin();
 
 
 	f << mapname->current.string << '\n';

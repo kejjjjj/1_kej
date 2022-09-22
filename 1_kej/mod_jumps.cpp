@@ -103,7 +103,9 @@ void cg::Mod_RPGAnalyzer(pmove_t* pm, pml_t* pml)
 			}
 			else {
 				if(timing_enabled)
-					Com_Printf(CON_CHANNEL_OBITUARY, "^1too early!\n");
+					Com_Printf(CON_CHANNEL_OBITUARY, "^1pre-bounce (+%i)\n", (int)(pm->cmd.buttons - pm->ps->jumpTime));
+
+
 				wait_until_fired = false;
 			}
 			wait_until_fired = false;

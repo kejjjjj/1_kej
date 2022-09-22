@@ -38,6 +38,27 @@ void __cdecl r::CG_DrawActive()
 		if (analyzer.isRecording())
 			R_DrawText("Recording", 0, 800, 2, 2, 0, vec4_t{ 1,1,1,1 }, 0);
 
+		//char buff[40];
+		//sprintf_s(buff, "clients->snap.ps.weaponstate: %i", clients->snap.ps.weaponstate);
+		//R_DrawText(buff, 0, 300, 2, 2, 0, vec4_t{ 1,1,0,1 }, 0);
+
+		//if (GetAsyncKeyState(VK_HOME) & 1) {
+		//	int rpg = BG_FindWeaponIndexForName("rpg_mp");
+
+		//	if (rpg) {
+		//		G_SelectWeaponIndex(rpg, -1);
+
+		//		int weapons[128];
+		//		size_t count = G_GetWeaponsList(weapons);
+
+		//		for (size_t i = 0; i < count; i++)
+		//			Com_Printf(CON_CHANNEL_OBITUARY, "weapon[%i]: %s\n", i, BG_WeaponNames[weapons[i]]->szInternalName);
+
+
+		//	}
+
+		//}
+
 		//float optYaw, test;
 
 		////static DWORD old_ms = Sys_Milliseconds();

@@ -223,7 +223,7 @@ namespace cg
 
 	inline WinMouseVars_t* s_wmv = reinterpret_cast<WinMouseVars_t*>(0xCC147C4);
 
-	
+	inline int* bg_lastParsedWeaponIndex = reinterpret_cast<int*>(0xD5EC418);
 }
 
 #endif

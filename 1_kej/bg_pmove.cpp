@@ -131,23 +131,17 @@ void cg::Mod_JumpView(pmove_t* pm, pml_t* pml)
 	else if (!hasBounced)
 		hasBounced = jumpanalyzer.bounceTime == pm->ps->commandTime;
 
+
 	if (!hasShotRPG) {
 		hasShotRPG = jumpanalyzer.weapon_cant_fire && (pm->ps->weapon == BG_FindWeaponIndexForName("rpg_mp") || pm->ps->weapon == BG_FindWeaponIndexForName("rpg_sustain_mp"));
 	}
 
-
-
-	static bool wait_ground = false;
-	if (!hasJumped && !wait_ground) {
-		if (move->jump) {
-			hasJumped = pm->ps->groundEntityNum == 1023;
-			wait_ground = true;
-		}
+	if (hasShotRPG && clients->snap.ps.weaponstate != WEAPON_FIRING) { //this check makes sure it doesn't think other animations are considered as shooting 
+		hasShotRPG = false;
 	}
-	if (pm->ps->groundEntityNum == 1022)
-		wait_ground = false;
 
 
+	hasJumped = pm->cmd.serverTime - pm->ps->jumpTime < 10;
 
 	if (pm->cmd.serverTime > old_cmdTime + 3) {
 		old_cmdTime = pm->cmd.serverTime;

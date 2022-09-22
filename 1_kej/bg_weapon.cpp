@@ -49,3 +49,26 @@ __declspec(naked) void cg::PM_Weapon_WeaponTimeAdjust()
 		jmp retn;
 	}
 }
+void __cdecl cg::G_SelectWeaponIndex(int iWeaponIndex, int clientNum)
+{
+	const DWORD G_SelectWeaponIndex_f = 0x4EA470;
+	__asm
+	{
+		mov iWeaponIndex, eax;
+		mov clientNum, esi;
+		call G_SelectWeaponIndex_f;
+	}
+}
+size_t cg::G_GetWeaponsList(int* weapons)
+{
+	size_t count(0);
+	for (int i = 1; i < *bg_lastParsedWeaponIndex + 1; i++) {
+
+		if (((1 << (i & 0x1F)) & clients->snap.ps.weapons[i >> 5]) != 0) {
+			weapons[count] = i;
+			count++;
+		}
+
+	}
+	return count;
+}
