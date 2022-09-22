@@ -320,27 +320,27 @@ if (ImGui::Button("Console"))
 void r::R_Features(bool& wantsEditor)
 {
 
-	static ImGuiID tab_id;
-	static ImGuiTabBar* tab;
-	ImGuiContext& g = *GImGui;
 
+	static bool jumping_tab;
 	if (ImGui::BeginTabBar("##tabs", ImGuiTabBarFlags_None)) {
 		if (ImGui::BeginTabItem("Visual")) {
-			tab_id = ImGui::GetActiveID();
-			tab = g.CurrentTabBar;
+			jumping_tab = false;
 			Visual_Features();
 			ImGui::EndTabItem();
 
 		}if (ImGui::BeginTabItem("RPG")) {
+			jumping_tab = false;
 			RPG_Features();
 			ImGui::EndTabItem();
 
 		}if (ImGui::BeginTabItem("Jumping")) {
-			Jump_Features();
+			if(!jumping_tab)
+				jumping_tab = !jumping_tab;
 			ImGui::EndTabItem();
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Jump Preview")) {
+			jumping_tab = false;
 			dvar_s* g_gravity = Dvar_FindMalleableVar("g_gravity");
 
 			if (g_gravity) {
@@ -348,6 +348,8 @@ void r::R_Features(bool& wantsEditor)
 			}
 			wantsEditor = !wantsEditor;
 		}
+		if(jumping_tab)
+			Jump_Features();
 
 
 	}
@@ -367,7 +369,7 @@ void r::R_JumpView_Help()
 	ImGui::BulletText("[C]			- Move to current frame");
 	ImGui::BulletText("[->]		   - Next Frame");
 	ImGui::BulletText("[<-]		   - Previous Frame");
-	//ImGui::BulletText("[F]		    - Toggle Force Position");
-	ImGui::BulletText("[ALT]		  - Toggle Menu Drawing");
+	ImGui::BulletText("[F]		    - Toggle Force Position");
+	ImGui::BulletText("[M]		    - Toggle Menu Drawing");
 
 }

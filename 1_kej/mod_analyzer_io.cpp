@@ -132,6 +132,13 @@ bool jAnalyzer::IO_StartReadingData(std::fstream& fp)
 	bool success;
 	bool isBounceFrame, isRpgFrame, isJumpFrame;
 
+	const auto mod = [](vec3_t value, float max) -> void
+	{
+		for (int i = 0; i < 3; i++) {
+			value[i] = fmodf(value[i], max);
+		}
+	};
+
 	while (fp.good() && !fp.eof()) {
 
 		jump_data jData;
@@ -150,6 +157,9 @@ bool jAnalyzer::IO_StartReadingData(std::fstream& fp)
 		success = IO_ReadVector1<bool>(fp, isBounceFrame);		if (!success) return false;
 		success = IO_ReadVector1<bool>(fp, isRpgFrame);			if (!success) return false;
 		success = IO_ReadVector1<bool>(fp, isJumpFrame);		if (!success) return false;
+
+		mod(jData.angles, 360); //fix broken angles
+
 
 		if (isBounceFrame)
 			bounceFrames.insert(data.size() - 1);

@@ -9,6 +9,7 @@ void r::R_JumpView_Main()
 	static DWORD ms = Sys_MilliSeconds();
 	static bool isPlayback;
 	const ImGuiIO& io = ImGui::GetIO();
+	static float timeScale = 1.f;
 
 	if (!VID_ACTIVE) {
 		ImGui::Text("WINDOW NOT ACTIVE\n");
@@ -44,12 +45,12 @@ void r::R_JumpView_Main()
 			Cbuf_AddText("ufo\n", cgs->clientNum);
 
 	}
-	//else if (GetAsyncKeyState('F') & 1) {
-	//	v::mod_jumpv_forcepos.SetValue(!v::mod_jumpv_forcepos.isEnabled());
+	else if (GetAsyncKeyState('F') & 1) {
+		v::mod_jumpv_forcepos.SetValue(!v::mod_jumpv_forcepos.isEnabled());
 
-	//	if (v::mod_jumpv_forcepos.isEnabled() && analyzer.InFreeMode())
-	//		analyzer.SetFreeMode(false);
-	//}
+		if (v::mod_jumpv_forcepos.isEnabled() && analyzer.InFreeMode())
+			analyzer.SetFreeMode(false);
+	}
 	ImGui::NewLine();
 
 	ImGui::PushItemWidth(100);
@@ -84,7 +85,7 @@ void r::R_JumpView_Main()
 		dvar_s* com_maxfps = Dvar_FindMalleableVar("com_maxfps");
 		jump_data* jData = analyzer.FetchFrameData(menu_frame);
 
-		if (com_maxfps && g_gravity && jumpanalyzer.serverTime > oldServerTime + 3 && jData) {
+		if (com_maxfps && g_gravity && jumpanalyzer.serverTime > ((float)(oldServerTime) + 3.f * timeScale) && jData) {
 			com_maxfps->current.integer = jData->FPS;
 			g_gravity->current.value = 0;
 			oldServerTime = jumpanalyzer.serverTime;
@@ -114,10 +115,15 @@ void r::R_JumpView_Main()
 		}
 	}
 
+	ImGui::SameLine();
+	ImGui::PushItemWidth(50);
+	ImGui::DragFloat("Slow-mo Scale", &timeScale, 0.1f, 1.f, 10.f, "%.3f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
+
 	if(menu_frame + 1 <= analyzer.GetTotalFrames())
 		menu_frame += ((GetAsyncKeyState(VK_RIGHT) & 1) == true);
 	if(menu_frame - 1 > 0)
 		menu_frame -= ((GetAsyncKeyState(VK_LEFT) & 1) == true);
+
 
 	ImGui::Text("Jump Data");
 	ImGui::Separator();
@@ -176,7 +182,7 @@ void r::R_JumpView_Main()
 void r::R_JumpView_BounceButtons(int& menu_frame)
 {
 
-	static std::set<int>::iterator it = analyzer.bounceFrames.begin(), it_rpg = analyzer.rpgFrames.begin();
+	static std::set<int>::iterator it = analyzer.bounceFrames.begin(), it_rpg = analyzer.rpgFrames.begin(), it_jump = analyzer.jumpFrame.begin();
 	static DWORD end_recording_time = analyzer.LastRecordingStoppedTime();
 
 	if (analyzer.LastRecordingStoppedTime() != end_recording_time) { // a way to track if this is a new run
@@ -211,7 +217,7 @@ void r::R_JumpView_BounceButtons(int& menu_frame)
 		ImGui::SameLine();
 		if (!R_JumpView_EventButtons(analyzer.jumpFrame, menu_frame, "<##03", ">##03")) {
 			if (ImGui::Button("Go##02")) {
-				menu_frame = *it_rpg;
+				menu_frame = *it_jump;
 			}
 		}
 	}
@@ -304,7 +310,7 @@ void r::R_JumpView_IO()
 		is_loading = !is_loading;
 
 		if (is_loading) {
-			dvar_s* mapname = Dvar_FindMalleableVar("mapname");
+			const dvar_s* mapname = Dvar_FindMalleableVar("mapname");
 
 			if (!mapname) {
 				Com_PrintError(CON_CHANNEL_OBITUARY, "mapname dvar does not exist!\n");
@@ -359,8 +365,6 @@ void r::R_JumpView_IO()
 
 		static int selected_map(0);
 
-
-
 		if (existingRuns_c.size() == NULL) {
 			for (size_t i = 0; i < existingRuns.size(); i++)
 				existingRuns_c.push_back(existingRuns[i].c_str());
@@ -383,14 +387,6 @@ void r::R_JumpView_IO()
 
 	}
 
-	//static char buff2[MAX_PATH];
-	//ImGui::PushItemWidth(150);
-	//ImGui::InputText("file name##01", buff2, MAX_PATH, ImGuiTextFlags_None);
-	//if (ImGui::Button("Read Data")) {
-	//	if (!analyzer.IO_ReadData(buff2)) {
-	//		Com_PrintError(CON_CHANNEL_OBITUARY, "See console or log file for more information\n");
-	//	}
-	//}
 
 
 }
@@ -407,7 +403,7 @@ void r::R_JumpView(bool& isOpen)
 
 	static bool transparent;
 
-	if (GetAsyncKeyState(VK_MENU) & 1) {
+	if (GetAsyncKeyState('M') & 1) {
 		transparent = !transparent;
 
 		if (transparent) {

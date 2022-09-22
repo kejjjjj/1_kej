@@ -61,6 +61,9 @@ void cg::Pmove(pmove_t* pm)
 
 	_msec = 1000.f / (com_maxfps->current.integer == 0 ? 1 : com_maxfps->current.integer);
 
+	if (_msec == NULL)
+		_msec = 1;
+
 	if (v::mod_pmove_fixed.isEnabled())
 		pm->cmd.serverTime = ((pm->cmd.serverTime + (_msec < 2 ? 2 : _msec) - 1) / _msec) * _msec;
 
@@ -92,6 +95,8 @@ void cg::Pmove(pmove_t* pm)
 
 		pm->cmd.serverTime = pm->ps->commandTime + msec;
 		PmoveSingle(pm);
+		jumpanalyzer.commandTime = pm->ps->commandTime;
+		jumpanalyzer.serverTime = pm->cmd.serverTime;
 		memcpy(&pm->oldcmd, &pm->cmd, sizeof(pm->oldcmd));
 
 	}
@@ -177,6 +182,7 @@ void cg::PM_ModCode(pml_t* pml, pmove_t* pm)
 	//this part of the code is called after PM_Weapon()
 
 	Mod_JumpView(pm, pml);
+
 
 	return;
 }

@@ -93,6 +93,17 @@ void* r::CL_ShutdownRenderer()
 char r::R_RecoverLostDevice()
 {
 	if (!r::device_needs_reset) {
+		if (analyzer.isPreviewing()) {
+			analyzer.setPreviewState(false);
+
+			dvar_s* g_gravity = Dvar_FindMalleableVar("g_gravity");
+
+			if (g_gravity) {
+				g_gravity->latched.value = 800;
+				g_gravity->current.value = 800;
+			}
+
+		}
 		Com_Printf(CON_CHANNEL_CONSOLEONLY, "R_RecoverLostDevice(): restoring input\n");
 		r::device_needs_reset = true;
 		r::should_draw_menu = false;
