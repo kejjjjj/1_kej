@@ -1,23 +1,8 @@
 #include "pch.h"
 
 
-void r::R_JumpView_Main()
+void r::R_JumpView_ToggleFreeMode()
 {
-	//this function might need some cleanup
-
-	static int& menu_frame = analyzer.preview_frame;
-	static DWORD ms = Sys_MilliSeconds();
-	static bool isPlayback;
-	const ImGuiIO& io = ImGui::GetIO();
-	static float timeScale = 1.f;
-
-	if (!VID_ACTIVE) {
-		ImGui::Text("WINDOW NOT ACTIVE\n");
-		return;
-	}
-
-	ImGui::BeginGroup();
-
 	if (!analyzer.InFreeMode())
 		cgs->snap->ps.velocity[2] = 0;
 
@@ -45,7 +30,27 @@ void r::R_JumpView_Main()
 			Cbuf_AddText("ufo\n", cgs->clientNum);
 
 	}
-	else if (GetAsyncKeyState('F') & 1) {
+}
+void r::R_JumpView_Main()
+{
+	//this function might need some cleanup
+
+	static int& menu_frame = analyzer.preview_frame;
+	static DWORD ms = Sys_MilliSeconds();
+	static bool& isPlayback = analyzer.is_playback;
+	const ImGuiIO& io = ImGui::GetIO();
+	static float timeScale = 1.f;
+
+	if (!VID_ACTIVE) {
+		ImGui::Text("WINDOW NOT ACTIVE\n");
+		return;
+	}
+
+	ImGui::BeginGroup();
+
+	R_JumpView_ToggleFreeMode();
+
+	 if (GetAsyncKeyState('F') & 1) {
 		v::mod_jumpv_forcepos.SetValue(!v::mod_jumpv_forcepos.isEnabled());
 
 		if (v::mod_jumpv_forcepos.isEnabled() && analyzer.InFreeMode())
@@ -68,24 +73,22 @@ void r::R_JumpView_Main()
 		g_gravity->current.value = 0;
 	}
 
-	const char* character = isPlayback == false ? ">" : "P";
-
 	ImGui::SameLine();
-	if (ImGui::Button(character) || GetAsyncKeyState('P') & 1) {
+	if (ImGui::Button(isPlayback == false ? ">" : "P") || GetAsyncKeyState('P') & 1) {
 		if (!isPlayback)
 			isPlayback = true;
 		else isPlayback = false;
 	}
-	if (isPlayback) {
+	if (analyzer.isPlayback()) {
 		static int32_t oldServerTime = jumpanalyzer.serverTime;
 
 		if (glm::distance((float)oldServerTime, (float)jumpanalyzer.serverTime) > 100) //true on map restart
 			oldServerTime = jumpanalyzer.serverTime;
 
 		dvar_s* com_maxfps = Dvar_FindMalleableVar("com_maxfps");
-		jump_data* jData = analyzer.FetchFrameData(menu_frame);
+		const jump_data* jData = analyzer.FetchFrameData(menu_frame);
 
-		if (com_maxfps && g_gravity && jumpanalyzer.serverTime > ((float)(oldServerTime) + 3.f * timeScale) && jData) {
+		if (jumpanalyzer.serverTime > ((float)(oldServerTime) + 3.f * timeScale) && jData && com_maxfps && g_gravity) {
 			com_maxfps->current.integer = jData->FPS;
 			g_gravity->current.value = 0;
 			oldServerTime = jumpanalyzer.serverTime;
@@ -130,6 +133,8 @@ void r::R_JumpView_Main()
 
 	jump_data* jData = analyzer.FetchFrameData(menu_frame);
 
+
+	//rpg prediction
 	int maxAllowedPrediction = analyzer.GetTotalFrames() - menu_frame;
 	int futureFrame = maxAllowedPrediction;
 	static int rpg_frames_min, rpg_frames_max;
@@ -151,8 +156,11 @@ void r::R_JumpView_Main()
 		rpg_frames_max = menu_frame + 400;
 	
 	}
+	//rpg prediction ends
 
-	if (jData && jPredictedData) {
+
+
+	if (jData) {
 
 		const int32_t velocity = (int32_t)glm::length(glm::vec2(jData->velocity[0], jData->velocity[1]));
 
@@ -181,38 +189,8 @@ void r::R_JumpView_Main()
 			ps_loc->origin[2] -= (70.f - jData->maxs[2]);
 			VectorCopy(empty, ps_loc->velocity);
 		}
-		const int rpg = BG_FindWeaponIndexForName("rpg_mp");
-		const int rpg_sustain = BG_FindWeaponIndexForName("rpg_sustain_mp");
-		const playerState_s ps = clients->snap.ps;
-		static bool rpg_used;
-
-		if (menu_frame > rpg_frames_min && menu_frame < rpg_frames_max && (ps.weapon != rpg && ps.weapon != rpg_sustain) && !rpg_used) {
-			//switch to rpg if it used during the frame
-			int weapons[64];
-			size_t count = G_GetWeaponsList(weapons);
-
-			for (size_t i = 0; i < count; i++) {
-
-
-				if (!strcmp(BG_WeaponNames[weapons[i]]->szInternalName, "rpg_mp")) {
-					rpg_used = true;
-					Cbuf_AddText("+actionslot 4\n", cgs->clientNum);
-					//G_SelectWeaponIndex(rpg, -1); //apparently doesn't work with custom maps
-				}
-				else if (!strcmp(BG_WeaponNames[weapons[i]]->szInternalName, "rpg_sustain_mp")) {
-					rpg_used = true;
-
-					Cbuf_AddText("+actionslot 4\n", cgs->clientNum);
-					//G_SelectWeaponIndex(rpg_sustain, -1); //apparently doesn't work with custom maps
-				}
-			}
-		}
-		else if ((menu_frame < rpg_frames_min || menu_frame > rpg_frames_max) && (ps.weapon == rpg || ps.weapon == rpg_sustain)) {
-			rpg_used = false;
-			Cbuf_AddText("weapnext\n", cgs->clientNum);
-
-		}
-
+	
+		R_JumpView_HandleWeapons(menu_frame, rpg_frames_min, rpg_frames_max);
 
 	}
 	else {
@@ -234,6 +212,45 @@ void r::R_JumpView_Main()
 	ImGui::EndGroup();
 	R_JumpView_IO();
 
+	if (v::mod_pmove_fixed.isEnabled()) {
+		ImGui::Text("\n\n\n");
+		ImGui::TextColored(ImVec4(255, 255, 0, 255), "Warning: fixed fps can cause playback issues!");
+	}
+
+}
+void r::R_JumpView_HandleWeapons(int& menu_frame, int min_frame, int max_frame)
+{
+	const int rpg = BG_FindWeaponIndexForName("rpg_mp");
+	const int rpg_sustain = BG_FindWeaponIndexForName("rpg_sustain_mp");
+	const playerState_s ps = clients->snap.ps;
+	static bool rpg_used;
+
+	if (menu_frame > min_frame && menu_frame < max_frame && (ps.weapon != rpg && ps.weapon != rpg_sustain) && !rpg_used) {
+		//switch to rpg if it used during the frame
+		int weapons[64];
+		size_t count = G_GetWeaponsList(weapons);
+
+		for (size_t i = 0; i < count; i++) {
+
+
+			if (!strcmp(BG_WeaponNames[weapons[i]]->szInternalName, "rpg_mp")) {
+				rpg_used = true;
+				Cbuf_AddText("+actionslot 4\n", cgs->clientNum);
+				//G_SelectWeaponIndex(rpg, -1); //apparently doesn't work with custom maps
+			}
+			else if (!strcmp(BG_WeaponNames[weapons[i]]->szInternalName, "rpg_sustain_mp")) {
+				rpg_used = true;
+
+				Cbuf_AddText("+actionslot 4\n", cgs->clientNum);
+				//G_SelectWeaponIndex(rpg_sustain, -1); //apparently doesn't work with custom maps
+			}
+		}
+	}
+	else if ((menu_frame < min_frame || menu_frame > max_frame) && (ps.weapon == rpg || ps.weapon == rpg_sustain)) {
+		rpg_used = false;
+		Cbuf_AddText("weapnext\n", cgs->clientNum);
+
+	}
 }
 void r::R_JumpView_BounceButtons(int& menu_frame)
 {
@@ -359,11 +376,11 @@ void r::R_JumpView_IO()
 	static std::vector<const char*> existingRuns_c;
 
 	if (analyzer.RecordingExists()) {
-		if (ImGui::Button("Save Run"))
+		if (ButtonCentered("Save Run"))
 			is_saving = !is_saving;
 	}
 
-	if (ImGui::Button("Load Run")) {
+	if (ButtonCentered("Load Run")) {
 		is_loading = !is_loading;
 
 		if (is_loading) {
@@ -455,26 +472,8 @@ void r::R_JumpView(bool& isOpen)
 
 	static ImVec2 old_size;
 
-	ImGui::Begin("Jump View", &isOpen);
+	ImGui::Begin("Jump View", &isOpen, ImGuiWindowFlags_AlwaysAutoResize);
 	ImGui::SetWindowSize(ImVec2(500, 300), ImGuiCond_FirstUseEver);
-
-	static bool transparent;
-
-	if (GetAsyncKeyState('M') & 1 && VID_ACTIVE) { //toggle menu drawing 
-		transparent = !transparent;
-
-		if (transparent) {
-			old_size = ImGui::GetWindowSize();
-			ImGui::SetWindowSize(ImVec2(1, 1));
-		}
-		else {
-			if (old_size.x == 1 || old_size.y == 1)
-				ImGui::SetWindowSize(ImVec2(400, 600)); //fix the menu size if old size is 1
-			else
-				ImGui::SetWindowSize(old_size);
-		}
-
-	}
 
 	if (!analyzer.RecordingExists()) {
 		ImGui::Text("nothing has been recorded yet!\nYou can load existing recordings however (if there are any)");

@@ -46,6 +46,7 @@ namespace cg
 		float GetAverageVelocity();
 		DWORD LastRecordingStoppedTime();
 		void SetLastRecordingStopTime(DWORD time);
+		bool isPlayback();
 
 		void SaveFrameData(jump_data& jdata);
 		jump_data* FetchFrameData(uint32_t frame);
@@ -71,6 +72,7 @@ namespace cg
 		//std::set<int> collisionFrames;
 		uint32_t current_frame; //when recording
 		int32_t preview_frame; //in frame editor
+		bool is_playback;
 		float average_velocity;
 
 		

@@ -165,3 +165,7 @@ void jAnalyzer::SetLastRecordingStopTime(DWORD time)
 {
 	time_since_last_recording = time;
 }
+bool jAnalyzer::isPlayback()
+{
+	return is_playback;
+}

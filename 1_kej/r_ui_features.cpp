@@ -370,6 +370,6 @@ void r::R_JumpView_Help()
 	ImGui::BulletText("[->]		   - Next Frame");
 	ImGui::BulletText("[<-]		   - Previous Frame");
 	ImGui::BulletText("[F]		    - Toggle Force Position");
-	ImGui::BulletText("[M]		    - Toggle Menu Drawing");
+	//ImGui::BulletText("[M]		    - Toggle Menu Drawing");
 
 }
