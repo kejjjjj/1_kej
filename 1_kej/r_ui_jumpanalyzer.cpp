@@ -80,24 +80,25 @@ void r::R_JumpView_Main()
 		else isPlayback = false;
 	}
 	if (analyzer.isPlayback()) {
-		static int32_t oldServerTime = jumpanalyzer.serverTime;
+		static int wait_incr(0);
+		//static int32_t oldServerTime = jumpanalyzer.serverTime;
 
-		if (glm::distance((float)oldServerTime, (float)jumpanalyzer.serverTime) > 100) //true on map restart
-			oldServerTime = jumpanalyzer.serverTime;
+		//if (glm::distance((float)oldServerTime, (float)jumpanalyzer.serverTime) > 100) //true on map restart
+		//	oldServerTime = jumpanalyzer.serverTime;
 
 		dvar_s* com_maxfps = Dvar_FindMalleableVar("com_maxfps");
 		const jump_data* jData = analyzer.FetchFrameData(menu_frame);
+		
 
-		if (jumpanalyzer.serverTime > ((float)(oldServerTime) + 3.f * timeScale) && jData && com_maxfps && g_gravity) {
-			com_maxfps->current.integer = jData->FPS;
+		if (wait_incr > timeScale - 1 && jData && com_maxfps&& g_gravity) {
+			com_maxfps->current.integer = 125.f;
 			g_gravity->current.value = 0;
-			oldServerTime = jumpanalyzer.serverTime;
-
+			wait_incr = 0;
 			if (menu_frame < analyzer.GetTotalFrames())
 				menu_frame++;
 			else isPlayback = false;
 		}
-
+		wait_incr++;
 
 	}
 
@@ -167,7 +168,7 @@ void r::R_JumpView_Main()
 		const float opt = getOptForAnalyzer(jData);
 
 		ImGui::Text("fps: %i", jData->FPS);
-		ImGui::Text("velocity: %i (Z: %.6f)", velocity, jData->velocity[2]);
+		ImGui::Text("velocity: %i (Z: %.3f)", velocity, jData->velocity[2]);
 		ImGui::Text("origin: %.3f, %.3f, %.3f", jData->origin[0], jData->origin[1], jData->origin[2]);
 		ImGui::Text("angles: %.3f, %.3f", jData->angles[0], jData->angles[1]);
 		ImGui::Text("rpg fired: %i", jData->rpg_fired);
@@ -176,8 +177,8 @@ void r::R_JumpView_Main()
 
 		if(jData->rightmove != NULL)
 			ImGui::Text("strafe accuracy: %.3f", DistanceToOpt(opt, jData->angles[YAW]));
-		else
-			ImGui::Text("strafe accuracy: N/A");
+		else 
+			ImGui::Text("strafe accuracy: N/A"); //would require additional data to be saved
 
 		ImGui::Text("colliding: %i", jData->colliding);
 		ImGui::Text("jumped: %i", jData->jumped);
@@ -192,30 +193,32 @@ void r::R_JumpView_Main()
 	
 		R_JumpView_HandleWeapons(menu_frame, rpg_frames_min, rpg_frames_max);
 
+		ImGui::NewLine();
+		ImGui::Text("Events");
+		ImGui::Separator();
+
+		static int32_t bounce_indx(0);
+
+		R_JumpView_BounceButtons(menu_frame);
+
+		if (ImGui::Button("highest point"))
+			menu_frame = analyzer.FindHighestPoint();
+
+
+		ImGui::EndGroup();
+		R_JumpView_IO();
+
+		if (v::mod_pmove_fixed.isEnabled()) {
+			ImGui::Text("\n\n\n");
+			ImGui::TextColored(ImVec4(255, 255, 0, 255), "Warning: fixed fps can cause playback issues!");
+		}
+
 	}
 	else {
 		ImGui::Text("ERROR: invalid frame data\n");
 	}
 
-	ImGui::NewLine();
-	ImGui::Text("Events");
-	ImGui::Separator();
-
-	static int32_t bounce_indx(0);
-
-	R_JumpView_BounceButtons(menu_frame);
-
-	if (ImGui::Button("highest point"))
-		menu_frame = analyzer.FindHighestPoint();
-
 	
-	ImGui::EndGroup();
-	R_JumpView_IO();
-
-	if (v::mod_pmove_fixed.isEnabled()) {
-		ImGui::Text("\n\n\n");
-		ImGui::TextColored(ImVec4(255, 255, 0, 255), "Warning: fixed fps can cause playback issues!");
-	}
 
 }
 void r::R_JumpView_HandleWeapons(int& menu_frame, int min_frame, int max_frame)

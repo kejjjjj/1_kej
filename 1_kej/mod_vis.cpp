@@ -176,11 +176,21 @@ void cg::Mod_DrawFPSHelpers()
 
 	static const float m250 = 86.f;
 	vec2_t marker250 = { m250, 90.f + m250 };
+	vec2_t zone125 = { fps_zones.fps125, 90.f + fps_zones.fps125 };
+	vec2_t zone200 = { fps_zones.fps200, 90.f + fps_zones.fps200 };
+	vec2_t zone250 = { fps_zones.fps250, 90.f + fps_zones.fps250 };
+	vec2_t zone333 = { fps_zones.fps333, 90.f + fps_zones.fps333 };
 
 	if (rightmove) {
 		marker250[0] = 189.f - marker250[0];
 		marker250[1] = 189.f - marker250[1];
-		yaw += 10;
+		zone125[0] = 180.f - zone125[0] - fps_zones.length125;
+		zone125[1] = 180.f - zone125[1] - fps_zones.length125;
+		zone200[0] = 180.f - zone200[0] - fps_zones.length200;
+		zone200[1] = 180.f - zone200[1] - fps_zones.length200;
+		zone250[0] = 180.f - zone250[0] - fps_zones.length250;
+		zone250[1] = 180.f - zone250[1] - fps_zones.length250;
+		//yaw += 10;
 	}
 
 	yaw = AngleNormalize180(yaw += aa);
@@ -203,13 +213,24 @@ void cg::Mod_DrawFPSHelpers()
 
 
 	if (isInverted) {
+		CG_FillAngleYaw(-180.f + zone125[0], -180.f + (zone125[0] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 0,1,1,1.0 });
+		CG_FillAngleYaw(-180.f + zone125[1], -180.f + (zone125[1] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 0,1,1,1.0 });
+
+		CG_FillAngleYaw(-180.f + zone250[0], -180.f + (zone250[0] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,1,1.0 });
+		CG_FillAngleYaw(-180.f + zone250[1], -180.f + (zone250[1] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,1,1.0 });
+
+		CG_FillAngleYaw(-180.f + zone200[0], -180.f + (zone200[0] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,1,0,1.0 });
+		CG_FillAngleYaw(-180.f + zone200[1], -180.f + (zone200[1] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,1,0,1.0 });
+
+		CG_FillAngleYaw(-180.f + zone333[0], -180.f + (zone333[0] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 0,1,0,1.0 });
+		CG_FillAngleYaw(-180.f + zone333[1], -180.f + (zone333[1] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 0,1,0,1.0 });
 
 
 		DistanceFromZone = (rightmove == false) ? yaw - (-180.f + marker250[0]) : yaw - (-180.f + (marker250[0] + length_marker250));
 
 		if (v::mod_fps_transferz.evar->arrayValue[0] != NULL) {
-			CG_FillAngleYaw(-180.f + marker250[0], -180.f + (marker250[0] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,255 });
-			CG_FillAngleYaw(-180.f + marker250[1], -180.f + (marker250[1] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,255 });
+			CG_FillAngleYaw(-180.f + marker250[0], -180.f + (marker250[0] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,1.0 });
+			CG_FillAngleYaw(-180.f + marker250[1], -180.f + (marker250[1] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,1.0 });
 		}
 	} else {
 
@@ -219,7 +240,21 @@ void cg::Mod_DrawFPSHelpers()
 	if (DistanceFromZone < 0.f)
 		DistanceFromZone = 90.f + DistanceFromZone;
 
+	CG_FillAngleYaw(zone125[0], (zone125[0] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 0,1,1,1.0 });
+	CG_FillAngleYaw(zone125[1], (zone125[1] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 0,1,1,1.0 });
+
+	CG_FillAngleYaw(zone250[0], (zone250[0] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,1,1.0 });
+	CG_FillAngleYaw(zone250[1], (zone250[1] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,1,1.0 });
+
+	CG_FillAngleYaw(zone200[0], (zone200[0] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,1,0,1.0 });
+	CG_FillAngleYaw(zone200[1], (zone200[1] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,1,0,1.0 });
+
+	CG_FillAngleYaw(zone333[0], (zone333[0] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 0,1,0,1.0 });
+	CG_FillAngleYaw(zone333[1], (zone333[1] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 0,1,0,1.0 });
+
+
 	if (v::mod_fps_transferz.evar->arrayValue[0] != NULL) {
+
 		CG_FillAngleYaw(marker250[0], (marker250[0] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,255 });
 		CG_FillAngleYaw(marker250[1], (marker250[1] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,255 });
 	}

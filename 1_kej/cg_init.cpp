@@ -61,6 +61,7 @@ void cg::CG_PrepareHooks()
 	PM_Weapon_WeaponTimeAdjust_f	= (void(*)())										(0x41A4D8);
 	PmoveSingle_stub_f				= (void(*)())										(0x414BB4);
 	PM_SlideMove_f					= (BOOL(*)(pmove_t*, pml_t*, int))					(0x414F40);
+	PM_OverBounce_f					= (void(*)())										(0x414BBB);
 }
 void cg::CG_InitForeverHooks()
 {
@@ -107,7 +108,7 @@ void cg::CG_InitHooks()
 	a->install(&(PVOID&)PM_Weapon_WeaponTimeAdjust_f, PM_Weapon_WeaponTimeAdjust);
 	a->install(&(PVOID&)PmoveSingle_stub_f, PmoveSingle_stub);
 	a->install(&(PVOID&)PM_SlideMove_f, PM_SlideMove);
-
+	a->install(&(PVOID&)PM_OverBounce_f, PM_OverBounce_stub);
 
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, " done!\n");
 
@@ -140,6 +141,7 @@ void cg::CG_RemoveHooks()
 	a->remove(&(PVOID&)PM_Weapon_WeaponTimeAdjust_f, PM_Weapon_WeaponTimeAdjust);
 	a->remove(&(PVOID&)PmoveSingle_stub_f, PmoveSingle_stub);
 	a->remove(&(PVOID&)PM_SlideMove_f, PM_SlideMove);
+	a->remove(&(PVOID&)PM_OverBounce_f, PM_OverBounce_stub);
 
 
 	if (r::pEndScene) {

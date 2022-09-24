@@ -10,7 +10,12 @@ BOOL cg::PM_SlideMove(pmove_t* pm, pml_t* pml, int gravity)
 }
 void cg::PM_AirMove(pmove_t* pm, pml_t* pml)
 {
+
+	memcpy_s(&h_pm, sizeof(pmove_t), pm, sizeof(pmove_t*));
+	memcpy_s(&h_pml, sizeof(pml_t), pml, sizeof(pml_t*));
 	
+	Mod_DetermineFPS(pm, pml);
+
 	PM_AirMove_f(pm, pml);
 
 	Mod_HitAnalyzer(pm, pml);
@@ -95,7 +100,8 @@ void cg::Pmove(pmove_t* pm)
 
 		pm->cmd.serverTime = pm->ps->commandTime + msec;
 		PmoveSingle(pm);
-		jumpanalyzer.commandTime = pm->ps->commandTime;
+
+		//jumpanalyzer.commandTime = pm->ps->commandTime;
 		jumpanalyzer.serverTime = pm->cmd.serverTime;
 		memcpy(&pm->oldcmd, &pm->cmd, sizeof(pm->oldcmd));
 
@@ -143,7 +149,10 @@ void cg::Mod_JumpView(pmove_t* pm, pml_t* pml)
 
 	hasJumped = pm->cmd.serverTime - pm->ps->jumpTime < 10;
 
-	if (pm->cmd.serverTime > old_cmdTime + 3) {
+	const float difference = (int)(1000.f / (cls->frametime == NULL ? 1 : cls->frametime)) / 125.f;
+
+
+	if (pm->cmd.serverTime > old_cmdTime + 3 * difference) {
 		old_cmdTime = pm->cmd.serverTime;
 		jump_data jData;
 
@@ -180,6 +189,100 @@ void cg::PM_ModCode(pml_t* pml, pmove_t* pm)
 
 	return;
 }
+void cg::Mod_DetermineFPS(pmove_t* pm, pml_t* pml)
+{
+	//
+	//vec3_t forward, right, wishdir;
+	//vec2_t wishvel;
+	//vec_t commandScale;
+
+	playerState_s* ps = pm->ps;
+	//usercmd_s cmd = pm->cmd;
+
+	//const char forwardmove = pm->cmd.forwardmove;
+	//const char rightmove = pm->cmd.rightmove;
+
+	//static const DWORD cmdscale = 0x40EE60;
+
+	//__asm //get command scale
+	//{
+	//	mov edi, ps;
+	//	lea esi, cmd;
+	//	call cmdscale;
+	//	fstp [commandScale];
+	//}
+
+
+	//VectorCopy(pml->forward, forward);
+	//VectorCopy(pml->right, right);
+
+	//forward[2] = 0;
+	//right[2] = 0;
+	//VectorNormalize(forward);
+	//VectorNormalize(right);
+	//
+	//wishvel[0] = forward[0] * forwardmove + right[0] * rightmove;
+	//wishvel[1] = forward[1] * forwardmove + right[1] * rightmove;
+
+	//if (GetAsyncKeyState(VK_END) & 1)
+	//	printf("forward[0]: %.6f\n", pml->forward[0]);
+
+	//wishdir[0] = wishvel[0];
+	//wishdir[1] = wishvel[1];
+	//wishdir[2] = 0.0f;
+
+	//float wishspeed = VectorNormalize(wishdir) * commandScale;
+
+	//const auto Accelerate = [](vec3_t wishDir, pml_t* pml, float wishspeed, float accel, playerState_s* ps) -> void
+	//{
+	//	float currentSpeed = ps->velocity[1] * wishDir[1] + *wishDir * ps->velocity[0] + ps->velocity[2] * wishDir[2];
+	//	float addspeed = wishspeed - currentSpeed;
+	//	float _wishspeed, accelspeed;
+
+	//	const dvar_s* stopspeed = Dvar_FindMalleableVar("stopspeed");
+	//	airmove.addspeed = addspeed;
+
+	//	if (addspeed > 0.0)
+	//	{
+	//		//_wishspeed = stopspeed->current.value;
+
+
+
+	//		accelspeed = pml->frametime * accel * wishspeed;
+	//		if (accelspeed > addspeed)
+	//		{
+	//			accelspeed = addspeed;
+	//		}
+	//		airmove.accelspeed = accelspeed;
+	//		VectorCopy(wishDir, airmove.wishDir);
+
+
+	//	}
+
+
+	//};
+
+
+
+	fps_zones.fps125 = round((float)ps->speed / 8) + 10;
+	fps_zones.fps200 = round((float)ps->speed / 5) + 10;
+	fps_zones.fps250 = round((float)ps->speed / 4) + 10;
+	fps_zones.fps333 = round((float)ps->speed / 3) + 10;
+
+	fps_zones.length125 = (90.f - fps_zones.fps125) - fps_zones.fps125; //this way around because 125 starts from < 45
+	fps_zones.length200 = fps_zones.fps200 - (90.f - fps_zones.fps200) + 3; //3 will fill the empty space with 200fps
+	fps_zones.length250 = fps_zones.fps250 - (90.f - fps_zones.fps250);
+	fps_zones.length333 = fps_zones.fps333 - (90.f - fps_zones.fps333);
+
+	fps_zones.fps125 -= fps_zones.length125;
+	fps_zones.fps250 += fps_zones.length250 - 11; 
+	fps_zones.fps200 = fps_zones.fps250 + 20;
+	fps_zones.fps333 -= fps_zones.length333;
+
+	return;
+	//return Accelerate(wishdir, pml, wishspeed, 1.f, ps);
+
+}
 __declspec(naked) void cg::PmoveSingle_stub()
 {
 	const static DWORD _jmp = 0x414BBB;
@@ -196,5 +299,65 @@ __declspec(naked) void cg::PmoveSingle_stub()
 		call esi;
 		jmp _jmp;
 
+	}
+}
+//not exactly overbouncing, but the bug is similar
+void cg::PM_OverBounce(pmove_t* pm, pml_t* pml)
+{
+
+
+
+	vec3_t move;
+
+	move[0] = pm->ps->origin[0] - pml->previous_origin[0];
+	move[1] = pm->ps->origin[1] - pml->previous_origin[1];
+	move[2] = pm->ps->origin[2] - pml->previous_origin[2];
+
+	float dot = move[2] * move[2] + move[1] * move[1] + move[0] * move[0];
+	float dot_div_frametime = dot / (pml->frametime * pml->frametime);
+	float dot_speed = pm->ps->velocity[2] * pm->ps->velocity[2] + pm->ps->velocity[1] * pm->ps->velocity[1] + pm->ps->velocity[0] * pm->ps->velocity[0];
+
+	if (dot_speed * 0.25 > dot_div_frametime)
+	{
+		//Com_Printf(CON_CHANNEL_OBITUARY, "possible overbounce!\n");
+		float inGameFramesPerSecond = 1.0 / pml->frametime;
+		pm->ps->velocity[0] = inGameFramesPerSecond * move[0];
+		pm->ps->velocity[1] = inGameFramesPerSecond * move[1];
+		pm->ps->velocity[2] = inGameFramesPerSecond * move[2];
+	}
+
+	float clampedFrametime = glm::clamp(pml->frametime, 0.f, 1.f);
+
+	float diffX = pm->ps->velocity[0] - pm->ps->oldVelocity[0];
+	float diffY = pm->ps->velocity[1] - pm->ps->oldVelocity[1];
+
+	float frameX = clampedFrametime * diffX;
+	float frameY = clampedFrametime * diffY;
+
+	pm->ps->oldVelocity[0] = pm->ps->oldVelocity[0] + frameX;
+	pm->ps->oldVelocity[1] = pm->ps->oldVelocity[1] + frameY;
+
+	//((void(__cdecl*)(float* vec))0x578FE0)(pm->ps->velocity); //Sys_SnapVector
+
+	return;
+
+}
+__declspec(naked) void cg::PM_OverBounce_stub()
+{
+	const static DWORD _jmp = 0x414BC8;
+
+	__asm
+	{
+		fld     dword ptr[ebp + 1Ch];
+		fsub		[esp + 0x90];
+		lea     esi, [ebp + 28h];
+		
+		lea ecx, [esp + 0x28];
+		push ecx;
+		push ebx;
+		call PM_OverBounce;
+		add esp, 0x8;
+		jmp _jmp;
+		//retn;
 	}
 }
