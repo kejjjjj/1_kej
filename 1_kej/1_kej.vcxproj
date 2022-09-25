@@ -190,6 +190,7 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="koukku.hpp" />
     <ClInclude Include="mod_analyzer.hpp" />
+    <ClInclude Include="mod_automation.hpp" />
     <ClInclude Include="mod_jumps.hpp" />
     <ClInclude Include="mod_vis.hpp" />
     <ClInclude Include="pch.h" />
@@ -253,6 +254,7 @@
     <ClCompile Include="koukku.cpp" />
     <ClCompile Include="mod_analyzer.cpp" />
     <ClCompile Include="mod_analyzer_io.cpp" />
+    <ClCompile Include="mod_automation.cpp" />
     <ClCompile Include="mod_jumps.cpp" />
     <ClCompile Include="mod_vis.cpp" />
     <ClCompile Include="pch.cpp">

@@ -55,9 +55,11 @@ void cg::Mod_DrawVelocity()
 	}
 
 	char buffer[20];
-	sprintf_s(buffer, "%i", velocity);
+	sprintf_s(buffer, "%i\n%i", velocity, jumpanalyzer.recommendedFPS);
 	buffer[19] = '\0';
 	r::R_DrawText(buffer, v::mod_velometer.evar->arrayValue[1], v::mod_velometer.evar->arrayValue[2], v::mod_velometer.evar->arrayValue[3], v::mod_velometer.evar->arrayValue[3], 0, (float*)&col, 0);
+
+
 }
 void cg::Mod_DrawCoordinates()
 {
@@ -182,15 +184,15 @@ void cg::Mod_DrawFPSHelpers()
 	vec2_t zone333 = { fps_zones.fps333, 90.f + fps_zones.fps333 };
 
 	if (rightmove) {
-		marker250[0] = 189.f - marker250[0];
-		marker250[1] = 189.f - marker250[1];
+		marker250[0] = 180.f - marker250[0] - length_marker250;
+		marker250[1] = 180.f - marker250[1] - length_marker250;
 		zone125[0] = 180.f - zone125[0] - fps_zones.length125;
 		zone125[1] = 180.f - zone125[1] - fps_zones.length125;
 		zone200[0] = 180.f - zone200[0] - fps_zones.length200;
 		zone200[1] = 180.f - zone200[1] - fps_zones.length200;
 		zone250[0] = 180.f - zone250[0] - fps_zones.length250;
 		zone250[1] = 180.f - zone250[1] - fps_zones.length250;
-		//yaw += 10;
+		//yaw -= 10;
 	}
 
 	yaw = AngleNormalize180(yaw += aa);
@@ -209,28 +211,43 @@ void cg::Mod_DrawFPSHelpers()
 	const float BAR_START_Y = v::mod_fps_transferz.evar->arrayValue[1];
 	const float BAR_HEIGHT = v::mod_fps_transferz.evar->arrayValue[2];
 
+
+
 	float &DistanceFromZone = mod_fps.DistanceToTransferZone;
+	const bool isLong125 = v::mod_autoFPS_long125.isEnabled();
 
 
 	if (isInverted) {
-		CG_FillAngleYaw(-180.f + zone125[0], -180.f + (zone125[0] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 0,1,1,1.0 });
-		CG_FillAngleYaw(-180.f + zone125[1], -180.f + (zone125[1] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 0,1,1,1.0 });
-
-		CG_FillAngleYaw(-180.f + zone250[0], -180.f + (zone250[0] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,1,1.0 });
-		CG_FillAngleYaw(-180.f + zone250[1], -180.f + (zone250[1] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,1,1.0 });
-
-		CG_FillAngleYaw(-180.f + zone200[0], -180.f + (zone200[0] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,1,0,1.0 });
-		CG_FillAngleYaw(-180.f + zone200[1], -180.f + (zone200[1] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,1,0,1.0 });
-
-		CG_FillAngleYaw(-180.f + zone333[0], -180.f + (zone333[0] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 0,1,0,1.0 });
-		CG_FillAngleYaw(-180.f + zone333[1], -180.f + (zone333[1] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 0,1,0,1.0 });
-
-
-		DistanceFromZone = (rightmove == false) ? yaw - (-180.f + marker250[0]) : yaw - (-180.f + (marker250[0] + length_marker250));
-
 		if (v::mod_fps_transferz.evar->arrayValue[0] != NULL) {
-			CG_FillAngleYaw(-180.f + marker250[0], -180.f + (marker250[0] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,1.0 });
-			CG_FillAngleYaw(-180.f + marker250[1], -180.f + (marker250[1] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,1.0 });
+
+			if (!isLong125) {
+				CG_FillAngleYaw(-180.f + zone125[0], -180.f + (zone125[0] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue);
+				CG_FillAngleYaw(-180.f + zone125[1], -180.f + (zone125[1] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue);
+			}
+			else {
+				CG_FillAngleYaw(-180.f + zone333[0], -180.f + (zone333[0] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue);
+				CG_FillAngleYaw(-180.f + zone333[1], -180.f + (zone333[1] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue);
+			}
+
+			CG_FillAngleYaw(-180.f + zone250[0], -180.f + (zone250[0] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_250col.evar->vecValue);
+			CG_FillAngleYaw(-180.f + zone250[1], -180.f + (zone250[1] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_250col.evar->vecValue);
+
+			CG_FillAngleYaw(-180.f + zone200[0], -180.f + (zone200[0] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_200col.evar->vecValue);
+			CG_FillAngleYaw(-180.f + zone200[1], -180.f + (zone200[1] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_200col.evar->vecValue);
+
+			if (!isLong125) {
+				CG_FillAngleYaw(-180.f + zone333[0], -180.f + (zone333[0] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue);
+				CG_FillAngleYaw(-180.f + zone333[1], -180.f + (zone333[1] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue);
+			}
+			else {
+				CG_FillAngleYaw(-180.f + zone125[0], -180.f + (zone125[0] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue);
+				CG_FillAngleYaw(-180.f + zone125[1], -180.f + (zone125[1] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue);
+			}
+
+			CG_FillAngleYaw(-180.f + marker250[0], -180.f + (marker250[0] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_markercol.evar->vecValue);
+			CG_FillAngleYaw(-180.f + marker250[1], -180.f + (marker250[1] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_markercol.evar->vecValue);
+
+			DistanceFromZone = (rightmove == false) ? yaw - (-180.f + marker250[0]) : yaw - (-180.f + (marker250[0] + length_marker250));
 		}
 	} else {
 
@@ -240,23 +257,35 @@ void cg::Mod_DrawFPSHelpers()
 	if (DistanceFromZone < 0.f)
 		DistanceFromZone = 90.f + DistanceFromZone;
 
-	CG_FillAngleYaw(zone125[0], (zone125[0] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 0,1,1,1.0 });
-	CG_FillAngleYaw(zone125[1], (zone125[1] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 0,1,1,1.0 });
-
-	CG_FillAngleYaw(zone250[0], (zone250[0] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,1,1.0 });
-	CG_FillAngleYaw(zone250[1], (zone250[1] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,1,1.0 });
-
-	CG_FillAngleYaw(zone200[0], (zone200[0] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,1,0,1.0 });
-	CG_FillAngleYaw(zone200[1], (zone200[1] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,1,0,1.0 });
-
-	CG_FillAngleYaw(zone333[0], (zone333[0] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 0,1,0,1.0 });
-	CG_FillAngleYaw(zone333[1], (zone333[1] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 0,1,0,1.0 });
-
 
 	if (v::mod_fps_transferz.evar->arrayValue[0] != NULL) {
+		if (!isLong125) {
+			CG_FillAngleYaw(zone125[0], (zone125[0] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue);
+			CG_FillAngleYaw(zone125[1], (zone125[1] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue);
+		}
+		else {
+			CG_FillAngleYaw(zone333[0], (zone333[0] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue);
+			CG_FillAngleYaw(zone333[1], (zone333[1] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue);
 
-		CG_FillAngleYaw(marker250[0], (marker250[0] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,255 });
-		CG_FillAngleYaw(marker250[1], (marker250[1] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 1,0,0,255 });
+		}
+
+		CG_FillAngleYaw(zone250[0], (zone250[0] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_250col.evar->vecValue);
+		CG_FillAngleYaw(zone250[1], (zone250[1] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_250col.evar->vecValue);
+
+		CG_FillAngleYaw(zone200[0], (zone200[0] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_200col.evar->vecValue);
+		CG_FillAngleYaw(zone200[1], (zone200[1] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_200col.evar->vecValue);
+
+		if (!isLong125) {
+			CG_FillAngleYaw(zone333[0], (zone333[0] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue);
+			CG_FillAngleYaw(zone333[1], (zone333[1] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue);
+		}
+		else {
+			CG_FillAngleYaw(zone125[0], (zone125[0] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue);
+			CG_FillAngleYaw(zone125[1], (zone125[1] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue);
+		}
+	
+		CG_FillAngleYaw(marker250[0], (marker250[0] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_markercol.evar->vecValue);
+		CG_FillAngleYaw(marker250[1], (marker250[1] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_markercol.evar->vecValue);
 	}
 
 	DistanceFromZone = fmodf(DistanceFromZone, 90);
@@ -264,13 +293,58 @@ void cg::Mod_DrawFPSHelpers()
 	if (!rightmove)
 		DistanceFromZone = 90.f - DistanceFromZone;
 
-	//char buffer[20];
-	//sprintf_s(buffer, "%.2f", DistanceFromZone);
 
-	//r::R_DrawText(buffer, 945, 400, 2, 2, 0, vec4_t{ 0,255,255,255 }, 1);
 	if (v::mod_fps_transferz.evar->arrayValue[0] != NULL)
 		r::R_DrawRect("white", 958, BAR_START_Y - 10, 4, BAR_HEIGHT + 20, vec4_t{ 1,1,1,255 });
+
+
+	range_t ranges, ranges2;
+
+	if (!isLong125) {
+		ranges = AnglesToRange(DEG2RAD(zone333[0]), DEG2RAD(zone333[0] + fps_zones.length333), DEG2RAD(fmodf(yaw, 90)), fov);
+		ranges2 = AnglesToRange(DEG2RAD(zone333[1]), DEG2RAD(zone333[1] + fps_zones.length333), DEG2RAD(fmodf(yaw, 90)), fov);
+	}
+	else {
+		ranges = AnglesToRange(DEG2RAD(zone125[0]), DEG2RAD(zone125[0] + fps_zones.length125), DEG2RAD(fmodf(yaw, 90)), fov);
+		ranges2 = AnglesToRange(DEG2RAD(zone125[1]), DEG2RAD(zone125[1] + fps_zones.length125), DEG2RAD(fmodf(yaw, 90)), fov);
+	}
+
+	if (ranges.x1 <= 960 && ranges.x2 > 960 || ranges2.x1 <= 960 && ranges2.x2 > 960) {
+		jumpanalyzer.recommendedFPS = isLong125 == false ? 333 : 125;
+		return;
+	}
+
+	if (!isLong125) {
+		ranges = AnglesToRange(DEG2RAD(zone125[0]), DEG2RAD(zone125[0] + fps_zones.length125), DEG2RAD(fmodf(yaw, 90)), fov);
+		ranges2 = AnglesToRange(DEG2RAD(zone125[1]), DEG2RAD(zone125[1] + fps_zones.length125), DEG2RAD(fmodf(yaw, 90)), fov);
+	}
+	else {
+		ranges = AnglesToRange(DEG2RAD(zone333[0]), DEG2RAD(zone333[0] + fps_zones.length333), DEG2RAD(fmodf(yaw, 90)), fov);
+		ranges2 = AnglesToRange(DEG2RAD(zone333[1]), DEG2RAD(zone333[1] + fps_zones.length333), DEG2RAD(fmodf(yaw, 90)), fov);
+	}
+
+	if (ranges.x1 <= 960 && ranges.x2 > 960 || ranges2.x1 <= 960 && ranges2.x2 > 960) {
+		jumpanalyzer.recommendedFPS = isLong125 == false ? 125 : 333;
+		return;
+	}
+
+	ranges = AnglesToRange(DEG2RAD(zone200[0]), DEG2RAD(zone200[0] + fps_zones.length200), DEG2RAD(fmodf(yaw, 90)), fov);
+	ranges2 = AnglesToRange(DEG2RAD(zone200[1]), DEG2RAD(zone200[1] + fps_zones.length200), DEG2RAD(fmodf(yaw, 90)), fov);
+
+	if (ranges.x1 <= 960 && ranges.x2 > 960 || ranges2.x1 <= 960 && ranges2.x2 > 960) {
+		jumpanalyzer.recommendedFPS = 200;
+		return;
+	}
+
+	ranges = AnglesToRange(DEG2RAD(zone250[0]), DEG2RAD(zone250[0] + fps_zones.length250), DEG2RAD(fmodf(yaw, 90)), fov);
+	ranges2 = AnglesToRange(DEG2RAD(zone250[1]), DEG2RAD(zone250[1] + fps_zones.length250), DEG2RAD(fmodf(yaw, 90)), fov);
+
+	if (ranges.x1 <= 960 && ranges.x2 > 960 || ranges2.x1 <= 960 && ranges2.x2 > 960) {
+		jumpanalyzer.recommendedFPS = 250;
+		return;
+	}
 	
+
 }
 void cg::FPS_CalculateSingleBeatDirection(bool& rightmove, const usercmd_s* cmd)
 {

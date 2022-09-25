@@ -262,30 +262,47 @@ void Evar_Setup()
 	float mod_anglehelper[4] = { 0, 600, 10, 1.f };
 
 
-	v::mod_velometer.Register		("1_kej_velometer",			evartype_t::EVAR_ARRAY,		mod_velometer, 4); //enabled, x, y, scale
-	v::mod_rpg_mode.Register		("1_kej_rpg_mode",			evartype_t::EVAR_STRING,	"default");
+	v::mod_velometer.Register		("1_kej_velometer",					evartype_t::EVAR_ARRAY,		mod_velometer, 4); //enabled, x, y, scale
+	v::mod_rpg_mode.Register		("1_kej_rpg_mode",					evartype_t::EVAR_STRING,	"default");
 
-	v::mod_coordinates.Register		("1_kej_coordinates",		evartype_t::EVAR_ARRAY,		mod_coordinates, 4); //enabled, x, y, scale
-	v::mod_hitanalyzer.Register		("1_kej_hitanalyzer",		evartype_t::EVAR_BOOL,		(float)0);
-	v::mod_jumpanalyzer.Register	("1_kej_jumpanalyzer",		evartype_t::EVAR_BOOL,		(float)0);
-	v::mod_bhop.Register			("1_kej_bhop",				evartype_t::EVAR_BOOL,		(float)0);
-	v::mod_bhop_nodelay.Register	("1_kej_bhop_nodelay",		evartype_t::EVAR_BOOL,		(float)0); 
-	v::mod_elevatable_surf.Register	("1_kej_elevatable_surf",	evartype_t::EVAR_BOOL, 		(float)0);
-	v::mod_bounceable_surf.Register	("1_kej_bounceable_surf",	evartype_t::EVAR_BOOL,		(float)0);
-	v::mod_pmove_fixed.Register		("1_kej_pmove_fixed",		evartype_t::EVAR_BOOL,		(float)0);
-	v::mod_anglehelper.Register		("1_kej_anglehelper",		evartype_t::EVAR_ARRAY,		mod_anglehelper, 4); //enabled, x, y, scale
-	v::mod_fps_transferz.Register	("1_kej_fps_transferz",		evartype_t::EVAR_ARRAY,		mod_fps_transferz, 5); //enabled, y, height, fovscale, change crosshair color
-	v::mod_crosshair.Register		("1_kej_crosshair",			evartype_t::EVAR_VEC4,		vec4_t{1,1,1,0.5f}); //r,g,b,min alpha
-	v::mod_veldirection.Register	("1_kej_veldirection",		evartype_t::EVAR_BOOL,		(float)0);
-	v::mod_show_worldaxes.Register	("1_kej_show_worldaxes",	evartype_t::EVAR_BOOL,		(float)0);
-	v::mod_worldaxes_opt.Register	("1_kej_worldaxes_opt",		evartype_t::EVAR_BOOL,		(float)0);
-	v::mod_rpg_timing.Register		("1_kej_rpg_timing",		evartype_t::EVAR_BOOL,		(float)0);
-	v::mod_rpg_angle.Register		("1_kej_rpg_angle",			evartype_t::EVAR_BOOL,		(float)0);
-	v::mod_curve_speed.Register		("1_kej_curve_speed",		evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_coordinates.Register		("1_kej_coordinates",				evartype_t::EVAR_ARRAY,		mod_coordinates, 4); //enabled, x, y, scale
+	v::mod_hitanalyzer.Register		("1_kej_hitanalyzer",				evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_jumpanalyzer.Register	("1_kej_jumpanalyzer",				evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_bhop.Register			("1_kej_bhop",						evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_bhop_nodelay.Register	("1_kej_bhop_nodelay",				evartype_t::EVAR_BOOL,		(float)0); 
+	v::mod_elevatable_surf.Register	("1_kej_elevatable_surf",			evartype_t::EVAR_BOOL, 		(float)0);
+	v::mod_bounceable_surf.Register	("1_kej_bounceable_surf",			evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_pmove_fixed.Register		("1_kej_pmove_fixed",				evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_anglehelper.Register		("1_kej_anglehelper",				evartype_t::EVAR_ARRAY,		mod_anglehelper, 4); //enabled, x, y, scale
+	v::mod_fps_transferz.Register	("1_kej_fps_transferz",				evartype_t::EVAR_ARRAY,		mod_fps_transferz, 5); //enabled, y, height, fovscale, change crosshair color
+	v::mod_crosshair.Register		("1_kej_crosshair",					evartype_t::EVAR_VEC4,		vec4_t{1,1,1,0.5f}); //r,g,b,min alpha
+	v::mod_veldirection.Register	("1_kej_veldirection",				evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_show_worldaxes.Register	("1_kej_show_worldaxes",			evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_worldaxes_opt.Register	("1_kej_worldaxes_opt",				evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_rpg_timing.Register		("1_kej_rpg_timing",				evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_rpg_angle.Register		("1_kej_rpg_angle",					evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_curve_speed.Register		("1_kej_curve_speed",				evartype_t::EVAR_BOOL,		(float)0);
 
-	v::mod_jumpv_forcepos.Register	("1_kej_jumpv_forcepos",	evartype_t::EVAR_BOOL,		(float)0);
-	v::mod_jumpv_path.Register		("1_kej_jumpv_path",		evartype_t::EVAR_BOOL,		(float)0);
-	v::mod_jumpv_hitbox.Register	("1_kej_jumpv_hitbox",		evartype_t::EVAR_BOOL, (float)0);
+	v::mod_showFPS.Register			("1_kej_showFPS",					evartype_t::EVAR_BOOL,		(float)0);
+
+	v::mod_jumpv_forcepos.Register	("1_kej_jumpv_forcepos",			evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_jumpv_path.Register		("1_kej_jumpv_path",				evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_jumpv_hitbox.Register	("1_kej_jumpv_hitbox",				evartype_t::EVAR_BOOL,		(float)0);
+
+	v::mod_125col.Register			("1_kej_125col",					evartype_t::EVAR_VEC4,		vec4_t{ 0,1,0,1 });
+	v::mod_200col.Register			("1_kej_200col",					evartype_t::EVAR_VEC4,		vec4_t{ 1,1,0,1 });
+	v::mod_250col.Register			("1_kej_250col",					evartype_t::EVAR_VEC4,		vec4_t{ 0,1,1,1 });
+	v::mod_333col.Register			("1_kej_333col",					evartype_t::EVAR_VEC4,		vec4_t{ 1,0,1,1 });
+	v::mod_markercol.Register		("1_kej_markercol",					evartype_t::EVAR_VEC4,		vec4_t{ 1,1,1,1 });
+
+	//automation
+	v::mod_autoFPS.Register			("1_kej_autofps",					evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_autoFPS_long125.Register ("1_kej_autofps_long125",			evartype_t::EVAR_BOOL,		(float)1);
+	v::mod_strafebot.Register		("1_kej_strafebot",					evartype_t::EVAR_BOOL,		(float)0);
+	v::mod_strafebot_all.Register   ("1_kej_strafebot_all",				evartype_t::EVAR_BOOL,		(float)0);
+
+
+
 
 }
 int evar_o::GetInt()

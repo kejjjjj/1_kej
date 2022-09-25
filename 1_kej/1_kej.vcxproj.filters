@@ -204,6 +204,9 @@
     <ClInclude Include="ImGui\imgui.h">
       <Filter>Header Files\lib\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="mod_automation.hpp">
+      <Filter>Source Files\mod</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -334,6 +337,9 @@
     </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">
       <Filter>Header Files\lib\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="mod_automation.cpp">
+      <Filter>Source Files\mod</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

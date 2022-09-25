@@ -13,9 +13,14 @@ namespace cg
 		float x2;
 		bool split;
 	};
-
+	struct screencoordinates_t
+	{
+		float x1;
+		float x2;
+	};
 	float ProjectionX(float angle, float fov);
 	range_t AnglesToRange(float start, float end, float yaw, float fov);
+	//screencoordinates_t CG_RangeAnglesToSC(range_t range);
 	void CG_FillAngleYaw(float start, float end, float yaw, float y, float h, float fov, const vec4_t color);
 
 	void setYaw(float ref, float ang);

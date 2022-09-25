@@ -113,37 +113,70 @@ void Visual_Features()
 
 		ImGui::Text("\t"); ImGui::SameLine();
 		ImGui::BeginGroup();
-		if (ImGui::CollapsingHeader("Transfer Zone")) {
+		if (ImGui::CollapsingHeader("Transfer Zone & FPS")) {
+
+			if (ImGui::Checkbox("Show FPS", &v::mod_showFPS.evar->enabled)) {
+				v::mod_showFPS.SetValue(v::mod_showFPS.isEnabled());
+
+			} ImGui::SameLine(); r::MetricsHelpMarker("Draw recommended FPS");
+
 			if (ImGui::Checkbox("horizontal bar", &v::mod_fps_transferz.evar->enabled)) {
 				float val = (float)v::mod_fps_transferz.evar->enabled;
 				v::mod_fps_transferz.SetValue(&val, 1, 0);
-			}
+			}ImGui::SameLine(); r::MetricsHelpMarker("draws a bar on the screen that indicates what FPS you should use");
 
-			if(v::mod_fps_transferz.evar->arrayValue[0]){
-				ImGui::SameLine();
-				static bool editing;
-				if (ImGui::Button("modify##03"))
-					editing = !editing;
+			if (!v::mod_fps_transferz.evar->arrayValue[0])
+				ImGui::BeginDisabled();
+
+			ImGui::Text("\t"); ImGui::SameLine();
+			ImGui::BeginGroup();
+			ImGui::PushItemWidth(100);
+			ImGui::DragFloat("y", &v::mod_fps_transferz.evar->arrayValue[1], 1.f, 0.f, 1080.f, "%.0f");
+
+			ImGui::PushItemWidth(100);
+			ImGui::DragFloat("height", &v::mod_fps_transferz.evar->arrayValue[2], 1.f, 0.f, 1080.f, "%.0f");
+
+			ImGui::PushItemWidth(100);
+			ImGui::DragFloat("fovscale", &v::mod_fps_transferz.evar->arrayValue[3], 0.25f, 0.f, 10.f, "%.2f");
+			
+			if (ImGui::Checkbox("Long 125", &v::mod_autoFPS_long125.evar->enabled)) {
+				v::mod_autoFPS_long125.SetValue(v::mod_autoFPS_long125.isEnabled());
+			} ImGui::SameLine(); r::MetricsHelpMarker("Don't let 333fps overwrite most of the 125fps angle");
+
+			ImGui::NewLine();
+			ImGui::Text("colors");
+			ImGui::Separator();
+			static bool 
+				t125	= v::mod_125col.evar->vecValue[3], 
+				t200	= v::mod_200col.evar->vecValue[3], 
+				t250	= v::mod_250col.evar->vecValue[3], 
+				t333	= v::mod_333col.evar->vecValue[3], 
+				tmarker = v::mod_markercol.evar->vecValue[3];
+			
+
+			ImGui::ColorEdit3("125fps", v::mod_125col.evar->vecValue, ImGuiColorEditFlags_NoInputs); 
+			ImGui::SameLine(); if (ImGui::Button(t125 == true ?		"hide##0" : "	show##0")) { t125 = !t125; v::mod_125col.evar->vecValue[3] = (float)t125;}
+
+			ImGui::ColorEdit3("200fps", v::mod_200col.evar->vecValue, ImGuiColorEditFlags_NoInputs);
+			ImGui::SameLine(); if (ImGui::Button(t200 == true ? "	hide##01" : "	show##01")) { t200 = !t200; v::mod_200col.evar->vecValue[3] = (float)t200; }
+
+			ImGui::ColorEdit3("250fps", v::mod_250col.evar->vecValue, ImGuiColorEditFlags_NoInputs);
+			ImGui::SameLine(); if (ImGui::Button(t250 == true ? "	hide##02" : "	show##02")) { t250 = !t250; v::mod_250col.evar->vecValue[3] = (float)t250; }
+
+			ImGui::ColorEdit3("333fps", v::mod_333col.evar->vecValue, ImGuiColorEditFlags_NoInputs);
+			ImGui::SameLine(); if (ImGui::Button(t333 == true ? "	hide##03" : "	show##03")) { t333 = !t333; v::mod_333col.evar->vecValue[3] = (float)t333; }
+
+			ImGui::ColorEdit3("transfer", v::mod_markercol.evar->vecValue, ImGuiColorEditFlags_NoInputs); ImGui::SameLine(); r::MetricsHelpMarker("indicates when your velocity direction starts to shift");
+			ImGui::SameLine(); if (ImGui::Button(tmarker == true ? "hide##04" : "show##04")) { tmarker = !tmarker; v::mod_markercol.evar->vecValue[3] = (float)tmarker; }
+
+			ImGui::EndGroup();
+			
 
 
-				if (editing) {
-					ImGui::Begin("Modify Transfer Zone UI", &editing);
+			if (!v::mod_fps_transferz.evar->arrayValue[0])
+				ImGui::EndDisabled();
 
-					const ImGuiViewport* viewport = ImGui::GetMainViewport();
 
-					ImGui::SetWindowSize(ImVec2(viewport->Size.x / 3.f, viewport->Size.y / 3.5f), ImGuiCond_FirstUseEver);
-
-					ImGui::PushItemWidth(100);
-					ImGui::DragFloat("y", &v::mod_fps_transferz.evar->arrayValue[1], 1.f, 0.f, 1080.f, "%.0f");
-
-					ImGui::PushItemWidth(100);
-					ImGui::DragFloat("height", &v::mod_fps_transferz.evar->arrayValue[2], 1.f, 0.f, 1080.f, "%.0f");
-
-					ImGui::PushItemWidth(100);
-					ImGui::DragFloat("fovscale", &v::mod_fps_transferz.evar->arrayValue[3], 0.25f, 0.f, 10.f, "%.2f");
-					ImGui::End();
-				}
-			}
 			static bool dummy = v::mod_fps_transferz.evar->arrayValue[4] != NULL;
 			if (ImGui::Checkbox("Change crosshair color", &dummy)) {
 				v::mod_fps_transferz.evar->arrayValue[4] = (float)dummy;

@@ -150,8 +150,13 @@ float cg::getOptAngle(float& _opt)
 
 	float _speed = glm::length(glm::vec2(clients->cgameVelocity[0], clients->cgameVelocity[1]));
 
-	if (_speed < 1)
+	if (_speed < 1 || !v::mod_strafebot_all.isEnabled() && (int)*forwardmove != 127 && (int)*sidemove != 0)
 		return -400.0;
+
+	if (v::mod_strafebot_all.isEnabled())
+		forwardmove = &input->move;
+	else *forwardmove = 127;
+
 
 	float yaw = clients->cgameViewangles[YAW];
 	float g_speed = (float)cgs->nextSnap->ps.speed;
@@ -170,7 +175,7 @@ float cg::getOptAngle(float& _opt)
 	const float minAngle = acos(g_speed / _speed) * 180.f / PI;
 
 	if (mod_fps.DistanceToTransferZone > 45.f)
-		diff = minAngle + accel;
+		diff = minAngle + accel; //TODO: increase the overstrafe as you gain more speed to avoid SLOW acceleration
 
 	float delta = yaw;
 

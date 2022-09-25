@@ -34,7 +34,18 @@ namespace v
 		mod_curve_speed,
 		mod_jumpv_forcepos,
 		mod_jumpv_path,
-		mod_jumpv_hitbox;
+		mod_jumpv_hitbox,
+		mod_125col,
+		mod_200col,
+		mod_250col,
+		mod_333col,
+		mod_markercol,
+		mod_showFPS,
+		mod_autoFPS,
+		mod_autoFPS_long125,
+		mod_strafebot,
+		mod_strafebot_all;
+		
 
 
 }

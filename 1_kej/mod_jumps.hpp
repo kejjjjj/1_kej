@@ -18,6 +18,7 @@ namespace cg {
 		bool velocity_clipped; //velocity was clipped during this frame
 		int32_t commandTime; //write from PM_ModCode
 		int32_t serverTime; //write from PM_ModCode
+		int recommendedFPS;
 
 	};
 	inline jumpanalyzer_s jumpanalyzer;
