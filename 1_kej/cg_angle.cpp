@@ -120,7 +120,7 @@ float cg::R_getOptAngle(const bool rightmove, float& diff)
 	diff = acos((g_speed - accel) / _speed) * 180.f / PI;
 	//const float minAngle = acos(g_speed / _speed) * 180.f / PI;
 
-	if (mod_fps.DistanceToTransferZone > 45.f)
+	if (jumpanalyzer.recommendedFPS == 125)
 		diff += accel;
 
 	float delta = yaw;
@@ -174,8 +174,8 @@ float cg::getOptAngle(float& _opt)
 	float diff = acos((g_speed - accel) / _speed) * 180.f / PI;
 	//const float minAngle = acos(g_speed / _speed) * 180.f / PI;
 
-	if (mod_fps.DistanceToTransferZone > 45.f)
-		diff += accel; //TODO: increase the overstrafe as you gain more speed to avoid SLOW acceleration
+	if (jumpanalyzer.recommendedFPS == 125)
+		diff += accel; 
 
 	float delta = yaw;
 
@@ -220,7 +220,7 @@ float cg::getOptForAnalyzer(jump_data* data)
 	float diff = acos((g_speed - accel) / _speed) * 180.f / PI;
 	//const float minAngle = acos(g_speed / _speed) * 180.f / PI;
 
-	if (mod_fps.DistanceToTransferZone > 45.f)
+	if (jumpanalyzer.recommendedFPS == 125)
 		diff += accel;
 
 	float delta = yaw;

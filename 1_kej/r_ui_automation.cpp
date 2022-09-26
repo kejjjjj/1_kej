@@ -53,11 +53,16 @@ void r::R_Automation_Features()
 			v::mod_autoFPS_space333.SetValue(v::mod_autoFPS_space333.isEnabled());
 		} ImGui::SameLine(); r::MetricsHelpMarker("Holding spacebar sets FPS to 333\nthis can be useful for height bounces and curving while long 125 is enabled");
 
+		ImGui::TextColored(ImVec4(255, 255, 0, 255), "note: long 125fps should be disabled for jumps where you need to do a 125-333 flick in mid-air!"
+			"\nit is useful to recognize when you should use long 125 and when you shouldn't");
+
+
 		if (!v::mod_autoFPS.isEnabled())
 			ImGui::EndDisabled();
 
 		if (v::mod_autoFPS_long125.isEnabled())
 			ImGui::TextColored(ImVec4(0, 255, 0, 255), "Long 125 tip: use spacebar 333fps whenever you need to curve earlier in the 125fps zone");
+
 
 		ImGui::EndGroup();
 	}
