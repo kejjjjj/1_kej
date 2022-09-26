@@ -20,6 +20,7 @@ void cg::PM_AirMove(pmove_t* pm, pml_t* pml)
 
 	Mod_HitAnalyzer(pm, pml);
 	Mod_JumpAnalyzer(pm, pml);
+	Mod_A_AdjustRPG(pm, pml);
 
 }
 void cg::PM_UFOMove(pmove_t* pmm, pml_t* pmll)

@@ -118,10 +118,10 @@ float cg::R_getOptAngle(const bool rightmove, float& diff)
 	const float velocitydirection = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180.f / PI;
 	const float accelerationAng = atan2(-(int)*sidemove, (int)*forwardmove) * 180.f / PI;
 	diff = acos((g_speed - accel) / _speed) * 180.f / PI;
-	const float minAngle = acos(g_speed / _speed) * 180.f / PI;
+	//const float minAngle = acos(g_speed / _speed) * 180.f / PI;
 
 	if (mod_fps.DistanceToTransferZone > 45.f)
-		diff = minAngle + accel;
+		diff += accel;
 
 	float delta = yaw;
 
@@ -160,7 +160,7 @@ float cg::getOptAngle(float& _opt)
 
 	float yaw = clients->cgameViewangles[YAW];
 	float g_speed = (float)cgs->nextSnap->ps.speed;
-	const float FPS = 1000.f / (cgs->frametime == NULL ? 1 : cgs->frametime);
+	const float FPS = (float)Dvar_FindMalleableVar("com_maxfps")->current.integer;
 
 	const float accel = FPS / g_speed;
 
@@ -172,10 +172,10 @@ float cg::getOptAngle(float& _opt)
 	const float velocitydirection = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180.f / PI;
 	const float accelerationAng = atan2(-(int)*sidemove, (int)*forwardmove) * 180.f / PI;
 	float diff = acos((g_speed - accel) / _speed) * 180.f / PI;
-	const float minAngle = acos(g_speed / _speed) * 180.f / PI;
+	//const float minAngle = acos(g_speed / _speed) * 180.f / PI;
 
 	if (mod_fps.DistanceToTransferZone > 45.f)
-		diff = minAngle + accel; //TODO: increase the overstrafe as you gain more speed to avoid SLOW acceleration
+		diff += accel; //TODO: increase the overstrafe as you gain more speed to avoid SLOW acceleration
 
 	float delta = yaw;
 
@@ -218,10 +218,10 @@ float cg::getOptForAnalyzer(jump_data* data)
 	const float velocitydirection = atan2(data->velocity[1], data->velocity[0]) * 180.f / PI;
 	const float accelerationAng = atan2((int)-data->rightmove, (int)data->forwardmove) * 180.f / PI;
 	float diff = acos((g_speed - accel) / _speed) * 180.f / PI;
-	const float minAngle = acos(g_speed / _speed) * 180.f / PI;
+	//const float minAngle = acos(g_speed / _speed) * 180.f / PI;
 
 	if (mod_fps.DistanceToTransferZone > 45.f)
-		diff = minAngle + accel;
+		diff += accel;
 
 	float delta = yaw;
 

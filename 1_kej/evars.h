@@ -45,7 +45,8 @@ namespace v
 		mod_autoFPS_long125,
 		mod_autoFPS_space333,
 		mod_strafebot,
-		mod_strafebot_all;
+		mod_strafebot_all,
+		mod_autoanglerpg;
 		
 
 

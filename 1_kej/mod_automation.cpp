@@ -55,3 +55,32 @@ void cg::Mod_A_AutoFPS()
 
 
 }
+void cg::Mod_A_AdjustRPG(pmove_t* pm, pml_t* pml)
+{
+
+	if (!v::mod_autoanglerpg.isEnabled())
+		return;
+
+	static bool rpg_isangling(false);
+	static float angleEveryFrame(0);
+	int rpg_indx = BG_FindWeaponIndexForName("rpg_mp");
+
+	if (!rpg_indx) rpg_indx = BG_FindWeaponIndexForName("rpg_sustain_mp");
+	if (!rpg_indx) return;
+
+	if ((pm->cmd.buttons & 1) && pm->ps->weaponstate == WEAPON_READY) {
+		rpg_isangling = true;
+		float DistanceToDown = glm::distance(pm->ps->viewangles[PITCH], 85.f);
+		angleEveryFrame = DistanceToDown / 1000.f * (500.f / (float)Dvar_FindMalleableVar("com_maxfps")->current.integer);
+		//Com_Printf(CON_CHANNEL_OBITUARY, "each frame: %.3f\n", angleEveryFrame);
+	}
+
+	if (!rpg_isangling)
+		return;
+
+	clients->viewangles[PITCH] += angleEveryFrame;
+
+	if (pm->ps->viewangles[PITCH] >= 85 || pm->ps->weaponstate == WEAPON_RELOADING)
+		rpg_isangling = false;
+
+}

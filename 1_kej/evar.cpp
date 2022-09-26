@@ -302,6 +302,7 @@ void Evar_Setup()
 	v::mod_strafebot.Register		("1_kej_strafebot",					evartype_t::EVAR_BOOL,		(float)0);
 	v::mod_strafebot_all.Register   ("1_kej_strafebot_all",				evartype_t::EVAR_BOOL,		(float)0);
 
+	v::mod_autoanglerpg.Register	("1_kej_autoanglerpg",				evartype_t::EVAR_BOOL,		(float)0);
 
 
 

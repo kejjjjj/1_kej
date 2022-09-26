@@ -53,12 +53,12 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
             WinMainCRTStartup_f = (WinMainCRTStartup_h)(0x67493C);
 
             //a->install(&(PVOID&)WinMainCRTStartup_f, dll_init);
-
-            __asm {
-                mov esi, _init;
-                call esi;
-                //add esp, 0;
-            }
+            _init();
+            //__asm {
+            //    mov esi, _init;
+            //    call esi;
+            //    //add esp, 0;
+            //}
             hooked = true;
         }
         break;

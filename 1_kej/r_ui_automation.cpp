@@ -61,4 +61,9 @@ void r::R_Automation_Features()
 
 		ImGui::EndGroup();
 	}
+	if (ImGui::CollapsingHeader("RPG##02")) {
+		if (ImGui::Checkbox("RPG lookdown", &v::mod_autoanglerpg.evar->enabled)) {
+			v::mod_autoanglerpg.SetValue(v::mod_autoanglerpg.isEnabled());
+		} ImGui::SameLine(); r::MetricsHelpMarker("Automatically aim down as you fire the rpg");
+	}
 }
