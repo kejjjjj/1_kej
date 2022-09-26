@@ -366,8 +366,13 @@ void r::R_Features(bool& wantsEditor)
 			RPG_Features();
 			ImGui::EndTabItem();
 
+		}if (ImGui::BeginTabItem("Automation")) {
+			jumping_tab = false;
+			R_Automation_Features();
+			ImGui::EndTabItem();
+
 		}if (ImGui::BeginTabItem("Jumping")) {
-			if(!jumping_tab)
+			if (!jumping_tab)
 				jumping_tab = !jumping_tab;
 			ImGui::EndTabItem();
 		}

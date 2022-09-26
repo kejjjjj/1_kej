@@ -8,7 +8,13 @@ void r::R_JumpView_ToggleFreeMode()
 
 	ImGui::Text("press [spacebar] to toggle free mode");
 
-	if (GetAsyncKeyState(VK_SPACE) & 1 && VID_ACTIVE) {
+	if (GetAsyncKeyState('F') & 1 && VID_ACTIVE) {
+		v::mod_jumpv_forcepos.SetValue(!v::mod_jumpv_forcepos.isEnabled());
+
+		if (v::mod_jumpv_forcepos.isEnabled() && analyzer.InFreeMode())
+			analyzer.SetFreeMode(false);
+	}
+	else if (GetAsyncKeyState(VK_SPACE) & 1 && VID_ACTIVE) {
 		analyzer.SetFreeMode(!analyzer.InFreeMode());
 
 		const bool isUFO = clients->snap.ps.pm_type == PM_UFO;
@@ -50,12 +56,7 @@ void r::R_JumpView_Main()
 
 	R_JumpView_ToggleFreeMode();
 
-	 if (GetAsyncKeyState('F') & 1) {
-		v::mod_jumpv_forcepos.SetValue(!v::mod_jumpv_forcepos.isEnabled());
 
-		if (v::mod_jumpv_forcepos.isEnabled() && analyzer.InFreeMode())
-			analyzer.SetFreeMode(false);
-	}
 	ImGui::NewLine();
 
 	ImGui::PushItemWidth(100);

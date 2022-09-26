@@ -55,7 +55,11 @@ void cg::Mod_DrawVelocity()
 	}
 
 	char buffer[20];
-	sprintf_s(buffer, "%i\n%i", velocity, jumpanalyzer.recommendedFPS);
+	if(!v::mod_showFPS.isEnabled())
+		sprintf_s(buffer, "%i", velocity);
+	else
+		sprintf_s(buffer, "%i\n%i %s", velocity, jumpanalyzer.recommendedFPS, GetAsyncKeyState(VK_SPACE) < 0 == true && v::mod_autoFPS_space333.isEnabled() ? "(hold 333)" : "");
+
 	buffer[19] = '\0';
 	r::R_DrawText(buffer, v::mod_velometer.evar->arrayValue[1], v::mod_velometer.evar->arrayValue[2], v::mod_velometer.evar->arrayValue[3], v::mod_velometer.evar->arrayValue[3], 0, (float*)&col, 0);
 

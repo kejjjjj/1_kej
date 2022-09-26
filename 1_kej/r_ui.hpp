@@ -27,6 +27,9 @@ namespace r
 	void R_JumpView_ToggleFreeMode();
 	void R_JumpView_HandleWeapons(int& menu_frame, int min_frame, int max_frame);
 	bool R_JumpView_EventButtons(std::set<int>& eventV, int& menu_frame, const char* prevBut, const char* nextBut);
+
+
+	void R_Automation_Features();
 	
 }
 

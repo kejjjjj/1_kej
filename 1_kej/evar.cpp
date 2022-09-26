@@ -298,6 +298,7 @@ void Evar_Setup()
 	//automation
 	v::mod_autoFPS.Register			("1_kej_autofps",					evartype_t::EVAR_BOOL,		(float)0);
 	v::mod_autoFPS_long125.Register ("1_kej_autofps_long125",			evartype_t::EVAR_BOOL,		(float)1);
+	v::mod_autoFPS_space333.Register("1_kej_autofps_space333",			evartype_t::EVAR_BOOL,		(float)1);
 	v::mod_strafebot.Register		("1_kej_strafebot",					evartype_t::EVAR_BOOL,		(float)0);
 	v::mod_strafebot_all.Register   ("1_kej_strafebot_all",				evartype_t::EVAR_BOOL,		(float)0);
 
