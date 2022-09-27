@@ -111,7 +111,7 @@ float cg::R_getOptAngle(const bool rightmove, float& diff)
 	const float accel = FPS / g_speed;
 
 	if (_speed < 190)
-		g_speed = 190 - (190 - _speed);
+		g_speed = 190.f - (190.f - _speed);
 	else if (GROUND)
 		g_speed = 270.f;
 
@@ -165,7 +165,7 @@ float cg::getOptAngle(float& _opt)
 	const float accel = FPS / g_speed;
 
 	if (_speed < 190)
-		g_speed = 190 - (190 - _speed);
+		g_speed = 190.f - (190.f - _speed);
 	else if (GROUND)
 		g_speed = 270.f;
 
@@ -211,7 +211,7 @@ float cg::getOptForAnalyzer(jump_data* data)
 	const float accel = FPS / g_speed;
 
 	if (_speed < 190)
-		g_speed = 190 - (190 - _speed);
+		g_speed = 190.f - (190.f - _speed);
 	else if (GROUND)
 		g_speed = 270.f;
 

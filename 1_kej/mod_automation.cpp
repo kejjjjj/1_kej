@@ -68,7 +68,7 @@ void cg::Mod_A_AdjustRPG(pmove_t* pm, pml_t* pml)
 	if (!rpg_indx) rpg_indx = BG_FindWeaponIndexForName("rpg_sustain_mp");
 	if (!rpg_indx) return;
 
-	if ((pm->cmd.buttons & 1) && pm->ps->weaponstate == WEAPON_READY) {
+	if (pm->ps->weapon == rpg_indx && (pm->cmd.buttons & 1) && pm->ps->weaponstate == WEAPON_READY) {
 		rpg_isangling = true;
 		float DistanceToDown = glm::distance(pm->ps->viewangles[PITCH], 85.f);
 		angleEveryFrame = DistanceToDown / 1000.f * (500.f / (float)Dvar_FindMalleableVar("com_maxfps")->current.integer);
@@ -82,5 +82,37 @@ void cg::Mod_A_AdjustRPG(pmove_t* pm, pml_t* pml)
 
 	if (pm->ps->viewangles[PITCH] >= 85 || pm->ps->weaponstate == WEAPON_RELOADING)
 		rpg_isangling = false;
+
+}
+void cg::Mod_A_AutoSliding(pmove_t* pmove, pml_t* pml)
+{
+	hook* a = 0;
+	static DWORD old_ms(0);
+
+	if (GetAsyncKeyState(VK_MENU) & 1 && !automation.currentlySliding) //getasynckeystate will be replaced with a scriptmenuresponse in the next commit.. if I remember
+		automation.pendingSlide = true;
+
+	
+	if (automation.pendingSlide && (pml->almostGroundPlane || pml->groundPlane)) {
+		automation.currentlySliding = true;
+		a->write_addr(0x410660, "\xC3", 1);
+		old_ms = Sys_MilliSeconds();
+	}
+
+	if (!automation.currentlySliding)
+		return;
+
+	const DWORD ms = Sys_MilliSeconds();
+	
+
+	if ((old_ms + 0.1) < ms) { //allow 0.1s to slide
+		old_ms = ms;
+		automation.currentlySliding = false;
+		a->write_addr(0x410660, "\x83", 1);
+		automation.pendingSlide = false;
+	}
+
+
+
 
 }

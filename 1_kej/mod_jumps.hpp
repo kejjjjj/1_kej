@@ -7,6 +7,7 @@
 
 namespace cg {
 
+	//actively updating jump data
 	struct jumpanalyzer_s
 	{
 		int jumpVelocity;
@@ -21,7 +22,7 @@ namespace cg {
 		int recommendedFPS;
 
 	};
-	inline jumpanalyzer_s jumpanalyzer;
+	inline jumpanalyzer_s jumpanalyzer; 	//actively updating jump data
 	void Mod_HitAnalyzer(pmove_t* pm, pml_t* pml);
 	void Mod_JumpAnalyzer(pmove_t* pm, pml_t* pml);
 	void Mod_RPGAnalyzer(pmove_t* pm, pml_t* pml);

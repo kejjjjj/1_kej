@@ -186,6 +186,7 @@ void cg::PM_ModCode(pml_t* pml, pmove_t* pm)
 	//this part of the code is called after PM_Weapon()
 
 	Mod_JumpView(pm, pml);
+	Mod_A_AutoSliding(pm, pml);
 
 
 	return;

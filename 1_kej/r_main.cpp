@@ -40,6 +40,10 @@ void __cdecl r::CG_DrawActive()
 		if (analyzer.isRecording())
 			R_DrawText("Recording", 0, 800, 2, 2, 0, vec4_t{ 1,1,1,1 }, 0);
 
+		if(automation.pendingSlide)
+			R_DrawText("Slide", v::mod_velometer.evar->arrayValue[1], v::mod_velometer.evar->arrayValue[2] - 20 * v::mod_velometer.evar->arrayValue[3], v::mod_velometer.evar->arrayValue[3], v::mod_velometer.evar->arrayValue[3], 0, vec4_t{0,1,0,1}, 0);
+
+
 		//char buff[150];
 
 		////sprintf_s(buff, "wishDir[0]: %.6f\nwishDir[1]: %.6f\nwishDirAngle: %.6f\naccelSpeed: %.6f\naddSpeed: %.6f",

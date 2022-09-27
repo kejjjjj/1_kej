@@ -71,4 +71,8 @@ void r::R_Automation_Features()
 			v::mod_autoanglerpg.SetValue(v::mod_autoanglerpg.isEnabled());
 		} ImGui::SameLine(); r::MetricsHelpMarker("Automatically aim down as you fire the rpg");
 	}
+	if (ImGui::CollapsingHeader("Other##01")) {
+		ImGui::TextColored(ImVec4(255, 255, 0, 255), "All other features can be found from Esc/Controls/Multiplayer controls");
+
+	}
 }

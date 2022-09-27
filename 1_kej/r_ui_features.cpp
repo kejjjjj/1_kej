@@ -155,16 +155,16 @@ void Visual_Features()
 			
 
 			ImGui::ColorEdit3("125fps", v::mod_125col.evar->vecValue, ImGuiColorEditFlags_NoInputs); 
-			ImGui::SameLine(); if (ImGui::Button(t125 == true ?		"hide##0" : "	show##0")) { t125 = !t125; v::mod_125col.evar->vecValue[3] = (float)t125;}
+			ImGui::SameLine(); ImGui::Text("\t "); ImGui::SameLine(); if (ImGui::Button(t125 == true ?	"hide##0" : "show##0")) { t125 = !t125; v::mod_125col.evar->vecValue[3] = (float)t125;}
 
 			ImGui::ColorEdit3("200fps", v::mod_200col.evar->vecValue, ImGuiColorEditFlags_NoInputs);
-			ImGui::SameLine(); if (ImGui::Button(t200 == true ? "	hide##01" : "	show##01")) { t200 = !t200; v::mod_200col.evar->vecValue[3] = (float)t200; }
+			ImGui::SameLine(); ImGui::Text("\t "); ImGui::SameLine(); if (ImGui::Button(t200 == true ? "hide##01" : "show##01")) { t200 = !t200; v::mod_200col.evar->vecValue[3] = (float)t200; }
 
 			ImGui::ColorEdit3("250fps", v::mod_250col.evar->vecValue, ImGuiColorEditFlags_NoInputs);
-			ImGui::SameLine(); if (ImGui::Button(t250 == true ? "	hide##02" : "	show##02")) { t250 = !t250; v::mod_250col.evar->vecValue[3] = (float)t250; }
+			ImGui::SameLine(); ImGui::Text("\t "); ImGui::SameLine(); if (ImGui::Button(t250 == true ? "hide##02" : "show##02")) { t250 = !t250; v::mod_250col.evar->vecValue[3] = (float)t250; }
 
 			ImGui::ColorEdit3("333fps", v::mod_333col.evar->vecValue, ImGuiColorEditFlags_NoInputs);
-			ImGui::SameLine(); if (ImGui::Button(t333 == true ? "	hide##03" : "	show##03")) { t333 = !t333; v::mod_333col.evar->vecValue[3] = (float)t333; }
+			ImGui::SameLine(); ImGui::Text("\t "); ImGui::SameLine(); if (ImGui::Button(t333 == true ? "hide##03" : "show##03")) { t333 = !t333; v::mod_333col.evar->vecValue[3] = (float)t333; }
 
 			ImGui::ColorEdit3("transfer", v::mod_markercol.evar->vecValue, ImGuiColorEditFlags_NoInputs); ImGui::SameLine(); r::MetricsHelpMarker("indicates when your velocity direction starts to shift");
 			ImGui::SameLine(); if (ImGui::Button(tmarker == true ? "hide##04" : "show##04")) { tmarker = !tmarker; v::mod_markercol.evar->vecValue[3] = (float)tmarker; }
