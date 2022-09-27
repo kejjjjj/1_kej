@@ -321,35 +321,22 @@ void Jump_Features()
 
 }
 
-/*
-
-void    ImGui::SetTabItemClosed(const char* label)
+void r::R_OtherTab()
 {
-	ImGuiContext& g = *GImGui;
-	bool is_within_manual_tab_bar = g.CurrentTabBar && !(g.CurrentTabBar->Flags & ImGuiTabBarFlags_DockNode);
-	if (is_within_manual_tab_bar)
-	{
-		ImGuiTabBar* tab_bar = g.CurrentTabBar;
-		ImGuiID tab_id = TabBarCalcTabID(tab_bar, label);
-		if (ImGuiTabItem* tab = TabBarFindTabByID(tab_bar, tab_id))
-			tab->WantClose = true; // Will be processed by next call to TabBarLayout()
-	}
+
+	ImGui::TextColored(ImVec4(0, 255, 0, 255), "These features aren't necessarily related to cj, but rather tools to analyze the game data");
+	ImGui::Separator();
+	ImGui::NewLine();
+
+	static bool inMenuView(false);
+	
+
+	if (ImGui::Button("Menu Browser"))
+		inMenuView = !inMenuView;
+
+	R_GameMenuBrowser(inMenuView);
+
 }
-
-void MakeTabVisible(const char* window_name)
-{
-	ImGuiWindow* window = ImGui::FindWindowByName(window_name);
-	if (window == NULL || window->DockNode == NULL || window->DockNode->TabBar == NULL)
-		return;
-	window->DockNode->TabBar->NextSelectedTabId = window->ID;;
-}
-
-if (ImGui::Button("Log"))
-   MakeTabVisible("Example: Log");
-if (ImGui::Button("Console"))
-   MakeTabVisible("Example: Console");
-
-*/
 void r::R_Features(bool& wantsEditor)
 {
 
@@ -369,6 +356,11 @@ void r::R_Features(bool& wantsEditor)
 		}if (ImGui::BeginTabItem("Automation")) {
 			jumping_tab = false;
 			R_Automation_Features();
+			ImGui::EndTabItem();
+
+		}if (ImGui::BeginTabItem("Game")) {
+			jumping_tab = false;
+			R_OtherTab();
 			ImGui::EndTabItem();
 
 		}if (ImGui::BeginTabItem("Jumping")) {
@@ -392,6 +384,19 @@ void r::R_Features(bool& wantsEditor)
 
 	}
 	ImGui::EndTabBar();
+
+	if (GetAsyncKeyState(VK_PRIOR) & 1) {
+		for (int i = 0; i < menuInfo.context->menuCount; i++) {
+			menuDef_t* menu = menuInfo.context->Menus[i];
+
+			if (menu)
+				Com_Printf(CON_CHANNEL_CONSOLEONLY, "[%i]: %s\n", i, menu->window.name);
+
+
+		}
+	}
+	
+
 }
 
 void r::R_JumpView_Help()

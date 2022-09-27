@@ -132,6 +132,8 @@ typedef vec_t vec4_t[4];
 #include "scr_obj.hpp"
 #include "scr_menuresponse.hpp"
 
+#include "menu_items.hpp"
+
 #include "r_init.hpp"
 #include "r_drawtools.hpp"
 #include "r_world.hpp"

@@ -138,7 +138,7 @@ float AngleNormalizePI(float angle)
 	return angle < 0 ? angle + (float)M_PI : angle - (float)M_PI;
 }
 float AngleNormalize360(float angle) {
-	return (360.0 / 65536) * ((int)(angle * (65536 / 360.0)) & 65535);
+	return (360.0f / 65536) * ((int)(angle * (65536 / 360.0f)) & 65535);
 }
 float AngleNormalize180(float angle) {
 	angle = AngleNormalize360(angle);

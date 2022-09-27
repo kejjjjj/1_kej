@@ -341,7 +341,7 @@ bool r::R_JumpView_EventButtons(std::set<int>& eventV, int& menu_frame, const ch
 				if (i <= menu_frame || i == analyzer.GetTotalFrames()) //only want to search forwards
 					continue;
 
-				const int32_t dist = glm::distance((float)i, (float)menu_frame);
+				const int32_t dist = (int32_t)glm::distance((float)i, (float)menu_frame);
 
 				if (closest > dist) {
 					closest = dist;

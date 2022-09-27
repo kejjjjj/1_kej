@@ -3886,8 +3886,6 @@ struct clientSession_t
 	int psOffsetTime;
 };
 
-
-
 struct gclient_s
 {
 	playerState_s ps;
@@ -6027,12 +6025,26 @@ struct itemDef_s
 	statement_s rectHExp;
 	statement_s forecolorAExp;
 };
+struct loadAssets_t
+{
+	float fadeClamp;
+	int fadeCycle;
+	float fadeAmount;
+	float fadeInAmount;
+};
 
 struct MenuList
 {
 	const char* name;
 	int menuCount;
 	menuDef_t** menus;
+};
+struct LoadedMenus_s
+{
+	loadAssets_t loadAssets;
+	MenuList menuList;
+	itemDef_s* items[256];
+	menuDef_t* menus[512];
 };
 
 struct cursor_t // $38C3DEC81229B66F67FB6D350D75FF5A
@@ -7012,7 +7024,11 @@ struct GfxCachedShaderText
 	const char* text;
 	int textSize;
 };
-
+struct itemParse_t
+{
+	const char* name;
+	void(__cdecl* func)(itemDef_s*, int);
+};
 struct MaterialString
 {
 	const char* string;

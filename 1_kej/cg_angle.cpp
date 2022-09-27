@@ -113,7 +113,7 @@ float cg::R_getOptAngle(const bool rightmove, float& diff)
 	if (_speed < 190)
 		g_speed = 190.f - (190.f - _speed);
 	else if (GROUND)
-		g_speed = 270.f;
+		g_speed = 281.f;
 
 	const float velocitydirection = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180.f / PI;
 	const float accelerationAng = atan2(-(int)*sidemove, (int)*forwardmove) * 180.f / PI;
@@ -167,7 +167,7 @@ float cg::getOptAngle(float& _opt)
 	if (_speed < 190)
 		g_speed = 190.f - (190.f - _speed);
 	else if (GROUND)
-		g_speed = 270.f;
+		g_speed = 281.f;
 
 	const float velocitydirection = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180.f / PI;
 	const float accelerationAng = atan2(-(int)*sidemove, (int)*forwardmove) * 180.f / PI;
@@ -206,14 +206,14 @@ float cg::getOptForAnalyzer(jump_data* data)
 
 	float yaw = data->angles[YAW];
 	float g_speed = (float)cgs->nextSnap->ps.speed;
-	const float FPS = data->FPS;
+	const float FPS = (float)data->FPS;
 
 	const float accel = FPS / g_speed;
 
 	if (_speed < 190)
 		g_speed = 190.f - (190.f - _speed);
 	else if (GROUND)
-		g_speed = 270.f;
+		g_speed = 281.f;
 
 	const float velocitydirection = atan2(data->velocity[1], data->velocity[0]) * 180.f / PI;
 	const float accelerationAng = atan2((int)-data->rightmove, (int)data->forwardmove) * 180.f / PI;

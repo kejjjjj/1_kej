@@ -62,6 +62,9 @@ void cg::CG_PrepareHooks()
 	PmoveSingle_stub_f				= (void(*)())										(0x414BB4);
 	PM_SlideMove_f					= (BOOL(*)(pmove_t*, pml_t*, int))					(0x414F40);
 	PM_OverBounce_f					= (void(*)())										(0x414BBB);
+
+	Menu_PostParse_f				= (itemDef_s * (*)(menuDef_t * menu))				(0x5583E0);
+	UI_AddMenuList_f				= (int(*)(UiContext*, MenuList*))					(0x554F40);
 }
 void cg::CG_InitForeverHooks()
 {
@@ -109,6 +112,8 @@ void cg::CG_InitHooks()
 	a->install(&(PVOID&)PmoveSingle_stub_f, PmoveSingle_stub);
 	a->install(&(PVOID&)PM_SlideMove_f, PM_SlideMove);
 	a->install(&(PVOID&)PM_OverBounce_f, PM_OverBounce_stub);
+	a->install(&(PVOID&)Menu_PostParse_f, Menu_PostParse);
+	a->install(&(PVOID&)UI_AddMenuList_f, UI_AddMenuList);
 
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, " done!\n");
 
@@ -142,6 +147,8 @@ void cg::CG_RemoveHooks()
 	a->remove(&(PVOID&)PmoveSingle_stub_f, PmoveSingle_stub);
 	a->remove(&(PVOID&)PM_SlideMove_f, PM_SlideMove);
 	a->remove(&(PVOID&)PM_OverBounce_f, PM_OverBounce_stub);
+	a->remove(&(PVOID&)Menu_PostParse_f, Menu_PostParse);
+	a->remove(&(PVOID&)UI_AddMenuList_f, UI_AddMenuList);
 
 
 	if (r::pEndScene) {

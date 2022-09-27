@@ -44,6 +44,19 @@ void __cdecl r::CG_DrawActive()
 			R_DrawText("Slide", v::mod_velometer.evar->arrayValue[1], v::mod_velometer.evar->arrayValue[2] - 20 * v::mod_velometer.evar->arrayValue[3], v::mod_velometer.evar->arrayValue[3], v::mod_velometer.evar->arrayValue[3], 0, vec4_t{0,1,0,1}, 0);
 
 
+		//if (GetAsyncKeyState(VK_INSERT) & 1) {
+		//	//itemParse_t** menuItems = reinterpret_cast<itemParse_t**>(0xCB0CD10);
+		//	for (int i = 0; i < 512; i++) {
+
+		//		menuDef_t* menu = g_menus->menus[i];
+
+		//		if (menu) {
+		//			Com_Printf(CON_CHANNEL_CONSOLEONLY, "menu[%i]: %s\n", i, menu->window.name);
+		//		}
+
+		//	}
+		//}
+
 		//char buff[150];
 
 		////sprintf_s(buff, "wishDir[0]: %.6f\nwishDir[1]: %.6f\nwishDirAngle: %.6f\naccelSpeed: %.6f\naddSpeed: %.6f",

@@ -97,7 +97,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <OutputFile>O:\SteamLibrary\steamapps\common\COD4\\miles\1_kej.asi</OutputFile>
+      <OutputFile>D:\Activision\cod4\miles\1_kej.asi</OutputFile>
       <AdditionalLibraryDirectories>$(DXSDK_DIR)/Lib/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -121,7 +121,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <OutputFile>O:\SteamLibrary\steamapps\common\COD4\\miles\1_kej.asi</OutputFile>
+      <OutputFile>D:\Activision\cod4\miles\1_kej.asi</OutputFile>
       <AdditionalLibraryDirectories>$(DXSDK_DIR)/Lib/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -189,6 +189,7 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="koukku.hpp" />
+    <ClInclude Include="menu_items.hpp" />
     <ClInclude Include="mod_analyzer.hpp" />
     <ClInclude Include="mod_automation.hpp" />
     <ClInclude Include="mod_jumps.hpp" />
@@ -252,6 +253,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="koukku.cpp" />
+    <ClCompile Include="menu_items.cpp" />
     <ClCompile Include="mod_analyzer.cpp" />
     <ClCompile Include="mod_analyzer_io.cpp" />
     <ClCompile Include="mod_automation.cpp" />
@@ -270,6 +272,7 @@
     <ClCompile Include="r_ui_automation.cpp" />
     <ClCompile Include="r_ui_features.cpp" />
     <ClCompile Include="r_ui_jumpanalyzer.cpp" />
+    <ClCompile Include="r_ui_menus.cpp" />
     <ClCompile Include="r_world.cpp" />
     <ClCompile Include="scr_cmd.cpp" />
     <ClCompile Include="scr_functions.cpp" />

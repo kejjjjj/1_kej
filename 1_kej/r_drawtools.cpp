@@ -96,13 +96,13 @@ void r::R_DrawText(const char* text, float x, float y, float xScale, float yScal
 
 float r::X(float pos)
 {
-	const float x = cgs->refdef.width;
+	const float x = (float)cgs->refdef.width;
 	return pos <= 1920 ? pos / (1920.f / x) : pos * (x / 1920);
 
 }
 float r::Y(float pos)
 {
-	const float y = cgs->refdef.height;
+	const float y = (float)cgs->refdef.height;
 	return pos <= 1080 ? pos / (1080.f / y) : pos * (y / 1080);
 }
 void r::MetricsHelpMarker(const char* desc)

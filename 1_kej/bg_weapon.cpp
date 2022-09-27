@@ -22,7 +22,7 @@ int cg::BG_FindWeaponIndexForName(const char* name)
 //	}
 //	return value;
 //}
-void test(int delay)
+void _test(int delay)
 {
 	//if (delay)
 	//	Com_Printf(CON_CHANNEL_OBITUARY, "hello world\n");
@@ -31,7 +31,7 @@ void test(int delay)
 __declspec(naked) void cg::PM_Weapon_WeaponTimeAdjust()
 {
 	static int delayedAction;
-	static DWORD retn = 0x41A4E7;
+	static DWORD _retn = 0x41A4E7;
 	static DWORD fnc = 0x418C80;
 	//bool& cant_fire = jumpanalyzer.weapon_cant_fire;
 	__asm
@@ -43,10 +43,10 @@ __declspec(naked) void cg::PM_Weapon_WeaponTimeAdjust()
 		mov ecx, ebp;
 		mov ebx, eax;
 		push eax;
-		call test;
+		call _test;
 		add esp, 0x4;
 		//mov[jumpanalyzer + 18], eax;
-		jmp retn;
+		jmp _retn;
 	}
 }
 void __cdecl cg::G_SelectWeaponIndex(int iWeaponIndex, int clientNum)

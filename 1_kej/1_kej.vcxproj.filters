@@ -70,6 +70,9 @@
     <Filter Include="Source Files\bg">
       <UniqueIdentifier>{15ba53db-9e1d-4345-8108-5e1803a04f76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\menu">
+      <UniqueIdentifier>{ad0e1ba6-cb49-4763-be6c-67b061c2513a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -207,6 +210,9 @@
     <ClInclude Include="mod_automation.hpp">
       <Filter>Source Files\mod</Filter>
     </ClInclude>
+    <ClInclude Include="menu_items.hpp">
+      <Filter>Source Files\menu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -342,6 +348,12 @@
       <Filter>Source Files\mod</Filter>
     </ClCompile>
     <ClCompile Include="r_ui_automation.cpp">
+      <Filter>Source Files\render\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="menu_items.cpp">
+      <Filter>Source Files\menu</Filter>
+    </ClCompile>
+    <ClCompile Include="r_ui_menus.cpp">
       <Filter>Source Files\render\ui</Filter>
     </ClCompile>
   </ItemGroup>
