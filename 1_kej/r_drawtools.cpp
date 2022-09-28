@@ -267,6 +267,40 @@ void r::R_DrawConstructedBox(box_s box, vec4_t col)
 	if (box.lowA_valid && box.lowB_valid && box.lowD_valid)
 		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.lowD[0], box.lowD[1]), IM_COL32(col[0], col[1], col[2], col[3]));
 }
+void r::R_DrawTriangle(vec3_t points[3], vec4_t col) {
+
+	if (!ImGui::GetCurrentContext())
+		return;
+
+	vec2_t sc[3];
+
+	const bool a = WorldToScreen(points[0], sc[0]);
+	const bool b = WorldToScreen(points[1], sc[1]);
+	const bool c = WorldToScreen(points[2], sc[2]);
+
+	if (!a || !b || !c)
+		return;
+
+	ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(sc[0][0], sc[0][1]), ImVec2(sc[1][0], sc[1][1]), ImVec2(sc[2][0], sc[2][1]), IM_COL32(col[0], col[1], col[2], col[3]));
+
+
+}
+void r::R_DrawTriangle(vec3_t pointA, vec3_t pointB, vec3_t pointC, vec4_t col)
+{
+	if (!ImGui::GetCurrentContext())
+		return;
+
+	vec2_t sc[3];
+
+	const bool a = WorldToScreen(pointA, sc[0]);
+	const bool b = WorldToScreen(pointB, sc[1]);
+	const bool c = WorldToScreen(pointC, sc[2]);
+
+	if (!a || !b || !c)
+		return;
+
+	ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(sc[0][0], sc[0][1]), ImVec2(sc[1][0], sc[1][1]), ImVec2(sc[2][0], sc[2][1]), IM_COL32(col[0], col[1], col[2], col[3]));
+}
 bool r::ButtonCentered(const char* label, float alignment)
 {
 	ImGuiStyle& style = ImGui::GetStyle();

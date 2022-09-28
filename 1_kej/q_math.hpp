@@ -30,4 +30,13 @@ vec_t VectorNormalize2(const vec3_t v, vec3_t out);
 void VectorInverse(vec3_t v);
 
 float GetAverage(float* arr, size_t size);
+
+void CrossProduct(const vec3_t v1, const vec3_t v2, vec3_t cross);
+
+void RotatePointAroundVector(vec3_t dst, vec3_t dir, float degrees, vec3_t point);
+void MatrixMultiply(float in1[3][3], float in2[3][3], float out[3][3]);
+void PerpendicularVector(vec3_t dst, const vec3_t src);
+void ProjectPointOnPlane(vec3_t dst, const vec3_t p, const vec3_t normal);
+
+int VectorCompare(const vec3_t v1, const vec3_t v2);
 #endif
