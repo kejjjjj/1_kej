@@ -97,7 +97,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <OutputFile>D:\Activision\cod4\miles\1_kej.asi</OutputFile>
+      <OutputFile>O:\SteamLibrary\steamapps\common\COD4\miles\1_kej.asi</OutputFile>
       <AdditionalLibraryDirectories>$(DXSDK_DIR)/Lib/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -121,7 +121,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <OutputFile>D:\Activision\cod4\miles\1_kej.asi</OutputFile>
+      <OutputFile>O:\SteamLibrary\steamapps\common\COD4\miles\1_kej.asi</OutputFile>
       <AdditionalLibraryDirectories>$(DXSDK_DIR)/Lib/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -168,6 +168,7 @@
     <ClInclude Include="cg_local.h" />
     <ClInclude Include="cg_offsets.h" />
     <ClInclude Include="cl_main.hpp" />
+    <ClInclude Include="cmod_data.hpp" />
     <ClInclude Include="com_channel.h" />
     <ClInclude Include="detours\detours.h" />
     <ClInclude Include="dvar.hpp" />
@@ -215,6 +216,7 @@
     <ClCompile Include="cg_init.cpp" />
     <ClCompile Include="cg_main.cpp" />
     <ClCompile Include="cl_main.cpp" />
+    <ClCompile Include="cmod_data.cpp" />
     <ClCompile Include="com_channel.cpp" />
     <ClCompile Include="dvar.cpp" />
     <ClCompile Include="entry.cpp" />

@@ -630,39 +630,8 @@ void cg::Mod_DrawJumpHitbox()
 
 		r::box_s box = r::R_ConstructBoxFromBounds(jData->origin, jData->mins, jData->maxs);
 
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.lowC[0], box.lowC[1]), IM_COL32(255, 255, 0, 255), 1.f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.lowD[0], box.lowD[1]), IM_COL32(255, 255, 0, 255), 1.f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowC[0], box.lowC[1]), ImVec2(box.lowB[0], box.lowB[1]), IM_COL32(255, 255, 0, 255), 1.f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowD[0], box.lowD[1]), ImVec2(box.lowA[0], box.lowA[1]), IM_COL32(255, 255, 0, 255), 1.f);
-
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.highA[0], box.highA[1]), ImVec2(box.highC[0], box.highC[1]), IM_COL32(255, 255, 0, 255), 1.f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.highB[0], box.highB[1]), ImVec2(box.highD[0], box.highD[1]), IM_COL32(255, 255, 0, 255), 1.f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.highC[0], box.highC[1]), ImVec2(box.highB[0], box.highB[1]), IM_COL32(255, 255, 0, 255), 1.f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.highD[0], box.highD[1]), ImVec2(box.highA[0], box.highA[1]), IM_COL32(255, 255, 0, 255), 1.f);
-
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.highA[0], box.highA[1]), IM_COL32(255, 255, 0, 255), 1.f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.highB[0], box.highB[1]), IM_COL32(255, 255, 0, 255), 1.f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowC[0], box.lowC[1]), ImVec2(box.highC[0], box.highC[1]), IM_COL32(255, 255, 0, 255), 1.f);
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowD[0], box.lowD[1]), ImVec2(box.highD[0], box.highD[1]), IM_COL32(255, 255, 0, 255), 1.f);
-
-
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.highC[0], box.highC[1]), ImVec2(box.lowC[0], box.lowC[1]), IM_COL32(255, 255, 0, 50));
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.highA[0], box.highA[1]), ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.highC[0], box.highC[1]), IM_COL32(255, 255, 0, 50));
-
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.highD[0], box.highD[1]), ImVec2(box.lowD[0], box.lowD[1]), IM_COL32(255, 255, 0, 50));
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.highB[0], box.highB[1]), ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.highD[0], box.highD[1]), IM_COL32(255, 255, 0, 50));
-
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowC[0], box.lowC[1]), ImVec2(box.highB[0], box.highB[1]), ImVec2(box.lowB[0], box.lowB[1]), IM_COL32(255, 255, 0, 50));
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.highC[0], box.highC[1]), ImVec2(box.lowC[0], box.lowC[1]), ImVec2(box.highB[0], box.highB[1]), IM_COL32(255, 255, 0, 50));
-
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowD[0], box.lowD[1]), ImVec2(box.highA[0], box.highA[1]), ImVec2(box.lowA[0], box.lowA[1]), IM_COL32(255, 255, 0, 50));
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.highD[0], box.highD[1]), ImVec2(box.lowD[0], box.lowD[1]), ImVec2(box.highA[0], box.highA[1]), IM_COL32(255, 255, 0, 50));
-
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.highA[0], box.highA[1]), ImVec2(box.highB[0], box.highB[1]), ImVec2(box.highC[0], box.highC[1]), IM_COL32(255, 255, 0, 50));
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.highA[0], box.highA[1]), ImVec2(box.highB[0], box.highB[1]), ImVec2(box.highD[0], box.highD[1]), IM_COL32(255, 255, 0, 50));
-
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.lowC[0], box.lowC[1]), IM_COL32(255, 255, 0, 50));
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.lowD[0], box.lowD[1]), IM_COL32(255, 255, 0, 50));
+		r::R_DrawConstructedBoxEdges(box, vec4_t{ 255,255,0,255 });
+		r::R_DrawConstructedBox(box, vec4_t{ 255,255,0,50 });
 
 	}
 }

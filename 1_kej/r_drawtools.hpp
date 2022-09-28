@@ -39,9 +39,24 @@ namespace r
 		vec2_t highC;
 		vec2_t highD;
 
+		bool lowA_valid;
+		bool lowB_valid;
+		bool lowC_valid;
+		bool lowD_valid;
+		
+		bool highA_valid;
+		bool highB_valid;
+		bool highC_valid;
+		bool highD_valid;
+
+
 	};
 
 	box_s R_ConstructBoxFromBounds(vec3_t origin, vec3_t mins, vec3_t maxs);
+
+	void R_DrawConstructedBox(box_s box, vec4_t col);
+	void R_DrawConstructedBoxEdges(box_s box, vec4_t col);
+
 	bool ButtonCentered(const char* label, float alignment = 0.5f);
 }
 

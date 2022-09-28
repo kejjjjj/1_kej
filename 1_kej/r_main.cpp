@@ -10,6 +10,7 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 		R_ImGui(pDevice);
 		if (R_OpenMenu(pDevice)) {
 			//ImGui::GetBackgroundDrawList()->Addline
+			CMod_HighlightSelected();
 			Mod_DrawVelocityDirection();
 			Mod_DrawWorldAxes();
 

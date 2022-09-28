@@ -73,6 +73,9 @@
     <Filter Include="Source Files\menu">
       <UniqueIdentifier>{ad0e1ba6-cb49-4763-be6c-67b061c2513a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\CMod">
+      <UniqueIdentifier>{c34691e5-8d60-491d-8fd9-19bbc254c500}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -212,6 +215,9 @@
     </ClInclude>
     <ClInclude Include="menu_items.hpp">
       <Filter>Source Files\menu</Filter>
+    </ClInclude>
+    <ClInclude Include="cmod_data.hpp">
+      <Filter>Source Files\CMod</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -355,6 +361,9 @@
     </ClCompile>
     <ClCompile Include="r_ui_menus.cpp">
       <Filter>Source Files\render\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="cmod_data.cpp">
+      <Filter>Source Files\CMod</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
