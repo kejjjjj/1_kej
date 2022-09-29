@@ -364,12 +364,20 @@ void r::R_Features(bool& wantsEditor)
 			ImGui::EndTabItem();
 
 		}if (ImGui::BeginTabItem("Jumping")) {
+
+
 			if (!jumping_tab)
-				jumping_tab = !jumping_tab;
+				jumping_tab = true;
 			ImGui::EndTabItem();
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Jump Preview")) {
+			analyzer.is_playback = false;
+			analyzer.SetFreeMode(false);
+			v::mod_jumpv_forcepos.evar->enabled = true;
+
+			if (clients->snap.ps.pm_type != PM_UFO)
+				Cbuf_AddText("ufo\n", 0);
 			jumping_tab = false;
 			dvar_s* g_gravity = Dvar_FindMalleableVar("g_gravity");
 
@@ -384,17 +392,6 @@ void r::R_Features(bool& wantsEditor)
 
 	}
 	ImGui::EndTabBar();
-
-	if (GetAsyncKeyState(VK_PRIOR) & 1) {
-		for (int i = 0; i < menuInfo.context->menuCount; i++) {
-			menuDef_t* menu = menuInfo.context->Menus[i];
-
-			if (menu)
-				Com_Printf(CON_CHANNEL_CONSOLEONLY, "[%i]: %s\n", i, menu->window.name);
-
-
-		}
-	}
 	
 
 }

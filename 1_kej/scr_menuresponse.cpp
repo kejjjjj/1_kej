@@ -38,6 +38,9 @@ void Script_OnMenuResponse(int serverId, int menu, const char* response)
                 analyzer.StopRecording();
 
         }
+        else if (!strcmp(response, "autoslide")) {
+            automation.keybindPressed = true;
+        }
     }
 
     //printf("menu[" "%s" "], response[" "%s" "]\n", menu_name, response);

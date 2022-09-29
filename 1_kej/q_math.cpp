@@ -191,12 +191,9 @@ void VectorInverse(vec3_t v) {
 	v[1] = -v[1];
 	v[2] = -v[2];
 }
-int VectorCompare(const vec3_t v1, const vec3_t v2)
+bool VectorCompare(const vec3_t v1, const vec3_t v2)
 {
-	if (v1[0] != v2[0] || v1[1] != v2[1] || v1[2] != v2[2]) {
-		return 0;
-	}
-	return 1;
+	return (v1[0] == v2[0] && v1[1] == v2[1] && v1[2] == v2[2]);
 }
 float GetAverage(float* arr, size_t size)
 {

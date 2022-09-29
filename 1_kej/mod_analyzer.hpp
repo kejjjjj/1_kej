@@ -33,6 +33,10 @@ namespace cg
 		void StartRecording();
 		bool isRecording();
 		void StopRecording();
+		bool RecordingPaused();
+		void PauseRecording();
+		void ContinueRecording();
+
 		void ClearData();
 		void OnFrameUpdate();
 		bool RecordingExists();
@@ -82,6 +86,8 @@ namespace cg
 		bool is_previewing;
 		bool is_free_mode;
 		bool in_recording_mode; //true when the recording mode keybind is toggled on 
+		bool is_paused;
+		bool is_afk; //true when player stays still for 2000 snapshots
 		DWORD time_since_last_recording;
 	};
 	inline jAnalyzer analyzer;

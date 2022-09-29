@@ -23,6 +23,9 @@ bool Evar_SaveToFile(std::string directory)
 		if (!evar)
 			continue;
 
+		if (!evar->save)
+			continue;
+
 		switch (evar->type) {
 			case evartype_t::EVAR_BOOL:		f << evar->name << " = " << evar->enabled		<< ";\n";		break;
 			case evartype_t::EVAR_INT:		f << evar->name << " = " << evar->intValue		<< ";\n";		break;

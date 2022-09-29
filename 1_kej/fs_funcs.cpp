@@ -22,10 +22,10 @@ bool fs::F_FileExists(std::string directory, std::string file_name)
 	}
 	for (const auto& entry : _fs::directory_iterator(directory)) {
 		
-		Com_Printf(CON_CHANNEL_CONSOLEONLY, "^5%s == %s\n", entry.path().filename().c_str(), file_name.c_str());
-
-		if (entry.path().filename() == file_name)
+		if (entry.path().filename() == file_name) {
+			//Com_Printf(CON_CHANNEL_CONSOLEONLY, "F_FileExists: %s == %s\n", entry.path().filename().c_str(), file_name.c_str());
 			return true;
+		}
 	}
 	return false;
 }

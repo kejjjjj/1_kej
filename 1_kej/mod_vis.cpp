@@ -168,15 +168,34 @@ void cg::Mod_DrawFPSHelpers()
 
 	const usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
 
+
 	if (cmd->rightmove > 0)
 		rightmove = true;
 	else if (cmd->rightmove < 0)
 		rightmove = false;
 
+
 	FPS_CalculateSingleBeatDirection(rightmove, cmd);
 
 	float yaw = clients->cgameViewangles[YAW] > 0 ? clients->cgameViewangles[YAW] : 180.f - clients->cgameViewangles[YAW] * -1; //mirror the yaw
 	float aa = atan2(-(int)cmd->rightmove, (int)cmd->forwardmove) * 57.2957795f;
+	const dvar_s* _fov = Dvar_FindMalleableVar("cg_fov");
+	const dvar_s* fovscale = Dvar_FindMalleableVar("cg_fovscale");
+
+	const float fov = _fov->current.value * fovscale->current.value * v::mod_fps_transferz.evar->arrayValue[3];
+	bool isInverted = clients->cgameViewangles[YAW] < fov || clients->cgameViewangles[YAW] > 180.f - fov;
+
+	if (analyzer.isPreviewing()) {
+		const jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+
+		if (jData) {
+			aa = atan2(-(int)jData->rightmove, (int)jData->forwardmove) * 57.2957795f;
+			yaw = jData->angles[YAW] > 0 ? jData->angles[YAW] : 180.f - jData->angles[YAW] * -1;
+			rightmove = jData->rightmove > 0;
+			isInverted = jData->angles[YAW] < fov || jData->angles[YAW] > 180.f - fov;
+		}
+
+	}
 
 	aa > 0 ? aa -= 45 : aa += 45;
 
@@ -203,12 +222,7 @@ void cg::Mod_DrawFPSHelpers()
 	if (yaw < 0)
 		yaw = 180.f - fabs(yaw);
 
-	const dvar_s* _fov = Dvar_FindMalleableVar("cg_fov");
-	const dvar_s* fovscale = Dvar_FindMalleableVar("cg_fovscale");
 
-	const float fov = _fov->current.value * fovscale->current.value * v::mod_fps_transferz.evar->arrayValue[3];
-
-	const bool isInverted = clients->cgameViewangles[YAW] < fov || clients->cgameViewangles[YAW] > 180.f - fov;
 	
 	//r::R_DrawRect("white", 0, BAR_START_Y, 1920, 10, vec4_t{ 1,1,1,100 });
 
@@ -376,11 +390,37 @@ void cg::Mod_DrawVelocityDirection()
 	if (!v::mod_veldirection.isEnabled() || NOT_SERVER)
 		return;
 
-	const float velAngle = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180.f / PI;
+
+	vec3_t orgPos;
+
+	if (analyzer.isPreviewing()) {
+		const jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+
+		if (jData) {
+			VectorCopy(jData->origin, orgPos);
+		}
+		else
+			VectorCopy(clients->cgameOrigin, orgPos);
+	}
+	else
+		VectorCopy(clients->cgameOrigin, orgPos);
+
+	float velAngle = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180.f / PI;
+
+	if (analyzer.isPreviewing()) {
+		jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+
+		if (jData) {
+			velAngle = atan2(jData->velocity[1], jData->velocity[0]) * 180.f / PI;
+
+		}
+
+	}
+
 	vec3_t angles = { 0, velAngle, 0 }, end;
-	AnglesToForward(angles, clients->cgameOrigin, 100, end);
+	AnglesToForward(angles, orgPos, 100, end);
 	vec2_t self_xy, end_xy;
-	if (r::WorldToScreen(clients->cgameOrigin, self_xy) && r::WorldToScreen(end, end_xy)) {
+	if (r::WorldToScreen(orgPos, self_xy) && r::WorldToScreen(end, end_xy)) {
 		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), IM_COL32(255, 255, 0, 255), 1.5f);
 	}
 }
@@ -391,8 +431,23 @@ void cg::Mod_DrawWorldAxes()
 		return;
 
 	vec3_t forwardStart, start;
-	VectorCopy(clients->cgameOrigin, forwardStart);
-	VectorCopy(clients->cgameOrigin, start);
+
+	vec3_t orgPos;
+
+	if (analyzer.isPreviewing()) {
+		const jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+
+		if (jData) {
+			VectorCopy(jData->origin, orgPos);
+		}
+		else
+			VectorCopy(clients->cgameOrigin, orgPos);
+	}else
+		VectorCopy(clients->cgameOrigin, orgPos);
+
+
+	VectorCopy(orgPos, forwardStart);
+	VectorCopy(orgPos, start);
 
 	forwardStart[0] -= DIRECTION_LENGTH;
 
@@ -410,7 +465,7 @@ void cg::Mod_DrawWorldAxes()
 	if (r::WorldToScreen(forwardStart, self_xy) && r::WorldToScreen(start, end_xy)) {
 		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), IM_COL32(255, 0, 0, 255), 2.f);
 	}
-	start[0] = clients->cgameOrigin[0];
+	start[0] = orgPos[0];
 	if (pitch < 0) {
 		start[0] += fabs(pitch) * 50;
 	}
@@ -418,7 +473,7 @@ void cg::Mod_DrawWorldAxes()
 	if (r::WorldToScreen(forwardStart, self_xy) && r::WorldToScreen(start, end_xy)) {
 		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), IM_COL32(255, 0, 0, 255), 2.f);
 	}
-	VectorCopy(clients->cgameOrigin, forwardStart);
+	VectorCopy(orgPos, forwardStart);
 	forwardStart[2] -= 1000;
 
 
@@ -431,7 +486,7 @@ void cg::Mod_DrawWorldAxes()
 	if (r::WorldToScreen(forwardStart, self_xy) && r::WorldToScreen(start, end_xy)) {
 		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), IM_COL32(255, 0, 0, 255), 2.f);
 	}
-	start[1] = clients->cgameOrigin[1];
+	start[1] = orgPos[1];
 	if (pitch < 0) {
 		start[1] += fabs(pitch) * 50;
 	}
@@ -440,7 +495,7 @@ void cg::Mod_DrawWorldAxes()
 		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(end_xy[0], end_xy[1]), ImVec2(self_xy[0], self_xy[1]), IM_COL32(255, 0, 0, 255), 2.f);
 	}
 
-	VectorCopy(clients->cgameOrigin, forwardStart);
+	VectorCopy(orgPos, forwardStart);
 	forwardStart[2] -= 1000;
 
 	if (!v::mod_worldaxes_opt.isEnabled())
@@ -456,9 +511,27 @@ void cg::Mod_DrawWorldAxes()
 		rightmove = false;
 
 	FPS_CalculateSingleBeatDirection(rightmove, cmd);
+	jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+	if (analyzer.isPreviewing()) {
+
+		if (jData) {
+			rightmove = jData->rightmove > 0;
+		}
+
+	}
 
 	float delta;
-	const float opt = R_getOptAngle(rightmove, delta);
+	float opt;
+	if(!analyzer.isPreviewing())
+		opt = R_getOptAngle(rightmove, delta);
+
+	else {
+		if (jData)
+			opt = getOptForAnalyzer(jData);
+		else
+			opt = R_getOptAngle(rightmove, delta);
+
+	}
 	vec3_t opt3, nearestAxis3;
 	AnglesToForward(vec3_t{ 0, opt, 0 }, forwardStart, DIRECTION_LENGTH, opt3);
 
@@ -473,12 +546,23 @@ void cg::Mod_DrawWorldAxes()
 	}
 
 }
-void cg::Mod_GetAccelerationAngles(const usercmd_s* cmd, const bool rightmove, vec2_t out)
+void cg::Mod_GetAccelerationAngles(const bool rightmove, vec2_t out)
 {
 	static float delta;
 	const float yaw = clients->cgameViewangles[YAW];
+	jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
 
-	const float opt = R_getOptAngle(rightmove, delta);
+	float opt;
+	if (!analyzer.isPreviewing())
+		opt = R_getOptAngle(rightmove, delta);
+
+	else {
+		if (jData)
+			opt = getOptForAnalyzer(jData);
+		else
+			opt = R_getOptAngle(rightmove, delta);
+
+	}
 
 	if(rightmove)
 		out[0] = opt;
@@ -509,7 +593,7 @@ void cg::Mod_DrawAngleHelper()
 
 	const usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
 
-	const float yaw = clients->cgameViewangles[YAW];
+	float yaw = clients->cgameViewangles[YAW];
 	const dvar_s* cg_fov = Dvar_FindMalleableVar("cg_fov");
 	const dvar_s* cg_fovscale = Dvar_FindMalleableVar("cg_fovscale");
 	vec2_t accel_angles;
@@ -523,10 +607,21 @@ void cg::Mod_DrawAngleHelper()
 
 	FPS_CalculateSingleBeatDirection(rightmove, cmd);
 
+	if (analyzer.isPreviewing()) {
+		const jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+
+		if (jData) {
+			rightmove = jData->rightmove > 0;
+			yaw = jData->angles[YAW];
+		}
+
+	}
+
+
 	if (!cg_fov || !cg_fovscale)
 		return;
 
-	Mod_GetAccelerationAngles(cmd, rightmove, accel_angles);
+	Mod_GetAccelerationAngles(rightmove, accel_angles);
 
 	const float fov = (cg_fov->current.value * cg_fovscale->current.value) * v::mod_anglehelper.evar->arrayValue[3];
 

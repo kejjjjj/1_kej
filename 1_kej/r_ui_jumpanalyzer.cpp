@@ -7,14 +7,15 @@ void r::R_JumpView_ToggleFreeMode()
 		cgs->snap->ps.velocity[2] = 0;
 
 	ImGui::Text("press [spacebar] to toggle free mode");
+	const ImGuiIO& io = ImGui::GetIO();
 
-	if (GetAsyncKeyState('F') & 1 && VID_ACTIVE) {
+	if (io.KeysDownDuration['F'] == 0.f && VID_ACTIVE) {
 		v::mod_jumpv_forcepos.SetValue(!v::mod_jumpv_forcepos.isEnabled());
 
 		if (v::mod_jumpv_forcepos.isEnabled() && analyzer.InFreeMode())
 			analyzer.SetFreeMode(false);
 	}
-	else if (GetAsyncKeyState(VK_SPACE) & 1 && VID_ACTIVE) {
+	else if (io.KeysDownDuration[VK_SPACE] == 0.f && VID_ACTIVE) {
 		analyzer.SetFreeMode(!analyzer.InFreeMode());
 
 		const bool isUFO = clients->snap.ps.pm_type == PM_UFO;
@@ -47,11 +48,6 @@ void r::R_JumpView_Main()
 	const ImGuiIO& io = ImGui::GetIO();
 	static float timeScale = 1.f;
 
-	if (!VID_ACTIVE) {
-		ImGui::Text("WINDOW NOT ACTIVE\n");
-		return;
-	}
-
 	ImGui::BeginGroup();
 
 	R_JumpView_ToggleFreeMode();
@@ -62,8 +58,10 @@ void r::R_JumpView_Main()
 	ImGui::PushItemWidth(100);
 	ImGui::SliderInt("Frame", &menu_frame, 0, analyzer.GetTotalFrames(), "%u", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 
+	ImGui::Text("key %i", io.KeysDown['R']);
+
 	//ImGui::SameLine();
-	if (ImGui::Button("R") || GetAsyncKeyState('R') & 1) {
+	if (ImGui::Button("R") || io.KeysDownDuration['R'] == 0.f && VID_ACTIVE) {
 		isPlayback = false;
 		menu_frame = 0;
 	}
@@ -75,7 +73,7 @@ void r::R_JumpView_Main()
 	}
 
 	ImGui::SameLine();
-	if (ImGui::Button(isPlayback == false ? ">" : "P") || GetAsyncKeyState('P') & 1) {
+	if (ImGui::Button(isPlayback == false ? ">" : "P") || io.KeysDownDuration['P'] == 0.f) {
 		if (!isPlayback)
 			isPlayback = true;
 		else isPlayback = false;
@@ -125,9 +123,9 @@ void r::R_JumpView_Main()
 	ImGui::DragFloat("Slow-mo Scale", &timeScale, 0.1f, 1.f, 10.f, "%.3f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 
 	if(menu_frame + 1 <= analyzer.GetTotalFrames())
-		menu_frame += ((GetAsyncKeyState(VK_RIGHT) & 1) == true);
+		menu_frame += ((io.KeysDownDuration[VK_RIGHT] == 0.f) == true);
 	if(menu_frame - 1 > 0)
-		menu_frame -= ((GetAsyncKeyState(VK_LEFT) & 1) == true);
+		menu_frame -= ((io.KeysDownDuration[VK_LEFT] == 0.f) == true);
 
 
 	ImGui::Text("Jump Data");

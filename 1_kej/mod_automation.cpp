@@ -38,7 +38,7 @@ void cg::Mod_A_AutoFPS()
 	if (!v::mod_autoFPS.isEnabled())
 		return;
 
-	if (jumpanalyzer.recommendedFPS != NULL && !analyzer.isPreviewing())
+	if (jumpanalyzer.recommendedFPS != NULL && !analyzer.isPreviewing() && VID_ACTIVE)
 	{
 		int fps = jumpanalyzer.recommendedFPS;
 
@@ -89,8 +89,10 @@ void cg::Mod_A_AutoSliding(pmove_t* pmove, pml_t* pml)
 	hook* a = 0;
 	static DWORD old_ms(0);
 
-	if (GetAsyncKeyState(VK_MENU) & 1 && !automation.currentlySliding) //getasynckeystate will be replaced with a scriptmenuresponse in the next commit.. if I remember
+	if (automation.keybindPressed & 1 && !automation.currentlySliding) { 
 		automation.pendingSlide = true;
+		automation.keybindPressed = false;
+	}
 
 	
 	if (automation.pendingSlide && (pml->almostGroundPlane || pml->groundPlane)) {

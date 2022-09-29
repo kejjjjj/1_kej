@@ -10,7 +10,7 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 		R_ImGui(pDevice);
 		if (R_OpenMenu(pDevice)) {
 			//ImGui::GetBackgroundDrawList()->Addline
-			CMod_HighlightSelected();
+			//CMod_HighlightSelected(); 
 			Mod_DrawVelocityDirection();
 			Mod_DrawWorldAxes();
 
@@ -38,9 +38,15 @@ void __cdecl r::CG_DrawActive()
 		Mod_A_Strafebot();
 		Mod_A_AutoFPS();
 
-		if (analyzer.isRecording())
-			R_DrawText("Recording", 0, 800, 2, 2, 0, vec4_t{ 1,1,1,1 }, 0);
+		if (analyzer.isRecording()) {
+			const bool isPaused = analyzer.RecordingPaused();
 
+			char buffer[30];
+
+			sprintf_s(buffer, "%s", isPaused == false ? "Recording" : "Paused");
+
+			R_DrawText(buffer, 0, 800, 2, 2, 0, isPaused == false ? vec4_t{ 1,1,1,1 } : vec4_t{ 1,0,0,1 }, 0);
+		}
 		if(automation.pendingSlide)
 			R_DrawText("Slide", v::mod_velometer.evar->arrayValue[1], v::mod_velometer.evar->arrayValue[2] - 20 * v::mod_velometer.evar->arrayValue[3], v::mod_velometer.evar->arrayValue[3], v::mod_velometer.evar->arrayValue[3], 0, vec4_t{0,1,0,1}, 0);
 

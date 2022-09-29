@@ -367,6 +367,17 @@ void GScr_SendCommand()
 		SendCommand(str);
 	}
 }
+void GScr_CanLoadPosition()
+{
+	if (Scr_GetNumParam() != 0) {
+		Scr_ObjectError("Usage: CanLoadPosition()");
+		Scr_AddInt(0);
+		return;
+	}
+
+	Scr_AddInt(analyzer.isPreviewing() == false);
+
+}
 void Scr_LoadMethods()
 {
 	Scr_AddMethod("getbuttonpressed",	(xfunction_t)PlayerCmd_GetButtonPressed, false);
@@ -382,6 +393,7 @@ void Scr_LoadMethods()
 	Scr_AddFunction("writetoaddress",	(xfunction_t)GScr_WriteToAddress, false);
 	Scr_AddFunction("getaddressint",	(xfunction_t)Gscr_GetAddressInt, false);
 	Scr_AddFunction("getaddressfloat",  (xfunction_t)Gscr_GetAddressFloat, false);
+	Scr_AddFunction("canloadposition",  (xfunction_t)GScr_CanLoadPosition, false);
 
 	Scr_AddFunction("sendcommand",		(xfunction_t)GScr_SendCommand, false);
 

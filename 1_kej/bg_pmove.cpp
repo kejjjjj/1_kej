@@ -110,14 +110,18 @@ void cg::Pmove(pmove_t* pm)
 }
 void cg::Mod_JumpView(pmove_t* pm, pml_t* pml)
 {
+
+	static DWORD afkSnapshots = Sys_MilliSeconds();
+
 	jumpanalyzer.commandTime = pm->ps->commandTime;
 	jumpanalyzer.serverTime  = pm->cmd.serverTime;
-	if (analyzer.InRecordingMode() && !analyzer.isRecording() 
+	if (analyzer.InRecordingMode() && !analyzer.isRecording()
 		&& !analyzer.isPreviewing() && analyzer.LastRecordingStoppedTime() + 200 < clients->snap.ps.commandTime
-		&& (pm->cmd.forwardmove != NULL || pm->cmd.rightmove != NULL) && VID_ACTIVE)
+		&& (pm->cmd.forwardmove != NULL || pm->cmd.rightmove != NULL) && VID_ACTIVE) {
 
 		analyzer.StartRecording();
-
+		afkSnapshots = Sys_MilliSeconds();
+	}
 	if (!analyzer.isRecording() || !pm || !pml)
 		return;
 
@@ -152,8 +156,36 @@ void cg::Mod_JumpView(pmove_t* pm, pml_t* pml)
 
 	const float difference = (int)(1000.f / (cls->frametime == NULL ? 1 : cls->frametime)) / 125.f;
 
+	if (/*pm->ps->velocity[0] == NULL && pm->ps->velocity[1] == NULL && GROUND && !VID_ACTIVE || NOT_GROUND && */!VID_ACTIVE)
+		analyzer.PauseRecording();
 
-	if (pm->cmd.serverTime > old_cmdTime + 3 * difference) {
+	static vec3_t	prevAngles = {pm->ps->viewangles[0], pm->ps->viewangles[1] , pm->ps->viewangles[2] }, 
+					prevOrigin = { pm->ps->origin[0], pm->ps->origin[1] , pm->ps->origin[2] };
+
+	if (VectorCompare(pm->ps->origin, prevOrigin) == true && VectorCompare(clients->cgameViewangles, prevAngles) == true) {
+
+		//afkSnapshots++;
+
+		if (GetAsyncKeyState(VK_PRIOR) & 1)
+			Com_Printf(CON_CHANNEL_OBITUARY, "snaps: %i\n", Sys_MilliSeconds() - afkSnapshots);
+
+		if (afkSnapshots + 2000 < Sys_MilliSeconds()) {
+			analyzer.PauseRecording();
+			afkSnapshots = Sys_MilliSeconds();
+		}
+
+	}else {
+		if (VID_ACTIVE) {
+			analyzer.ContinueRecording();
+			
+		}
+		afkSnapshots = Sys_MilliSeconds();
+	}
+
+	VectorCopy(pm->ps->origin, prevOrigin);
+	VectorCopy(clients->cgameViewangles, prevAngles);
+
+	if (pm->cmd.serverTime > old_cmdTime + 3 * difference && !analyzer.RecordingPaused()) {
 		old_cmdTime = pm->cmd.serverTime;
 		jump_data jData;
 

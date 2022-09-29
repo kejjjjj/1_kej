@@ -28,6 +28,7 @@ struct evar_s
 	std::vector<float> arrayValue;
 	bool enabled;
 	float value;
+	bool save; //save to config
 	evartype_t type;
 	struct evar_o* Next;
 };
@@ -43,10 +44,10 @@ struct evar_o
 		if (this->evar)
 			delete this->evar;
 	}
-	void Register(const char* name, evartype_t type, float defaultValue);
-	void Register(const char* name, evartype_t type, float* defaultValue);
-	void Register(const char* name, evartype_t type, const char* defaultValue);
-	void Register(const char* name, evartype_t type, float* defaultValue, uint32_t size); //arrays
+	void Register(const char* name, evartype_t type, float defaultValue, bool save);
+	void Register(const char* name, evartype_t type, float* defaultValue, bool save);
+	void Register(const char* name, evartype_t type, const char* defaultValue, bool save);
+	void Register(const char* name, evartype_t type, float* defaultValue, uint32_t size, bool save); //arrays
 
 
 	int GetInt();

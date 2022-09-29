@@ -72,16 +72,21 @@ void jAnalyzer::ClearData()
 }
 void cg::jAnalyzer::OnFrameUpdate()
 {
-	if (current_frame >= std::numeric_limits<int32_t>().max() - 1) {
-		Com_PrintError(CON_CHANNEL_ERROR, "exceeded maximum amount of frames!\n");
-		StopRecording();
-	}
+	//if (current_frame >= std::numeric_limits<int32_t>().max() - 1) {
+	//	Com_PrintError(CON_CHANNEL_ERROR, "exceeded maximum amount of frames!\n");
+	//	StopRecording();
+	//}
 
 	current_frame++;
 }
 void jAnalyzer::SaveFrameData(jump_data& jdata)
 {
-	data.push_back(jdata);
+	if(data.size() + 1 < data.max_size())
+		data.push_back(jdata);
+	else {
+		Com_PrintError(CON_CHANNEL_ERROR, "exceeded maximum amount of frames!\n");
+		StopRecording();
+	}
 }
 jump_data* jAnalyzer::FetchFrameData(uint32_t frame)
 {
@@ -168,4 +173,16 @@ void jAnalyzer::SetLastRecordingStopTime(DWORD time)
 bool jAnalyzer::isPlayback()
 {
 	return is_playback;
+}
+bool jAnalyzer::RecordingPaused()
+{
+	return is_paused;
+}
+void jAnalyzer::PauseRecording()
+{
+	is_paused = true;
+}
+void jAnalyzer::ContinueRecording()
+{
+	is_paused = false;
 }

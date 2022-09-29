@@ -26,6 +26,7 @@ void GScr_GetEvar();
 void GScr_WriteToAddress();
 void Gscr_GetAddressInt();
 void Gscr_GetAddressFloat();
+void GScr_CanLoadPosition();
 
 void GScr_SendCommand();
 #endif

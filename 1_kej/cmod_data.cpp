@@ -30,6 +30,10 @@ void cg::CMod_GetBrushOriginFromBounds(cbrush_t* brush, vec3_t out)
 	for (int i = 0; i < 3; i++)
 		out[i] = brush->mins[i] + (brush->maxs[i] - brush->mins[i]) / 2;
 }
+
+//
+//will fix later when motivation kicks back in :x
+//
 void cg::CMod_HighlightSelected()
 {
 	if (NOT_SERVER)
@@ -71,40 +75,17 @@ void cg::CMod_HighlightSelected()
 
 				cbrushside_t* brushside = brush->sides;
 
-
+				if (brush->numsides > 0) {
+					brush = nullptr;
+					return;
+				}
 
 				for (int i = 0; i < brush->numsides; i++) {
 					if (brushside) {
-
-						vec3_t nAngles;
+						cplane_s* plane = brushside->plane;
 
 						dmaterial_t mat = cm->materials[brushside->materialNum];
 						std::cout << "brushside->materialNum: " << mat.material << '\n';
-						std::cout << "brushside->plane->dist: " << /*DotProduct(brush_org, brushside->plane->normal) - */brushside->plane->dist << '\n';
-		
-
-						//VectorSubtract(brush->maxs, brush->mins, midpoint);
-
-						//float yaw = atan2(brushside->plane->normal[1], brushside->plane->normal[0]) * 180.f / PI;
-
-						//vectoangles(brushside->plane->normal, nAngles);
-
-						//nAngles[PITCH] *= -0.5;
-
-						//float dist = glm::distance(glm::vec3(brush->mins[0], brush->mins[1], brush->mins[2]), glm::vec3(brush->maxs[0], brush->maxs[1], brush->maxs[2])) / 2;
-						//RotatePointAroundVector(dst, brushside->plane->normal, 0, brush_org);
-
-						vec3_t tmp_org;
-						VectorCopy(brush_org, tmp_org);
-
-						VectorNormalize(tmp_org);
-
-						RotatePointAroundVector(dst, brushside->plane->normal, rand() % 360, tmp_org);
-						VectorSubtract(brush_org, dst, dst);
-						//AnglesToForward(nAngles, brush_org, dist, dst);
-
-						//VectorSubtract(brush->maxs, dst, dst);
-						
 
 					}
 					++brushside;
@@ -119,31 +100,31 @@ void cg::CMod_HighlightSelected()
 
 	}if (brush) {
 
-		vec3_t angles, finalpos;
+		//vec3_t angles, finalpos;
 
-		VectorsToAngles(brush_org, dst, angles);
+		//VectorsToAngles(brush_org, brush->maxs, angles);
 
-		float dist = glm::distance(glm::vec3(brush_org[0], brush_org[1], brush_org[2]), glm::vec3(brush->maxs[0], brush->maxs[1], brush->maxs[2])) / 2;
-
-		vec3_t tmp_org;
-		VectorCopy(brush_org, tmp_org);
-
-		VectorAdd(tmp_org, maxs, tmp_org);
-		AnglesToForward(angles, tmp_org, -1, finalpos);
-
-		vec2_t start_xy, end_xy;
-		if (r::WorldToScreen(brush_org, start_xy) && r::WorldToScreen(finalpos, end_xy)) {
-			ImGui::GetBackgroundDrawList()->AddCircleFilled(ImVec2(start_xy[0], start_xy[1]), 30, IM_COL32(0, 255, 0, 255), 4);
-			ImGui::GetBackgroundDrawList()->AddCircleFilled(ImVec2(end_xy[0], end_xy[1]), 30, IM_COL32(255, 0, 0, 255), 4);
-
-			vec2_t text_xy;
+		//float dist = glm::distance(glm::vec3(brush_org[0], brush_org[1], brush_org[2]), glm::vec3(brush->maxs[0], brush->maxs[1], brush->maxs[2]));
 
 
-			//if (r::WorldToScreen(finalpos, text_xy)) {
-			//	ImGui::GetBackgroundDrawList()->AddText(ImVec2(text_xy[0], text_xy[1]), IM_COL32(255, 255, 0, 255), std::to_string(dist).c_str());
-			//}
+		//angles[YAW] *= 1.5;
 
-		}
+
+		//AnglesToForward(angles, brush_org, dist, finalpos);
+
+		//vec2_t start_xy, end_xy;
+		//if (r::WorldToScreen(brush_org, start_xy) && r::WorldToScreen(finalpos, end_xy)) {
+		//	ImGui::GetBackgroundDrawList()->AddCircleFilled(ImVec2(start_xy[0], start_xy[1]), 30, IM_COL32(0, 255, 0, 255), 4);
+		//	ImGui::GetBackgroundDrawList()->AddCircleFilled(ImVec2(end_xy[0], end_xy[1]), 30, IM_COL32(255, 0, 0, 255), 4);
+
+		//	vec2_t text_xy;
+
+
+		//	//if (r::WorldToScreen(finalpos, text_xy)) {
+		//	//	ImGui::GetBackgroundDrawList()->AddText(ImVec2(text_xy[0], text_xy[1]), IM_COL32(255, 255, 0, 255), std::to_string(dist).c_str());
+		//	//}
+
+		//}
 
 		//vec3_t yMaxs, yMins;
 		//VectorCopy(brush->mins, yMins);
@@ -158,9 +139,9 @@ void cg::CMod_HighlightSelected()
 		//r::R_DrawTriangle(dst, brush->mins, brush->maxs, vec4_t{ 0,255,0,200 });
 		//r::R_DrawTriangle(dst, yMins, brush->maxs, vec4_t{ 0,255,0,200 });
 
-		//r::box_s box = r::R_ConstructBoxFromBounds(brush_org, mins, maxs);
-		//r::R_DrawConstructedBoxEdges(box, vec4_t{ 0,255,0,255 });
-		//r::R_DrawConstructedBox(box, vec4_t{ 0,255,0,50});
+		r::box_s box = r::R_ConstructBoxFromBounds(brush_org, mins, maxs);
+		r::R_DrawConstructedBoxEdges(box, vec4_t{ 0,255,0,255 });
+		r::R_DrawConstructedBox(box, vec4_t{ 0,255,0,50});
 
 	}
 

@@ -166,7 +166,10 @@ bool r::R_OpenMenu(IDirect3DDevice9* pDevice)
 
 		}
 
-		if (!r::should_draw_menu || GetAsyncKeyState(VK_ESCAPE) < 0 && should_draw_menu) {
+		if (!r::should_draw_menu || ImGui::GetIO().KeysDownDuration[VK_ESCAPE] >= 0.0 && should_draw_menu) {
+			if (clients->snap.ps.pm_type == PM_UFO && analyzer.isPreviewing())
+				Cbuf_AddText("ufo\n", 0);
+
 			should_draw_menu = false;
 			wantsEditor = false;
 			std::cout << "calling R_RemoveInput() from R_OpenMenu()\n";

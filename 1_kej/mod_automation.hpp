@@ -9,6 +9,7 @@ namespace cg
 {
 	//actively updating automation data
 	struct automation_s {
+		bool keybindPressed;
 		bool pendingSlide;
 		bool currentlySliding;
 

@@ -25,6 +25,7 @@ typedef vec_t vec4_t[4];
 #define VectorAddAll(a,b,c)		((c)[0]=(a)[0]+(b),(c)[1]=(a)[1]+(b),(c)[2]=(a)[2]+(b))
 #define VectorCopy(a,b)			((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2])
 #define	VectorScale(v, s, o)	((o)[0]=(v)[0]*(s),(o)[1]=(v)[1]*(s),(o)[2]=(v)[2]*(s))
+#define VectorScaleAll(a,b,c)	((c)[0]=(a)[0]*(b),(c)[1]=(a)[1]*(b),(c)[2]=(a)[2]*(b))
 #define	VectorMA(v, s, b, o)	((o)[0]=(v)[0]+(b)[0]*(s),(o)[1]=(v)[1]+(b)[1]*(s),(o)[2]=(v)[2]+(b)[2]*(s))
 #define VectorClear( a )              ( ( a )[0] = ( a )[1] = ( a )[2] = 0 )
 
@@ -33,6 +34,13 @@ typedef vec_t vec4_t[4];
 #define RAD2SHORT(a) ((a) * (32768.f / (float)M_PI))
 #define SHORT2RAD(a) ((a) * ((float)M_PI / 32768.f))
 #define SHORT2DEG(a) (((a) / 32768.f) * 180.0f)
+
+// plane types are used to speed some tests
+// 0-2 are axial planes
+#define	PLANE_X			0
+#define	PLANE_Y			1
+#define	PLANE_Z			2
+#define	PLANE_NON_AXIAL	3
 
 //hopefully the user has qwerty layout..
 #define WE GetAsyncKeyState('W') < 0 && GetAsyncKeyState('E') < 0
