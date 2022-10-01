@@ -58,8 +58,6 @@ void r::R_JumpView_Main()
 	ImGui::PushItemWidth(100);
 	ImGui::SliderInt("Frame", &menu_frame, 0, analyzer.GetTotalFrames(), "%u", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 
-	ImGui::Text("key %i", io.KeysDown['R']);
-
 	//ImGui::SameLine();
 	if (ImGui::Button("R") || io.KeysDownDuration['R'] == 0.f && VID_ACTIVE) {
 		isPlayback = false;
@@ -122,11 +120,12 @@ void r::R_JumpView_Main()
 	ImGui::PushItemWidth(50);
 	ImGui::DragFloat("Slow-mo Scale", &timeScale, 0.1f, 1.f, 10.f, "%.3f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 
-	if(menu_frame + 1 <= analyzer.GetTotalFrames())
-		menu_frame += ((io.KeysDownDuration[VK_RIGHT] == 0.f) == true);
-	if(menu_frame - 1 > 0)
-		menu_frame -= ((io.KeysDownDuration[VK_LEFT] == 0.f) == true);
-
+	if (VID_ACTIVE) {
+		if (menu_frame + 1 <= analyzer.GetTotalFrames())
+			menu_frame += ((io.KeysDownDuration[VK_RIGHT] == 0.f) == true);
+		if (menu_frame - 1 > 0)
+			menu_frame -= ((io.KeysDownDuration[VK_LEFT] == 0.f) == true);
+	}
 
 	ImGui::Text("Jump Data");
 	ImGui::Separator();
@@ -203,6 +202,8 @@ void r::R_JumpView_Main()
 		if (ImGui::Button("highest point"))
 			menu_frame = analyzer.FindHighestPoint();
 
+		if (ImGui::Button("Mark segment"))
+			analyzer.segment_frame = menu_frame;
 
 		ImGui::EndGroup();
 		R_JumpView_IO();

@@ -41,6 +41,8 @@ void Script_OnMenuResponse(int serverId, int menu, const char* response)
         else if (!strcmp(response, "autoslide")) {
             automation.keybindPressed = true;
         }
+        else if (!strcmp(response, "segment"))
+            analyzer.OnStartSegment();
     }
 
     //printf("menu[" "%s" "], response[" "%s" "]\n", menu_name, response);
@@ -130,6 +132,7 @@ void Script_OnPositionLoaded()
 
     }
     analyzer.StopRecording();
+    analyzer.OnEndSegment();
 
     memset(&cg::jumpanalyzer, 0, sizeof(cg::jumpanalyzer_s));
 
@@ -137,4 +140,6 @@ void Script_OnPositionLoaded()
 void Script_OnPositionSaved()
 {
     analyzer.StopRecording();
+    analyzer.OnEndSegment();
+
 }

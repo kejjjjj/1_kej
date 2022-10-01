@@ -1,7 +1,6 @@
 
 #include "pch.h"
 
-
 void cg::Mod_A_Strafebot()
 {
 	if (!v::mod_strafebot.isEnabled() || clients->snap.ps.pm_type == PM_UFO)
@@ -21,22 +20,24 @@ void cg::Mod_A_Strafebot()
 	if (optYaw == -400.f || std::isnan(optYaw))
 		return;
 
-	uint32_t forwardmove = (uint32_t)input->move;
-	uint32_t sidemove = (uint32_t)input->strafe;
+	const usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
 
-	if (GROUND && forwardmove <= 0 || GROUND && sidemove == 0)
+
+	if (GROUND && cmd->forwardmove <= 0 || GROUND && cmd->rightmove == 0)
 		return;
 
 
-	if (sidemove != 0 || forwardmove != 0) {
-		setYaw(cgs->refdefViewAngles[YAW], optYaw);	
-	}
+	if (cmd->forwardmove != 0 || cmd->rightmove != 0) {
+		setYaw(clients->cgameViewangles[YAW], optYaw);
 
+	}
 }
 void cg::Mod_A_AutoFPS()
 {
 	if (!v::mod_autoFPS.isEnabled())
 		return;
+	
+
 
 	if (jumpanalyzer.recommendedFPS != NULL && !analyzer.isPreviewing() && VID_ACTIVE)
 	{
@@ -44,9 +45,16 @@ void cg::Mod_A_AutoFPS()
 
 		dvar_s* com_maxfps = Dvar_FindMalleableVar("com_maxfps");
 
-		if (v::mod_autoFPS_space333.isEnabled())
-			if (GetAsyncKeyState(VK_SPACE) < 0)
+		if (v::mod_autoFPS_space333.isEnabled()) {
+			if (GROUND)
+				fps = 125;
+			else if (GetAsyncKeyState(VK_SPACE) < 0)
 				fps = 333;
+
+			//if (mod_fps.DistanceToTransferZone > 45 && jumpanalyzer.recommendedFPS == 250)
+			//	fps = 200;
+
+		}
 
 		if(com_maxfps)
 			com_maxfps->current.integer = fps;
@@ -65,8 +73,13 @@ void cg::Mod_A_AdjustRPG(pmove_t* pm, pml_t* pml)
 	static float angleEveryFrame(0);
 	int rpg_indx = BG_FindWeaponIndexForName("rpg_mp");
 
-	if (!rpg_indx) rpg_indx = BG_FindWeaponIndexForName("rpg_sustain_mp");
-	if (!rpg_indx) return;
+
+
+	if(pm->ps->weapon != rpg_indx)
+		rpg_indx = BG_FindWeaponIndexForName("rpg_sustain_mp");
+
+
+
 
 	if (pm->ps->weapon == rpg_indx && (pm->cmd.buttons & 1) && pm->ps->weaponstate == WEAPON_READY) {
 		rpg_isangling = true;

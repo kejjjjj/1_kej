@@ -115,13 +115,33 @@ void cg::Mod_JumpView(pmove_t* pm, pml_t* pml)
 
 	jumpanalyzer.commandTime = pm->ps->commandTime;
 	jumpanalyzer.serverTime  = pm->cmd.serverTime;
+
+
 	if (analyzer.InRecordingMode() && !analyzer.isRecording()
 		&& !analyzer.isPreviewing() && analyzer.LastRecordingStoppedTime() + 200 < clients->snap.ps.commandTime
-		&& (pm->cmd.forwardmove != NULL || pm->cmd.rightmove != NULL) && VID_ACTIVE) {
+		&& (pm->cmd.forwardmove != NULL || pm->cmd.rightmove != NULL) && VID_ACTIVE && !analyzer.isSegmenting()) {
 
 		analyzer.StartRecording();
 		afkSnapshots = Sys_MilliSeconds();
 	}
+
+	if (analyzer.isSegmenting()) {
+		if (analyzer.Segmenter_Prepare() > 200) {
+
+			jump_data* jData = analyzer.FetchFrameData(analyzer.segment_frame);
+
+			if (jData) {
+				const vec3_t null = { 0,0,0 };
+				VectorCopy(jData->origin, ps_loc->origin);
+				VectorCopy(null, ps_loc->velocity);
+
+				//CG_SetPlayerAngles(clients->cgameViewangles, jData->angles);
+			}
+		}
+
+
+	}
+
 	if (!analyzer.isRecording() || !pm || !pml)
 		return;
 
@@ -138,23 +158,18 @@ void cg::Mod_JumpView(pmove_t* pm, pml_t* pml)
 		hasBounced = false;
 		hasShotRPG = false;
 		hasJumped  = false;
-	}
-	else if (!hasBounced)
+	}else if (!hasBounced)
 		hasBounced = jumpanalyzer.bounceTime == pm->ps->commandTime;
 
 
 	if (!hasShotRPG) {
 		hasShotRPG = jumpanalyzer.weapon_cant_fire && (pm->ps->weapon == BG_FindWeaponIndexForName("rpg_mp") || pm->ps->weapon == BG_FindWeaponIndexForName("rpg_sustain_mp"));
-	}
-
-	if (hasShotRPG && clients->snap.ps.weaponstate != WEAPON_FIRING) { //this check makes sure it doesn't think other animations are considered as shooting 
+	}else if (hasShotRPG && clients->snap.ps.weaponstate != WEAPON_FIRING) { //this check makes sure it doesn't think other animations are considered as shooting 
 		hasShotRPG = false;
 	}
 
 
 	hasJumped = pm->cmd.serverTime - pm->ps->jumpTime < 10;
-
-	const float difference = (int)(1000.f / (cls->frametime == NULL ? 1 : cls->frametime)) / 125.f;
 
 	if (/*pm->ps->velocity[0] == NULL && pm->ps->velocity[1] == NULL && GROUND && !VID_ACTIVE || NOT_GROUND && */!VID_ACTIVE)
 		analyzer.PauseRecording();
@@ -162,12 +177,14 @@ void cg::Mod_JumpView(pmove_t* pm, pml_t* pml)
 	static vec3_t	prevAngles = {pm->ps->viewangles[0], pm->ps->viewangles[1] , pm->ps->viewangles[2] }, 
 					prevOrigin = { pm->ps->origin[0], pm->ps->origin[1] , pm->ps->origin[2] };
 
-	if (VectorCompare(pm->ps->origin, prevOrigin) == true && VectorCompare(clients->cgameViewangles, prevAngles) == true) {
+	const float angDist = glm::distance(glm::vec2(pm->ps->viewangles[0], pm->ps->viewangles[1]), glm::vec2(prevAngles[0], prevAngles[1]));
+
+	if (VectorCompare(pm->ps->origin, prevOrigin) == true && angDist < 10.f) {
 
 		//afkSnapshots++;
 
 		if (GetAsyncKeyState(VK_PRIOR) & 1)
-			Com_Printf(CON_CHANNEL_OBITUARY, "snaps: %i\n", Sys_MilliSeconds() - afkSnapshots);
+			Com_Printf(CON_CHANNEL_OBITUARY, "angDist: %.6f\n", angDist/*Sys_MilliSeconds() - afkSnapshots*/);
 
 		if (afkSnapshots + 2000 < Sys_MilliSeconds()) {
 			analyzer.PauseRecording();
@@ -183,35 +200,42 @@ void cg::Mod_JumpView(pmove_t* pm, pml_t* pml)
 	}
 
 	VectorCopy(pm->ps->origin, prevOrigin);
-	VectorCopy(clients->cgameViewangles, prevAngles);
+	VectorCopy(pm->ps->viewangles, prevAngles);
+
+	const float difference = (int)(1000.f / (cls->frametime == NULL ? 1 : cls->frametime)) / 125.f;
 
 	if (pm->cmd.serverTime > old_cmdTime + 3 * difference && !analyzer.RecordingPaused()) {
 		old_cmdTime = pm->cmd.serverTime;
-		jump_data jData;
+		Mod_SaveData(&analyzer, pm, hasBounced, hasJumped, hasShotRPG);
 
-		VectorCopy(pm->ps->viewangles, jData.angles);
-		VectorCopy(pm->ps->origin, jData.origin);
-		VectorCopy(pm->ps->velocity, jData.velocity);
-		jData.forwardmove	= pm->cmd.forwardmove;
-		jData.rightmove		= pm->cmd.rightmove;
-		VectorCopy(pm->mins, jData.mins);
-		VectorCopy(pm->maxs, jData.maxs);
-		jData.rpg_fired		= hasShotRPG;
-		jData.bounced		= hasBounced;
-		jData.colliding		= jumpanalyzer.velocity_clipped;
-		jData.jumped		= hasJumped;
-
-		if (hasShotRPG) {	analyzer.rpgFrames.insert(analyzer.current_frame);				hasShotRPG = false; }
-		if (hasBounced) {	analyzer.bounceFrames.insert(analyzer.current_frame);			hasBounced = false; }
-		if (hasJumped) {	analyzer.jumpFrame.insert(analyzer.current_frame);				hasJumped = false; }
-
-		//if (hasCollided) {	analyzer.collisionFrames.insert(analyzer.current_frame);	hasCollided = false; }
-
-		jData.FPS = (int)(1000.f / (cls->frametime == NULL ? 1 : cls->frametime));
-
-		analyzer.SaveFrameData(jData); 
-		analyzer.OnFrameUpdate();
 	}
+}
+void cg::Mod_SaveData(jAnalyzer* current, pmove_t* pm, bool& hasBounced, bool& hasJumped, bool& hasShotRPG)
+{
+	jump_data jData;
+
+	VectorCopy(pm->ps->viewangles, jData.angles);
+	VectorCopy(pm->ps->origin, jData.origin);
+	VectorCopy(pm->ps->velocity, jData.velocity);
+	jData.forwardmove = pm->cmd.forwardmove;
+	jData.rightmove = pm->cmd.rightmove;
+	VectorCopy(pm->mins, jData.mins);
+	VectorCopy(pm->maxs, jData.maxs);
+	jData.rpg_fired = hasShotRPG;
+	jData.bounced = hasBounced;
+	jData.colliding = jumpanalyzer.velocity_clipped;
+	jData.jumped = hasJumped;
+
+	if (hasShotRPG) { current->rpgFrames.insert(current->current_frame);			hasShotRPG = false; }
+	if (hasBounced) { current->bounceFrames.insert(current->current_frame);			hasBounced = false; }
+	if (hasJumped) { current->jumpFrame.insert(current->current_frame);				hasJumped = false; }
+
+	//if (hasCollided) {	current->collisionFrames.insert(current->current_frame);	hasCollided = false; }
+
+	jData.FPS = (int)(1000.f / (cls->frametime == NULL ? 1 : cls->frametime));
+
+	current->SaveFrameData(analyzer.data, jData);
+	current->OnFrameUpdate();
 }
 void cg::PM_ModCode(pml_t* pml, pmove_t* pm)
 {
@@ -219,7 +243,7 @@ void cg::PM_ModCode(pml_t* pml, pmove_t* pm)
 
 	Mod_JumpView(pm, pml);
 	Mod_A_AutoSliding(pm, pml);
-
+	//Mod_A_Strafebot(pm);
 
 	return;
 }
@@ -309,8 +333,8 @@ void cg::Mod_DetermineFPS(pmove_t* pm, pml_t* pml)
 	fps_zones.length333 = fps_zones.fps333 - (90.f - fps_zones.fps333);
 
 	fps_zones.fps125 -= fps_zones.length125;
-	fps_zones.fps250 += fps_zones.length250 - 11; 
-	fps_zones.fps200 = fps_zones.fps250 + 20;
+	fps_zones.fps250 += fps_zones.length250 - (11.f * ((float)ps->speed / 190.f));
+	fps_zones.fps200 = fps_zones.fps250 + 20 * ((float)ps->speed / 190.f);
 	fps_zones.fps333 -= fps_zones.length333;
 
 	return;
@@ -339,7 +363,7 @@ __declspec(naked) void cg::PmoveSingle_stub()
 void cg::PM_OverBounce(pmove_t* pm, pml_t* pml)
 {
 
-
+	//Mod_A_Strafebot(pm);
 
 	vec3_t move;
 

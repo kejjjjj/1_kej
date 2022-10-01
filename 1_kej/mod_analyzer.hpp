@@ -22,11 +22,32 @@ namespace cg
 		bool colliding;
 		bool jumped;
 	};
+	struct segmenter_data
+	{
+		bool hasStarted; //true as soon as the menuresponse has been received
+		bool hasLaunched; //readyup is done
+		bool isReady; //can start recording
+
+	};
 	class jAnalyzer 
 	{
 	public:
 		jAnalyzer();
 		~jAnalyzer();
+
+				//std::unique_ptr<analyzer_data> ptr_data;
+		std::vector<jump_data> data;
+		std::set<int> bounceFrames;
+		std::set<int> rpgFrames;
+		std::set<int> jumpFrame;
+		//std::set<int> collisionFrames;
+		uint32_t current_frame; //when recording
+		int32_t preview_frame; //in frame editor
+		int32_t segment_frame;
+		bool is_playback;
+		float average_velocity;
+
+		segmenter_data segmenterData;
 
 		auto GetData();
 
@@ -52,12 +73,17 @@ namespace cg
 		void SetLastRecordingStopTime(DWORD time);
 		bool isPlayback();
 
-		void SaveFrameData(jump_data& jdata);
+		void SaveFrameData(std::vector<jump_data>& storage, jump_data& jdata);
 		jump_data* FetchFrameData(uint32_t frame);
 
 		int32_t FindBounceFrame();
 		int32_t FindRpgShot();
 		int32_t FindHighestPoint();
+
+		void OnStartSegment();
+		void OnEndSegment();
+		bool isSegmenting();
+		int Segmenter_Prepare();
 
 		bool IO_WriteData(const std::string run_name, const std::vector<jump_data>& _data);
 		bool IO_ReadData(const std::string run_name);
@@ -68,18 +94,7 @@ namespace cg
 		bool IO_ReadVector2(std::fstream& fp, vec2_t value);
 		bool IO_ReadVector3(std::fstream& fp, vec3_t value);
 		bool IO_FindExistingRuns(const char* mapname, std::vector<std::string>& runs);
-		//std::unique_ptr<analyzer_data> ptr_data;
-		std::vector<jump_data> data;
-		std::set<int> bounceFrames;
-		std::set<int> rpgFrames;
-		std::set<int> jumpFrame;
-		//std::set<int> collisionFrames;
-		uint32_t current_frame; //when recording
-		int32_t preview_frame; //in frame editor
-		bool is_playback;
-		float average_velocity;
 
-		
 
 	private:
 		bool is_recording; //currently recording a clip
@@ -88,6 +103,7 @@ namespace cg
 		bool in_recording_mode; //true when the recording mode keybind is toggled on 
 		bool is_paused;
 		bool is_afk; //true when player stays still for 2000 snapshots
+		bool is_segmenting; //current recording is a segment
 		DWORD time_since_last_recording;
 	};
 	inline jAnalyzer analyzer;

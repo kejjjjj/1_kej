@@ -29,6 +29,7 @@ namespace cg {
 
 	void Mod_DetermineFPS(pmove_t* pm, pml_t* pml);
 	void Mod_JumpView(pmove_t* pm, pml_t* pml);
+	void Mod_SaveData(jAnalyzer* current, pmove_t* pm, bool& hasBounced, bool& hasJumped, bool& hasShotRpg);
 
 }
 #endif

@@ -79,10 +79,10 @@ void cg::jAnalyzer::OnFrameUpdate()
 
 	current_frame++;
 }
-void jAnalyzer::SaveFrameData(jump_data& jdata)
+void jAnalyzer::SaveFrameData(std::vector<jump_data>& storage, jump_data& jdata)
 {
-	if(data.size() + 1 < data.max_size())
-		data.push_back(jdata);
+	if(storage.size() + 1 < storage.max_size())
+		storage.push_back(jdata);
 	else {
 		Com_PrintError(CON_CHANNEL_ERROR, "exceeded maximum amount of frames!\n");
 		StopRecording();
@@ -185,4 +185,67 @@ void jAnalyzer::PauseRecording()
 void jAnalyzer::ContinueRecording()
 {
 	is_paused = false;
+}
+void jAnalyzer::OnStartSegment()
+{
+	if (!RecordingExists()) {
+		Com_PrintError(CON_CHANNEL_OBITUARY, "No active recording\n");
+		return;
+	}
+	memset(&segmenterData, 0, sizeof(segmenter_data));
+	is_segmenting = true;
+
+}
+void jAnalyzer::OnEndSegment()
+{
+	is_segmenting = false;
+	memset(&segmenterData, 0, sizeof(segmenter_data));
+	
+}
+bool jAnalyzer::isSegmenting()
+{
+	return is_segmenting;
+}
+
+int jAnalyzer::Segmenter_Prepare()
+{
+	static bool needs_reset(false);
+	static DWORD startTime(Sys_MilliSeconds());
+
+	if (segmenterData.hasLaunched || !segmenterData.hasStarted) {
+		startTime = Sys_MilliSeconds();
+		segmenterData.hasLaunched = false;
+	}
+
+	segmenterData.hasStarted = true;
+	if (segmenterData.isReady)
+		return -1;
+
+
+	if (segment_frame >= GetTotalFrames())
+		return -1;
+
+	if (startTime + 2000 < Sys_MilliSeconds()) {
+
+		jump_data* jData = FetchFrameData(segment_frame);
+
+		if (jData) {
+			Com_Printf(CON_CHANNEL_OBITUARY, "^2launch\n");
+			VectorCopy(jData->origin, ps_loc->origin);
+			VectorCopy(jData->velocity, ps_loc->velocity);
+
+			CG_SetPlayerAngles(clients->cgameViewangles, jData->angles);
+
+			segmenterData.hasLaunched = true;
+			segmenterData.isReady = true;
+
+			ps_loc->pm_flags = ps_loc->pm_flags & 0xFFFFFE7F | PMF_JUMPING;
+			ps_loc->jumpOriginZ = jData->origin[2] + 30000;
+			return 0;
+		}
+	}
+
+
+
+	return (startTime + 2000) - Sys_MilliSeconds();
 }

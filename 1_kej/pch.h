@@ -115,8 +115,9 @@ typedef vec_t vec4_t[4];
 #include "cg_init.hpp"
 
 #include "mod_vis.hpp"
-#include "mod_jumps.hpp"
 #include "mod_analyzer.hpp"
+
+#include "mod_jumps.hpp"
 #include "mod_automation.hpp"
 
 #include "cg_angle.hpp"

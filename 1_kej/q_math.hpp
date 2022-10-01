@@ -39,4 +39,6 @@ void PerpendicularVector(vec3_t dst, const vec3_t src);
 void ProjectPointOnPlane(vec3_t dst, const vec3_t p, const vec3_t normal);
 
 bool VectorCompare(const vec3_t v1, const vec3_t v2);
+
+
 #endif

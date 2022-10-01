@@ -105,7 +105,7 @@ float cg::R_getOptAngle(const bool rightmove, float& diff)
 		return -400.0;
 
 	float yaw = clients->cgameViewangles[YAW];
-	float g_speed = (float)cgs->nextSnap->ps.speed;
+	float g_speed = (float)cgs->snap->ps.speed;
 	const float FPS = 1000.f / (cgs->frametime == NULL ? 1 : cgs->frametime);
 
 	const float accel = FPS / g_speed;
@@ -142,24 +142,27 @@ float cg::R_getOptAngle(const bool rightmove, float& diff)
 float cg::getOptAngle(float& _opt)
 {
 
-	//usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
+	usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
 
-	char* forwardmove = &input->move;
-	char* sidemove = &input->strafe;
+	char forwardmove = cmd->forwardmove;
+	char rightmove = cmd->rightmove;
 
+	const bool all_techs = v::mod_strafebot_all.isEnabled();
 
 	float _speed = glm::length(glm::vec2(clients->cgameVelocity[0], clients->cgameVelocity[1]));
 
-	if (_speed < 1 || !v::mod_strafebot_all.isEnabled() && (int)*forwardmove != 127 && (int)*sidemove != 0)
+	if (_speed < 1 || !all_techs && forwardmove != 127 && rightmove != 0 || analyzer.isSegmenting() && !analyzer.segmenterData.isReady)
 		return -400.0;
 
-	if (v::mod_strafebot_all.isEnabled())
-		forwardmove = &input->move;
-	else *forwardmove = 127;
+	
+
+	if (all_techs)
+		forwardmove = cmd->forwardmove;
+	else forwardmove = 127;
 
 
 	float yaw = clients->cgameViewangles[YAW];
-	float g_speed = (float)cgs->nextSnap->ps.speed;
+	float g_speed = (float)clients->snap.ps.speed;
 	const float FPS = (float)Dvar_FindMalleableVar("com_maxfps")->current.integer;
 
 	const float accel = FPS / g_speed;
@@ -167,10 +170,10 @@ float cg::getOptAngle(float& _opt)
 	if (_speed < 190)
 		g_speed = 190.f - (190.f - _speed);
 	else if (GROUND)
-		g_speed = 281.f;
+		g_speed = 224.f;
 
 	const float velocitydirection = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180.f / PI;
-	const float accelerationAng = atan2(-(int)*sidemove, (int)*forwardmove) * 180.f / PI;
+	const float accelerationAng = atan2(-rightmove, forwardmove) * 180.f / PI;
 	float diff = acos((g_speed - accel) / _speed) * 180.f / PI;
 	//const float minAngle = acos(g_speed / _speed) * 180.f / PI;
 
@@ -180,11 +183,11 @@ float cg::getOptAngle(float& _opt)
 	float delta = yaw;
 
 
-	if ((int)*sidemove > 0 || WE || SE) {
+	if (rightmove > 0 || WE && all_techs || SE && all_techs) {
 		delta = (velocitydirection - diff - accelerationAng);
 		_opt = delta - yaw;
 	}
-	else if ((int)*sidemove < 0 || WQ || SQ) {
+	else if (rightmove < 0 || WQ && all_techs || SQ && all_techs) {
 		delta = (velocitydirection + diff - accelerationAng);
 		_opt = delta - yaw;
 	}
@@ -205,7 +208,7 @@ float cg::getOptForAnalyzer(jump_data* data)
 		return -400.0;
 
 	float yaw = data->angles[YAW];
-	float g_speed = (float)cgs->nextSnap->ps.speed;
+	float g_speed = (float)cgs->snap->ps.speed;
 	const float FPS = (float)data->FPS;
 
 	const float accel = FPS / g_speed;
