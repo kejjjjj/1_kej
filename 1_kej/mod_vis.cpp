@@ -1,6 +1,22 @@
 #include "pch.h"
 
+void cg::Mod_DrawEvents()
+{
+	if (analyzer.isRecording() || analyzer.isSegmenting()) {
+		const bool isPaused = analyzer.RecordingPaused();
 
+		char buffer[30];
+
+		const char* const mode = analyzer.isSegmenting() == true ? "Segmenting" : "Recording";
+
+		sprintf_s(buffer, "%s", isPaused == false ? mode : "Paused");
+
+		r::R_DrawText(buffer, 0, 800, 2, 2, 0, isPaused == false ? vec4_t{ 1,1,1,1 } : vec4_t{ 1,0,0,1 }, 0);
+	}
+	if (automation.pendingSlide)
+		r::R_DrawText("Slide", v::mod_velometer.evar->arrayValue[1], v::mod_velometer.evar->arrayValue[2] - 20 * v::mod_velometer.evar->arrayValue[3], v::mod_velometer.evar->arrayValue[3], v::mod_velometer.evar->arrayValue[3], 0, vec4_t{ 0,1,0,1 }, 0);
+
+}
 void cg::Mod_DrawVelocity()
 {
 	if (!v::mod_velometer.isEnabled())
@@ -9,8 +25,8 @@ void cg::Mod_DrawVelocity()
 
 	int32_t velocity;
 
-	if (analyzer.isPreviewing() && analyzer.RecordingExists()) {
-		jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+	if (analyzer.isPreviewing() && (analyzer.RecordingExists() || analyzer.Segmenter_RecordingExists())) {
+		jump_data* jData = analyzer.FetchFrameData(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, analyzer.preview_frame);
 		
 		float x{}, y{};
 
@@ -61,7 +77,7 @@ void cg::Mod_DrawVelocity()
 		sprintf_s(buffer, "%i\n%i %s", velocity, jumpanalyzer.recommendedFPS, GetAsyncKeyState(VK_SPACE) < 0 == true && v::mod_autoFPS_space333.isEnabled() ? "(hold 333)" : "");
 
 	buffer[19] = '\0';
-	r::R_DrawText(buffer, v::mod_velometer.evar->arrayValue[1], v::mod_velometer.evar->arrayValue[2], v::mod_velometer.evar->arrayValue[3], v::mod_velometer.evar->arrayValue[3], 0, (float*)&col, 0);
+	r::R_DrawText(buffer, "fonts/normalfont", v::mod_velometer.evar->arrayValue[1], v::mod_velometer.evar->arrayValue[2], v::mod_velometer.evar->arrayValue[3], v::mod_velometer.evar->arrayValue[3], 0, (float*)&col, 1);
 
 
 }
@@ -186,7 +202,7 @@ void cg::Mod_DrawFPSHelpers()
 	bool isInverted = clients->cgameViewangles[YAW] < fov || clients->cgameViewangles[YAW] > 180.f - fov;
 
 	if (analyzer.isPreviewing()) {
-		const jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+		const jump_data* jData = analyzer.FetchFrameData(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, analyzer.preview_frame);
 
 		if (jData) {
 			aa = atan2(-(int)jData->rightmove, (int)jData->forwardmove) * 57.2957795f;
@@ -395,7 +411,7 @@ void cg::Mod_DrawVelocityDirection()
 	vec3_t orgPos;
 
 	if (analyzer.isPreviewing()) {
-		const jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+		const jump_data* jData = analyzer.FetchFrameData(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, analyzer.preview_frame);
 
 		if (jData) {
 			VectorCopy(jData->origin, orgPos);
@@ -409,7 +425,7 @@ void cg::Mod_DrawVelocityDirection()
 	float velAngle = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180.f / PI;
 
 	if (analyzer.isPreviewing()) {
-		jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+		jump_data* jData = analyzer.FetchFrameData(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, analyzer.preview_frame);
 
 		if (jData) {
 			velAngle = atan2(jData->velocity[1], jData->velocity[0]) * 180.f / PI;
@@ -436,7 +452,7 @@ void cg::Mod_DrawWorldAxes()
 	vec3_t orgPos;
 
 	if (analyzer.isPreviewing()) {
-		const jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+		const jump_data* jData = analyzer.FetchFrameData(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, analyzer.preview_frame);
 
 		if (jData) {
 			VectorCopy(jData->origin, orgPos);
@@ -512,7 +528,7 @@ void cg::Mod_DrawWorldAxes()
 		rightmove = false;
 
 	FPS_CalculateSingleBeatDirection(rightmove, cmd);
-	jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+	jump_data* jData = analyzer.FetchFrameData(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, analyzer.preview_frame);
 	if (analyzer.isPreviewing()) {
 
 		if (jData) {
@@ -551,7 +567,7 @@ void cg::Mod_GetAccelerationAngles(const bool rightmove, vec2_t out)
 {
 	static float delta;
 	const float yaw = clients->cgameViewangles[YAW];
-	jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+	jump_data* jData = analyzer.FetchFrameData(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, analyzer.preview_frame);
 
 	float opt;
 	if (!analyzer.isPreviewing())
@@ -609,7 +625,7 @@ void cg::Mod_DrawAngleHelper()
 	FPS_CalculateSingleBeatDirection(rightmove, cmd);
 
 	if (analyzer.isPreviewing()) {
-		const jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+		const jump_data* jData = analyzer.FetchFrameData(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, analyzer.preview_frame);
 
 		if (jData) {
 			rightmove = jData->rightmove > 0;
@@ -658,7 +674,7 @@ void cg::Mod_DrawCurveSpeed()
 void cg::Mod_DrawJumpPath()
 {
 
-	if (!analyzer.RecordingExists() || !v::mod_jumpv_path.isEnabled())
+	if (!analyzer.RecordingExists() && !analyzer.Segmenter_RecordingExists() || !v::mod_jumpv_path.isEnabled())
 		return;
 
 	const auto OriginsToScreen = [](std::vector<jump_data> data, std::vector<ImVec2>* color) -> std::vector<ImVec2> {
@@ -694,14 +710,14 @@ void cg::Mod_DrawJumpPath()
 	};
 
 	std::vector<ImVec2> color;
-	std::vector<ImVec2> points = OriginsToScreen(analyzer.data, &color);
+	std::vector<ImVec2> points = OriginsToScreen(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, &color);
 	if (points.size() > 1)
 		for (int i = 0; i < points.size() - 1; i++)
 			ImGui::GetBackgroundDrawList()->AddLine(points[i], points[i + 1], IM_COL32(color[i].x, color[i].y, 0, 255), 3.f);
 
 
 	vec2_t xy;
-	jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+	jump_data* jData = analyzer.FetchFrameData(analyzer.isSegmenting() ? analyzer.segData : analyzer.data, analyzer.preview_frame);
 
 	if (jData) {
 		if (r::WorldToScreen(jData->origin, xy)) {
@@ -714,13 +730,13 @@ void cg::Mod_DrawJumpPath()
 }
 void cg::Mod_DrawJumpHitbox()
 {
-	if (!analyzer.RecordingExists() ||  !v::mod_jumpv_hitbox.isEnabled())
+	if (!analyzer.RecordingExists() && !analyzer.Segmenter_RecordingExists() || !v::mod_jumpv_hitbox.isEnabled())
 		return;
 
 	if (!analyzer.InFreeMode() && v::mod_jumpv_forcepos.isEnabled())
 		return;
 
-	jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+	jump_data* jData = analyzer.FetchFrameData(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, analyzer.preview_frame);
 
 	if (jData) {
 
@@ -733,10 +749,10 @@ void cg::Mod_DrawJumpHitbox()
 }
 void cg::Mod_DrawJumpDirection()
 {
-	if (!analyzer.isPreviewing() || !analyzer.RecordingExists())
+	if (!analyzer.isPreviewing() || !analyzer.RecordingExists() && !analyzer.Segmenter_RecordingExists())
 		return;
 
-	jump_data* jData = analyzer.FetchFrameData(analyzer.preview_frame);
+	jump_data* jData = analyzer.FetchFrameData(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, analyzer.preview_frame);
 
 	if (!jData)
 		return;

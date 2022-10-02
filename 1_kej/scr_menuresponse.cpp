@@ -47,7 +47,7 @@ void Script_OnMenuResponse(int serverId, int menu, const char* response)
 
     //printf("menu[" "%s" "], response[" "%s" "]\n", menu_name, response);
 }
-void Script_ParseMenuResponse(char* text)
+void Script_ParseMenuResponse(char* text) //this will always be the same format so hardcoding everything should not cause issues
 {
     std::string unfixed = text;
     int sv_serverId;
@@ -129,6 +129,14 @@ void Script_OnPositionLoaded()
         if (cg::jumpanalyzer.hasBounced)
             Com_Printf(CON_CHANNEL_OBITUARY, "^6bounce velocity: ^2%i\n", cg::jumpanalyzer.bounceVelocity);
 
+
+    }
+    if (analyzer.isSegmenting()) {
+        Com_Printf(CON_CHANNEL_OBITUARY, "segment frames: [%i]\n", analyzer.segData.size());
+
+        //analyzer.segData.erase(analyzer.segData.begin(), analyzer.segData.end());
+        //analyzer.segData.clear();
+        //analyzer.segData.resize(0);
 
     }
     analyzer.StopRecording();

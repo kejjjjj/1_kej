@@ -142,7 +142,7 @@ void cg::Mod_JumpView(pmove_t* pm, pml_t* pml)
 
 	}
 
-	if (!analyzer.isRecording() || !pm || !pml)
+	if (!analyzer.isRecording() && analyzer.isSegmenting() && !analyzer.segmenterData.isReady || !pm || !pml || !analyzer.isRecording() && !analyzer.isSegmenting())
 		return;
 
 
@@ -206,11 +206,13 @@ void cg::Mod_JumpView(pmove_t* pm, pml_t* pml)
 
 	if (pm->cmd.serverTime > old_cmdTime + 3 * difference && !analyzer.RecordingPaused()) {
 		old_cmdTime = pm->cmd.serverTime;
-		Mod_SaveData(&analyzer, pm, hasBounced, hasJumped, hasShotRPG);
-
+		if(!analyzer.isSegmenting())
+			Mod_SaveData(analyzer.data, pm, hasBounced, hasJumped, hasShotRPG);
+		else
+			Mod_SaveData(analyzer.segData, pm, hasBounced, hasJumped, hasShotRPG);
 	}
 }
-void cg::Mod_SaveData(jAnalyzer* current, pmove_t* pm, bool& hasBounced, bool& hasJumped, bool& hasShotRPG)
+void cg::Mod_SaveData(std::vector<jump_data>& storage, pmove_t* pm, bool& hasBounced, bool& hasJumped, bool& hasShotRPG)
 {
 	jump_data jData;
 
@@ -226,16 +228,23 @@ void cg::Mod_SaveData(jAnalyzer* current, pmove_t* pm, bool& hasBounced, bool& h
 	jData.colliding = jumpanalyzer.velocity_clipped;
 	jData.jumped = hasJumped;
 
-	if (hasShotRPG) { current->rpgFrames.insert(current->current_frame);			hasShotRPG = false; }
-	if (hasBounced) { current->bounceFrames.insert(current->current_frame);			hasBounced = false; }
-	if (hasJumped) { current->jumpFrame.insert(current->current_frame);				hasJumped = false; }
+	std::set<int> &rpg = analyzer.isSegmenting() ? analyzer.s_rpgFrames : analyzer.rpgFrames;
+	std::set<int> &jump = analyzer.isSegmenting() ? analyzer.s_jumpFrame : analyzer.jumpFrame;
+	std::set<int> &bounce = analyzer.isSegmenting() ? analyzer.s_bounceFrames : analyzer.bounceFrames;
+
+
+	if (hasShotRPG) { rpg.insert(analyzer.current_frame);			hasShotRPG = false; }
+	if (hasBounced) { 
+		bounce.insert(analyzer.current_frame);			hasBounced = false; }
+	if (hasJumped) {  
+		jump.insert(analyzer.current_frame);				hasJumped = false;  }
 
 	//if (hasCollided) {	current->collisionFrames.insert(current->current_frame);	hasCollided = false; }
 
 	jData.FPS = (int)(1000.f / (cls->frametime == NULL ? 1 : cls->frametime));
 
-	current->SaveFrameData(analyzer.data, jData);
-	current->OnFrameUpdate();
+	analyzer.SaveFrameData(storage, jData);
+	analyzer.OnFrameUpdate();
 }
 void cg::PM_ModCode(pml_t* pml, pmove_t* pm)
 {
@@ -327,14 +336,16 @@ void cg::Mod_DetermineFPS(pmove_t* pm, pml_t* pml)
 	fps_zones.fps250 = round((float)ps->speed / 4) + 10;
 	fps_zones.fps333 = round((float)ps->speed / 3) + 10;
 
+	const float diff = ((float)ps->speed / 190.f);
+
 	fps_zones.length125 = (90.f - fps_zones.fps125) - fps_zones.fps125; //this way around because 125 starts from < 45
-	fps_zones.length200 = fps_zones.fps200 - (90.f - fps_zones.fps200) + 3; //3 will fill the empty space with 200fps
+	fps_zones.length200 = fps_zones.fps200 - (90.f - fps_zones.fps200) + 3.f * diff; //will fill the empty space with 200fps
 	fps_zones.length250 = fps_zones.fps250 - (90.f - fps_zones.fps250);
 	fps_zones.length333 = fps_zones.fps333 - (90.f - fps_zones.fps333);
 
 	fps_zones.fps125 -= fps_zones.length125;
-	fps_zones.fps250 += fps_zones.length250 - (11.f * ((float)ps->speed / 190.f));
-	fps_zones.fps200 = fps_zones.fps250 + 20 * ((float)ps->speed / 190.f);
+	fps_zones.fps250 += fps_zones.length250 - (11.f * diff);
+	fps_zones.fps200 = fps_zones.fps250 + 20.f * diff;
 	fps_zones.fps333 -= fps_zones.length333;
 
 	return;

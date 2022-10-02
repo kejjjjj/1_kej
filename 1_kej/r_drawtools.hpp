@@ -15,10 +15,19 @@ namespace r
 	void CG_AdjustFrom640(float& x, float& y, float& w, float& h);
 
 	char* __cdecl R_AddCmdDrawText(const char* text, int maxChars, Font_s* font, float x, float y, float xScale, float yScale, float rotation, float* color, int style);
+
 	void R_AddCmdDrawStretchPic(Material* material, float x, float y, float w, float h, float s0, float t0, float s1, float t1, const float* color);
 	void R_DrawRect(const char* material, float x, float y, float w, float h, const float* color);
 	void R_DrawText(const char* text, const char* font, float x, float y, float xScale, float yScale, float rotation, float* color, int style);
 	void R_DrawText(const char* text, float x, float y, float xScale, float yScale, float rotation, float* color, int style);
+
+	void R_AddCmdDrawTextWithEffects(char* text, int maxChars, Font_s* font, float x, float y, float xScale, float yScale, float rotation, 
+		const float* color, int style, const float* glowColor, Material* fxMaterial, Material* fxMaterialGlow, 
+		int fxBirthTime, int fxLetterTime, int fxDecayStartTime, int fxDecayDuration); //holy this takes a lot of args
+
+	void R_AddCmdDrawTextWithEffects(char* text, const char* font, float x, float y, float xScale, float yScale, float rotation,
+		const float* color, int style, const float* glowColor, Material* fxMaterial, Material* fxMaterialGlow,
+		int fxBirthTime, int fxLetterTime, int fxDecayStartTime, int fxDecayDuration);
 
 	std::string R_UserCmdKeysPressed(char forwardmove, char sidemove);
 

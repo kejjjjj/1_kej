@@ -56,12 +56,25 @@ void jAnalyzer::ClearData()
 	jumpFrame.erase(jumpFrame.begin(), jumpFrame.end());
 	jumpFrame.clear();
 
+	s_bounceFrames.erase(s_bounceFrames.begin(), s_bounceFrames.end());
+	s_bounceFrames.clear();
+
+	s_rpgFrames.erase(s_rpgFrames.begin(), s_rpgFrames.end());
+	s_rpgFrames.clear();
+
+	s_jumpFrame.erase(s_jumpFrame.begin(), s_jumpFrame.end());
+	s_jumpFrame.clear();
+
 	//collisionFrames.erase(bounceFrames.begin(), bounceFrames.end());
 	//collisionFrames.clear();
 
 	data.erase(data.begin(), data.end());
 	data.clear();
 	data.resize(0);
+
+	segData.erase(segData.begin(), segData.end());
+	segData.clear();
+	segData.resize(0);
 
 	SetLastRecordingStopTime(0);
 	average_velocity = 0;
@@ -96,6 +109,13 @@ jump_data* jAnalyzer::FetchFrameData(uint32_t frame)
 	//std::cout << data.size() << " > " << frame << '\n';
 	return nullptr;
 }
+jump_data* jAnalyzer::FetchFrameData(std::vector<jump_data>& storage, uint32_t frame)
+{
+	if (storage.size() > frame)
+		return &storage[frame];
+
+	return nullptr;
+}
 bool jAnalyzer::RecordingExists()
 {
 	return data.size() > 0;
@@ -103,6 +123,10 @@ bool jAnalyzer::RecordingExists()
 int32_t jAnalyzer::GetTotalFrames()
 {
 	return data.size() - 1;
+}
+int32_t jAnalyzer::GetTotalFrames(std::vector<jump_data>& storage)
+{
+	return storage.size() - 1;
 }
 int32_t jAnalyzer::FindBounceFrame()
 {
@@ -129,6 +153,20 @@ int32_t jAnalyzer::FindHighestPoint()
 
 		if (data[i].origin[2] > highestHeight) {
 			highestHeight = data[i].origin[2];
+			highestFrame = i;
+		}
+	}
+	return highestFrame;
+}
+int32_t jAnalyzer::FindHighestPoint(std::vector<jump_data>& storage)
+{
+	int32_t highestFrame(0);
+	//float highestHeight = std::numeric_limits<float>().min();
+	float highestHeight = -FLT_MAX;
+	for (size_t i = 0; i < storage.size(); i++) {
+
+		if (storage[i].origin[2] > highestHeight) {
+			highestHeight = storage[i].origin[2];
 			highestFrame = i;
 		}
 	}
@@ -192,14 +230,46 @@ void jAnalyzer::OnStartSegment()
 		Com_PrintError(CON_CHANNEL_OBITUARY, "No active recording\n");
 		return;
 	}
+
+	//if (Segmenter_RecordingExists()) {
+
+	//	std::set<int>::iterator 
+
+	//	a = rpgFrames.begin();
+	//	for (size_t i = 0; i < segmenterData.oldRPGcount; i++) ++a;  rpgFrames.erase(a, rpgFrames.end());
+
+
+	//	a = jumpFrame.begin();
+	//	for (size_t i = 0; i < segmenterData.oldJumpcount; i++) ++a; jumpFrame.erase(a, jumpFrame.end());
+
+	//	a = bounceFrames.begin();
+	//	for (size_t i = 0; i < segmenterData.oldBouncecount; i++) ++a; bounceFrames.erase(a, bounceFrames.end());
+
+	//}
+
+	////store old information as a backup
+	//segmenterData.oldBouncecount = bounceFrames.size();
+	//segmenterData.oldRPGcount = rpgFrames.size();
+	//segmenterData.oldJumpcount = jumpFrame.size();
+
+
+	analyzer.segData.erase(analyzer.segData.begin(), analyzer.segData.end());
+	analyzer.segData.clear();
+	analyzer.segData.resize(0);
+
+
+
+
 	memset(&segmenterData, 0, sizeof(segmenter_data));
 	is_segmenting = true;
+	segmenterData.mergeFrame = analyzer.segment_frame;
 
 }
 void jAnalyzer::OnEndSegment()
 {
 	is_segmenting = false;
 	memset(&segmenterData, 0, sizeof(segmenter_data));
+
 	
 }
 bool jAnalyzer::isSegmenting()
@@ -236,11 +306,17 @@ int jAnalyzer::Segmenter_Prepare()
 
 			CG_SetPlayerAngles(clients->cgameViewangles, jData->angles);
 
+			ps_loc->pm_flags = ps_loc->pm_flags & 0xFFFFFE7F | PMF_JUMPING; //reset bouncing flags
+			ps_loc->jumpOriginZ = jData->origin[2];
+
+			current_frame = NULL;
+
 			segmenterData.hasLaunched = true;
 			segmenterData.isReady = true;
 
-			ps_loc->pm_flags = ps_loc->pm_flags & 0xFFFFFE7F | PMF_JUMPING;
-			ps_loc->jumpOriginZ = jData->origin[2] + 30000;
+
+
+
 			return 0;
 		}
 	}
@@ -248,4 +324,8 @@ int jAnalyzer::Segmenter_Prepare()
 
 
 	return (startTime + 2000) - Sys_MilliSeconds();
+}
+bool jAnalyzer::Segmenter_RecordingExists()
+{
+	return segData.size() > 0;
 }

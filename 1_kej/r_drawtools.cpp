@@ -81,6 +81,27 @@ char* __cdecl r::R_AddCmdDrawText(const char* text, int maxChars, Font_s* font, 
 		add		esp, 24h;
 	}
 }
+void r::R_AddCmdDrawTextWithEffects(char* text, int maxChars, Font_s* font, float x, float y, float xScale, float yScale, float rotation,
+	const float* color, int style, const float* glowColor, Material* fxMaterial, Material* fxMaterialGlow,
+	int fxBirthTime, int fxLetterTime, int fxDecayStartTime, int fxDecayDuration)
+{
+	const static uint32_t R_AddCmdDrawTextWithEffects_f = 0x5F6D30;
+
+	return ((void(__cdecl*)(char* text, int maxChars, Font_s * font, float x, float y, float xScale, float yScale, float rotation,
+		const float* color, int style, const float* glowColor, Material * fxMaterial, Material * fxMaterialGlow,
+		int fxBirthTime, int fxLetterTime, int fxDecayStartTime, int fxDecayDuration))0x5F6D30)(text, maxChars, font, x,  y,  xScale,  yScale,  rotation,
+			color,  style, glowColor,  fxMaterial, fxMaterialGlow,
+			 fxBirthTime,  fxLetterTime,  fxDecayStartTime,  fxDecayDuration);
+}
+void r::R_AddCmdDrawTextWithEffects(char* text, const char* font, float x, float y, float xScale, float yScale, float rotation,
+	const float* color, int style, const float* glowColor, Material* fxMaterial, Material* fxMaterialGlow,
+	int fxBirthTime, int fxLetterTime, int fxDecayStartTime, int fxDecayDuration)
+{
+	Font_s* _font = R_RegisterFont(font);
+
+	R_AddCmdDrawTextWithEffects(text, 0x7FFFFFFF, _font, x, y, xScale, yScale, rotation, color, style, glowColor, fxMaterial, fxMaterialGlow, fxBirthTime, fxLetterTime, fxDecayStartTime, fxDecayDuration);
+
+}
 void r::R_DrawText(const char* text, const char* font, float x, float y, float xScale, float yScale, float rotation, float* color, int style)
 {
 

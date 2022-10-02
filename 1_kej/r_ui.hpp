@@ -18,7 +18,7 @@ namespace r
 
 
 	void R_JumpView(bool& isOpen);
-	void R_JumpView_Main();
+	void R_JumpView_Main(std::vector<jump_data>& container);
 	void R_JumpView_KeyEvents();
 	void R_JumpView_Preferences();
 	void R_JumpView_BounceButtons(int& menu_frame);

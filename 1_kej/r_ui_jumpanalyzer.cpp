@@ -38,7 +38,7 @@ void r::R_JumpView_ToggleFreeMode()
 
 	}
 }
-void r::R_JumpView_Main()
+void r::R_JumpView_Main(std::vector<jump_data>& container)
 {
 	//this function might need some cleanup
 
@@ -56,7 +56,7 @@ void r::R_JumpView_Main()
 	ImGui::NewLine();
 
 	ImGui::PushItemWidth(100);
-	ImGui::SliderInt("Frame", &menu_frame, 0, analyzer.GetTotalFrames(), "%u", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
+	ImGui::SliderInt("Frame", &menu_frame, 0, analyzer.GetTotalFrames(container), "%u", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 
 	//ImGui::SameLine();
 	if (ImGui::Button("R") || io.KeysDownDuration['R'] == 0.f && VID_ACTIVE) {
@@ -84,14 +84,14 @@ void r::R_JumpView_Main()
 		//	oldServerTime = jumpanalyzer.serverTime;
 
 		dvar_s* com_maxfps = Dvar_FindMalleableVar("com_maxfps");
-		const jump_data* jData = analyzer.FetchFrameData(menu_frame);
+		const jump_data* jData = analyzer.FetchFrameData(container, menu_frame);
 		
 
 		if (wait_incr > timeScale - 1 && jData && com_maxfps&& g_gravity) {
 			com_maxfps->current.integer = 125.f;
 			g_gravity->current.value = 0;
 			wait_incr = 0;
-			if (menu_frame < analyzer.GetTotalFrames())
+			if (menu_frame < analyzer.GetTotalFrames(container))
 				menu_frame++;
 			else isPlayback = false;
 		}
@@ -99,19 +99,20 @@ void r::R_JumpView_Main()
 
 	}
 
-	ImGui::SameLine();
-	ImGui::Button("+");
-	if (ImGui::IsItemActive()) {
-		if (menu_frame + 1 <= analyzer.GetTotalFrames() && ms + 200 < Sys_MilliSeconds()) {
-			menu_frame++;
-			ms = Sys_MilliSeconds();
-		}
-	}
+
 	ImGui::SameLine();
 	ImGui::Button("-");
 	if (ImGui::IsItemActive()) {
 		if (menu_frame - 1 > 0 && ms + 200 < Sys_MilliSeconds()) {
 			menu_frame--;
+			ms = Sys_MilliSeconds();
+		}
+	}
+	ImGui::SameLine();
+	ImGui::Button("+");
+	if (ImGui::IsItemActive()) {
+		if (menu_frame + 1 <= analyzer.GetTotalFrames(container) && ms + 200 < Sys_MilliSeconds()) {
+			menu_frame++;
 			ms = Sys_MilliSeconds();
 		}
 	}
@@ -122,28 +123,28 @@ void r::R_JumpView_Main()
 
 	if (VID_ACTIVE) {
 		if (menu_frame + 1 <= analyzer.GetTotalFrames())
-			menu_frame += ((io.KeysDownDuration[VK_RIGHT] == 0.f) == true);
+			menu_frame += ((GetAsyncKeyState(VK_RIGHT) & 1) == true);
 		if (menu_frame - 1 > 0)
-			menu_frame -= ((io.KeysDownDuration[VK_LEFT] == 0.f) == true);
+			menu_frame -= ((GetAsyncKeyState(VK_LEFT) & 1) == true);
 	}
 
 	ImGui::Text("Jump Data");
 	ImGui::Separator();
 
-	jump_data* jData = analyzer.FetchFrameData(menu_frame);
+	jump_data* jData = analyzer.FetchFrameData(container, menu_frame);
 
 
 	//rpg prediction
-	int maxAllowedPrediction = analyzer.GetTotalFrames() - menu_frame;
+	const int maxAllowedPrediction = analyzer.GetTotalFrames(container) - menu_frame;
 	int futureFrame = maxAllowedPrediction;
 	static int rpg_frames_min, rpg_frames_max;
 	if (futureFrame >= 200)
 		futureFrame = 200;
 
-	jump_data* jPredictedData = analyzer.FetchFrameData(menu_frame + futureFrame);
+	jump_data* jPredictedData = analyzer.FetchFrameData(container, menu_frame + futureFrame);
 
 	bool RPGprePrediction = false;
-	const std::set<int>::iterator it_rpg = analyzer.rpgFrames.begin();
+	const std::set<int>::iterator it_rpg = analyzer.Segmenter_RecordingExists() ? analyzer.s_rpgFrames.begin() : analyzer.rpgFrames.begin();
 
 	if (analyzer.rpgFrames.size() > 0)
 		if (*it_rpg < 200)
@@ -182,7 +183,7 @@ void r::R_JumpView_Main()
 		ImGui::Text("jumped: %i", jData->jumped);
 		const vec3_t empty = { 0,0,0 };
 
-		if (!analyzer.InFreeMode() && v::mod_jumpv_forcepos.isEnabled() || GetAsyncKeyState('C') & 1) {
+		if (!analyzer.InFreeMode() && v::mod_jumpv_forcepos.isEnabled() || GetAsyncKeyState('C') & 1 && VID_ACTIVE) {
 			CG_SetPlayerAngles(clients->cgameViewangles, jData->angles);
 			VectorCopy(jData->origin, ps_loc->origin);
 			ps_loc->origin[2] -= (70.f - jData->maxs[2]);
@@ -200,7 +201,7 @@ void r::R_JumpView_Main()
 		R_JumpView_BounceButtons(menu_frame);
 
 		if (ImGui::Button("highest point"))
-			menu_frame = analyzer.FindHighestPoint();
+			menu_frame = analyzer.FindHighestPoint(container);
 
 		if (ImGui::Button("Mark segment"))
 			analyzer.segment_frame = menu_frame;
@@ -258,40 +259,48 @@ void r::R_JumpView_HandleWeapons(int& menu_frame, int min_frame, int max_frame)
 void r::R_JumpView_BounceButtons(int& menu_frame)
 {
 
-	static std::set<int>::iterator it = analyzer.bounceFrames.begin(), it_rpg = analyzer.rpgFrames.begin(), it_jump = analyzer.jumpFrame.begin();
+	static std::set<int>::iterator 
+		it		= analyzer.Segmenter_RecordingExists() ? analyzer.s_bounceFrames.begin()	: analyzer.bounceFrames.begin(),
+		it_rpg	= analyzer.Segmenter_RecordingExists() ? analyzer.s_rpgFrames.begin()		: analyzer.rpgFrames.begin(),
+		it_jump = analyzer.Segmenter_RecordingExists() ? analyzer.s_jumpFrame.begin()		: analyzer.jumpFrame.begin();
+
 	static DWORD end_recording_time = analyzer.LastRecordingStoppedTime();
 
+	std::set<int>& rpg = analyzer.isSegmenting() ? analyzer.s_rpgFrames : analyzer.rpgFrames;
+	std::set<int>& jump = analyzer.isSegmenting() ? analyzer.s_jumpFrame : analyzer.jumpFrame;
+	std::set<int>& bounce = analyzer.isSegmenting() ? analyzer.s_bounceFrames : analyzer.bounceFrames;
+
 	if (analyzer.LastRecordingStoppedTime() != end_recording_time) { // a way to track if this is a new run
-		it = analyzer.bounceFrames.begin();
+		it = bounce.begin();
 		end_recording_time = analyzer.LastRecordingStoppedTime();
 	}
 
-	if (analyzer.bounceFrames.size() > 0) {
+	if (bounce.size() > 0) {
 		ImGui::Text("bounce");
 
 
 		ImGui::SameLine();
-		if (!R_JumpView_EventButtons(analyzer.bounceFrames, menu_frame, "<##01", ">##01")) {
+		if (!R_JumpView_EventButtons(bounce, menu_frame, "<##01", ">##01")) {
 			//if (ImGui::Button("Go##00")) {
 			//	menu_frame = *it;
 			//}
 		}
 	}
-	if (analyzer.rpgFrames.size() > 0) {
+	if (rpg.size() > 0) {
 		ImGui::Text("rpg   ");
 
 		ImGui::SameLine();
-		if (!R_JumpView_EventButtons(analyzer.rpgFrames, menu_frame, "<##02", ">##02")) {
+		if (!R_JumpView_EventButtons(rpg, menu_frame, "<##02", ">##02")) {
 			//if (ImGui::Button("Go##01")) {
 			//	menu_frame = *it_rpg;
 			//}
 		}
 	}
-	if (analyzer.jumpFrame.size() > 0) {
+	if (jump.size() > 0) {
 		ImGui::Text("jump  ");
 
 		ImGui::SameLine();
-		if (!R_JumpView_EventButtons(analyzer.jumpFrame, menu_frame, "<##03", ">##03")) {
+		if (!R_JumpView_EventButtons(jump, menu_frame, "<##03", ">##03")) {
 			//if (ImGui::Button("Go##02")) {
 			//	menu_frame = *it_jump;
 			//}
@@ -488,7 +497,11 @@ void r::R_JumpView(bool& isOpen)
 		if (ImGui::BeginTabBar("##jumpview_tabs", ImGuiTabBarFlags_None)) {
 			if (ImGui::BeginTabItem("Main view")) {
 
-				R_JumpView_Main();
+				if (!analyzer.Segmenter_RecordingExists())
+					R_JumpView_Main(analyzer.data);
+				else
+					R_JumpView_Main(analyzer.segData);
+
 				ImGui::EndTabItem();
 
 			}if (ImGui::BeginTabItem("Preferences")) {
