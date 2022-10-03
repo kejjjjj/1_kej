@@ -246,3 +246,49 @@ void fs::F_SyntaxError(const char* msg, ...)
 
 
 }
+
+std::vector<std::pair<std::string, LPDIRECT3DTEXTURE9>>
+fs::FS_CreatePairsForTextures()
+{
+
+	std::vector<std::pair<std::string, LPDIRECT3DTEXTURE9>> pair;
+
+	std::string ImagePath = std::string(GetExePath() + "\\1_kej\\images");
+
+	if (!F_DirectoryExists(ImagePath)) {
+		if (!F_CreateDirectory(ImagePath)) {
+			Log_Write(LOG_ERROR, "Failed to create directory [%s]\n", ImagePath.c_str());
+			return pair;
+		}
+	}
+
+	std::vector<std::string> files;
+
+	F_FilesInThisDirectory(ImagePath, &files);
+
+	if (files.size() < 1)
+		return pair;
+
+	uint16_t index{ 0 };
+	std::string name, ext;
+
+	for (const auto& i : files) {
+
+		name = F_GetFileName(i);
+		ext = GetFileExtension(name);
+		name = removeFileExtension(name, ext.size());
+
+		name += ".png";
+
+		pair.push_back(std::make_pair(name, r::tabs[index]));
+
+
+		index++;
+
+	}
+
+	return pair;
+
+
+
+}

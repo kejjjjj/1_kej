@@ -41,7 +41,25 @@ bool r::R_ImGui(IDirect3DDevice9* pDevice)
 		fs::Log_Write(LOG_FATAL, "ImGui_ImplDX9_Init() return false.. possibly null directx device\n");
 		return false;
 	}
-	
+
+	r::imagePairs.erase(r::imagePairs.begin(), r::imagePairs.end());
+	r::imagePairs.clear();
+	r::imagePairs.resize(0);
+
+	r::imagePairs = fs::FS_CreatePairsForTextures();
+
+	if (r::imagePairs.size() < 1) {
+		fs::Log_Write(LOG_FATAL, "Failed to create image pairs\n");
+		return false;
+	}
+
+	if (!r::CreateTextures(r::imagePairs)) {
+		fs::Log_Write(LOG_FATAL, "Failed to create D3DX textures from images\n");
+		return false;
+	}
+
+	R_MenuStyle();
+
 	return true;
 }
 LRESULT CALLBACK r::WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -123,4 +141,72 @@ char r::R_RecoverLostDevice()
 	//}
 
 	return R_RecoverLostDevice_f();
+}
+
+bool r::CreateTextures(std::vector<std::pair<std::string, LPDIRECT3DTEXTURE9>>& pair)
+{
+	WCHAR _imagepath[MAX_PATH];
+
+
+	if (pair.size() < 1) {
+		fs::Log_Write(LOG_ERROR, "no textures can be loaded due to no pairs");
+
+		std::cout << "no textures can be loaded due to no pairs\n";
+		return false;
+	}
+
+	for (size_t i = 0; i < pair.size(); i++) {
+		std::string curImage = fs::GetExePath() + "\\1_kej\\images\\" + pair[i].first;
+
+		char imagepath[MAX_PATH]{};
+
+		memcpy(imagepath, curImage.c_str(), curImage.size());
+
+		MultiByteToWideChar(0, 0, imagepath, IM_ARRAYSIZE(imagepath), _imagepath, IM_ARRAYSIZE(imagepath));
+		HRESULT result = D3DXCreateTextureFromFileW(cg::dx->device, _imagepath, &pair[i].second);
+
+		if (result != S_OK) {
+			std::wcout << _imagepath;
+			std::cout << " failed with ";
+			return ReturnErrorCode(result);
+		}
+
+		else {
+			printf("[%s]: S_OK\n", curImage.c_str());
+			fs::Log_Write(LOG_NONE, "[%s]: S_OK", curImage.c_str());
+		}
+	}
+	return true;
+}
+
+bool r::ReturnErrorCode(HRESULT result)
+{
+	switch (result) {
+	case D3DERR_NOTAVAILABLE:
+		fs::Log_Write(LOG_ERROR, "CreateTextures(): failed with D3DERR_NOTAVAILABLE");
+		std::cout << "D3DERR_NOTAVAILABLE\n";
+		return true;
+		break;
+	case D3DERR_OUTOFVIDEOMEMORY:
+		fs::Log_Write(LOG_ERROR, "CreateTextures(): failed with D3DERR_OUTOFVIDEOMEMORY");
+		std::cout << "D3DERR_OUTOFVIDEOMEMORY\n";
+		break;
+	case D3DERR_INVALIDCALL:
+		fs::Log_Write(LOG_ERROR, "CreateTextures(): failed with D3DERR_INVALIDCALL");
+		std::cout << "D3DERR_INVALIDCALL\n";
+		break;
+	case D3DXERR_INVALIDDATA:
+		fs::Log_Write(LOG_ERROR, "CreateTextures(): failed with D3DXERR_INVALIDDATA");
+		std::cout << "D3DXERR_INVALIDDATA\n";
+		break;
+	case E_OUTOFMEMORY:
+		fs::Log_Write(LOG_ERROR, "CreateTextures(): failed with E_OUTOFMEMORY");
+		std::cout << "E_OUTOFMEMORY\n";
+		break;
+	default:
+		fs::Log_Write(LOG_ERROR, "CreateTextures(): failed with no common return value?");
+		std::cout << "no common return value?\n";
+		break;
+	}
+	return false;
 }

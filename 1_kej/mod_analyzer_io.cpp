@@ -7,8 +7,8 @@ bool jAnalyzer::IO_WriteData(const std::string run_name, const std::vector<jump_
 
 	const std::string game_path = fs::GetExePath();
 
-	if (!fs::F_DirectoryExists(game_path + "\\1_kej")) {
-		if (!fs::F_CreateDirectory(game_path + "\\1_kej")) {
+	if (!fs::F_DirectoryExists(game_path + "\\1_kej\\recorder")) {
+		if (!fs::F_CreateDirectory(game_path + "\\1_kej\\recorder")) {
 			Com_PrintError(CON_CHANNEL_CONSOLEONLY, "IO_WriteData failed with: %s", fs::_GetLastError().c_str());
 			return false;
 		}
@@ -19,7 +19,7 @@ bool jAnalyzer::IO_WriteData(const std::string run_name, const std::vector<jump_
 		return false;
 	}
 
-	const std::string full_path = fs::GetExePath() + "\\1_kej\\" + run_name + ".kej";
+	const std::string full_path = fs::GetExePath() + "\\1_kej\\recorder\\" + run_name + ".kej";
 
 
 
@@ -92,7 +92,7 @@ bool jAnalyzer::IO_ReadData(const std::string run_name)
 {
 	fs::F_Reset(); //reset all the read stuff
 
-	const std::string game_path = fs::GetExePath() + "\\1_kej";
+	const std::string game_path = fs::GetExePath() + "\\1_kej\\recorder";
 	const std::string full_path = game_path + "\\" + run_name + ".kej";
 
 	if (!fs::F_FileExists(game_path, run_name + ".kej")) {
@@ -291,7 +291,7 @@ bool jAnalyzer::IO_ReadVector3(std::fstream& fp, vec3_t value)
 
 bool jAnalyzer::IO_ReadMapName(std::fstream& fp, const char* run_name, std::string& buffer)
 {
-	const std::string game_path = fs::GetExePath() + "\\1_kej";
+	const std::string game_path = fs::GetExePath() + "\\1_kej\\recorder";
 
 	if (!fs::F_FileExists(game_path, std::string(run_name) + ".kej")) {
 		Com_PrintError(CON_CHANNEL_CONSOLEONLY, "IO_ReadMapName failed with: non existent file\n");
@@ -316,7 +316,7 @@ bool jAnalyzer::IO_ReadMapName(std::fstream& fp, const char* run_name, std::stri
 }
 bool jAnalyzer::IO_FindExistingRuns(const char* mapname, std::vector<std::string>& runs)
 {
-	const std::string game_path = fs::GetExePath() + "\\1_kej";
+	const std::string game_path = fs::GetExePath() + "\\1_kej\\recorder";
 	std::vector<std::string> dir;
 	fs::F_FilesInThisDirectory(game_path, &dir);
 	std::fstream f;

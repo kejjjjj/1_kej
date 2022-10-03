@@ -53,6 +53,7 @@ struct evar_o
 	int GetInt();
 	float GetFloat();
 	float GetVector(uint32_t prm);
+	float GetArray(uint32_t prm);
 	const char* GetString();
 	bool isEnabled();
 

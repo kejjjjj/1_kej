@@ -339,13 +339,63 @@ void r::R_OtherTab()
 }
 void r::R_Features(bool& wantsEditor)
 {
+	static ImVec2 childSize = ImVec2(250, ImGui::GetWindowSize().y - 30);
+
+	ImGui::BeginGroup();
+	ImGui::BeginChild("child##034", childSize, true, ImGuiWindowFlags_NoScrollbar);
+
+	
+	for (size_t i = 0; i < r::imagePairs.size(); i++) {
+		ImGui::BeginGroup();
+		ImGui::Image((ImTextureID)r::imagePairs[i].second, ImVec2(64, 64));
+		ImGui::SameLine();
+		ImGui::BeginGroup();
+		ImGui::Text("\n");
+		ImGui::Text(fs::removeFileExtension(r::imagePairs[i].first.c_str(), 4).c_str());
+		ImGui::EndGroup();
+		ImGui::Separator();
+		ImGui::EndGroup();		
+
+		if (ImGui::IsItemHovered()) {
+			ImVec2 rect = ImGui::GetItemRectSize();
+			ImGui::GetForegroundDrawList()->AddRectFilled(ImGui::GetItemRectMin(), ImVec2(ImGui::GetItemRectMin().x + childSize.x, ImGui::GetItemRectMax().y), IM_COL32(255, 255, 255, 170));
+		}
+
+		if (ImGui::IsItemClicked()) {
+			Com_Printf(CON_CHANNEL_OBITUARY, "item clicked ^2'%s'\n", imagePairs[i].first.c_str());
+		}
+
+	}
+	
+	ImGui::EndGroup();
+	
+	
+
+	static ImVec2 rect = ImGui::GetItemRectSize();
+	ImGui::EndChild();
+	
+
+	ImGui::NewLine();
+
+
+	childSize.x = rect.x;
+	childSize.y = rect.y + 10;
+
+
+	//ImGui::SetWindowSize(ImVec2(600, childSize.y));
+
 
 
 	static bool jumping_tab;
-	if (ImGui::BeginTabBar("##tabs", ImGuiTabBarFlags_None)) {
+	/*if (ImGui::BeginTabBar("##tabs", ImGuiTabBarFlags_None)) {
 		if (ImGui::BeginTabItem("Visual")) {
 			jumping_tab = false;
 			Visual_Features();
+			ImGui::EndTabItem();
+
+		}if (ImGui::BeginTabItem("Demo##06")) {
+			jumping_tab = false;
+			ImGui::ShowDemoWindow();
 			ImGui::EndTabItem();
 
 		}if (ImGui::BeginTabItem("RPG")) {
@@ -391,7 +441,7 @@ void r::R_Features(bool& wantsEditor)
 
 
 	}
-	ImGui::EndTabBar();
+	ImGui::EndTabBar();*/
 	
 
 }

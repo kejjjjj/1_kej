@@ -333,3 +333,7 @@ bool evar_o::isEnabled()
 {
 	return this->evar->enabled;
 }
+float evar_o::GetArray(uint32_t prm)
+{
+	return this->evar->arrayValue[prm];
+}

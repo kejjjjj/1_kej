@@ -203,9 +203,14 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 		if (ImGui::Button("highest point"))
 			menu_frame = analyzer.FindHighestPoint(container);
 
-		if (ImGui::Button("Mark segment"))
-			analyzer.segment_frame = menu_frame;
+		ImGui::NewLine();
+		ImGui::Text("Segmenting");
+		ImGui::Separator();
 
+		if (ImGui::Button("Mark segment")) {
+			Com_Printf(CON_CHANNEL_OBITUARY, "^2Segment has been marked!\n");
+			analyzer.segment_frame = menu_frame;
+		}
 		ImGui::EndGroup();
 		R_JumpView_IO();
 

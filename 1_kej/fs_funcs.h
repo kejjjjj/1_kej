@@ -53,6 +53,11 @@ namespace fs
 	void F_SyntaxError(const char* message, ...);
 	std::string _GetLastError();
 	inline file_s file;
+
+
+	std::vector<std::pair<std::string, LPDIRECT3DTEXTURE9>>
+		FS_CreatePairsForTextures();
+
 }
 
 #endif
