@@ -269,6 +269,8 @@ void Evar_Setup()
 
 
 	v::mod_velometer.Register		("1_kej_velometer",					evartype_t::EVAR_ARRAY,		mod_velometer, 4,		true); //enabled, x, y, scale
+	v::mod_velometer_glow.Register	("1_kej_velometer_glow",			evartype_t::EVAR_VEC4,		vec4_t{1,0,0,1},		true);
+
 	v::mod_rpg_mode.Register		("1_kej_rpg_mode",					evartype_t::EVAR_STRING,	"default",				true);
 
 	v::mod_coordinates.Register		("1_kej_coordinates",				evartype_t::EVAR_ARRAY,		mod_coordinates, 4,		true); //enabled, x, y, scale
@@ -332,4 +334,8 @@ const char* evar_o::GetString()
 bool evar_o::isEnabled()
 {
 	return this->evar->enabled;
+}
+float evar_o::GetArray(uint32_t prm)
+{
+	return this->evar->arrayValue[prm];
 }

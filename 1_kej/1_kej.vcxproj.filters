@@ -76,6 +76,9 @@
     <Filter Include="Source Files\CMod">
       <UniqueIdentifier>{c34691e5-8d60-491d-8fd9-19bbc254c500}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\lib\ImGradient">
+      <UniqueIdentifier>{eab82273-3385-47b3-98ad-ef0ade7c8b01}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -218,6 +221,9 @@
     </ClInclude>
     <ClInclude Include="cmod_data.hpp">
       <Filter>Source Files\CMod</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_color_gradient.hpp">
+      <Filter>Header Files\lib\ImGradient</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -364,6 +370,9 @@
     </ClCompile>
     <ClCompile Include="cmod_data.cpp">
       <Filter>Source Files\CMod</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_color_gradient.cpp">
+      <Filter>Header Files\lib\ImGradient</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -77,6 +77,7 @@ typedef vec_t vec4_t[4];
 #include <stdio.h>
 #include <timeapi.h>
 #include <set>
+#include <list>
 
 //#include <glm/vec2.hpp>
 //#include <glm/vec3.hpp>
@@ -97,6 +98,8 @@ typedef vec_t vec4_t[4];
 #include "imGui/imgui_impl_dx9.h"
 #include "imGui/imgui_impl_win32.h"
 #include "imGui/imgui_internal.h"
+
+#include "imgui_color_gradient.hpp"
 
 //detours
 #include "detours/detours.h"

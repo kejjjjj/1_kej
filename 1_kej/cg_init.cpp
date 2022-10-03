@@ -35,9 +35,13 @@ void cg::CG_Init()
 
 	cod4x();
 	CG_InitForeverHooks();
+
+	Com_Printf(CON_CHANNEL_CONSOLEONLY, "Successfully loaded image resources\n");
+
 	Scr_Init();
 	Evar_Setup();
 	Evar_LoadFromFile(v::cfg::cfgDirectory);
+
 
 	hook* a = nullptr;
 

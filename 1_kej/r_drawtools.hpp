@@ -70,6 +70,11 @@ namespace r
 	void R_DrawTriangle(vec3_t pointA, vec3_t pointB, vec3_t pointC, vec4_t col);
 
 	bool ButtonCentered(const char* label, float alignment = 0.5f);
+
+	void UI_CreateSettings(bool& isediting);
+	LPDIRECT3DTEXTURE9 UI_FindImageByName(const char* name);
+	void UI_DrawGradientZone(ImVec2 size);
+
 }
 
 #endif

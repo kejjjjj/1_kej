@@ -32,6 +32,18 @@ namespace r
 	char R_RecoverLostDevice();
 
 	inline bool device_needs_reset;
+
+
+	inline std::vector<LPDIRECT3DTEXTURE9> tabs(20);
+	inline std::vector<const char*> imagepaths;
+
+	inline std::vector<std::pair<std::string, LPDIRECT3DTEXTURE9>> imagePairs;
+
+	bool CreateTextures(std::vector<std::pair<std::string, LPDIRECT3DTEXTURE9>>& pair);
+	bool ReturnErrorCode(HRESULT result);
+
+	inline bool ResetImFont;
+
 }
 
 #endif

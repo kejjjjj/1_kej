@@ -14,6 +14,7 @@ namespace v
 
 	inline evar_o
 		mod_velometer,
+		mod_velometer_glow,
 		mod_rpg_mode,
 		mod_coordinates,
 		mod_hitanalyzer,

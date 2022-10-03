@@ -14,7 +14,7 @@ void cg::Mod_DrawEvents()
 		r::R_DrawText(buffer, 0, 800, 2, 2, 0, isPaused == false ? vec4_t{ 1,1,1,1 } : vec4_t{ 1,0,0,1 }, 0);
 	}
 	if (automation.pendingSlide)
-		r::R_DrawText("Slide", v::mod_velometer.evar->arrayValue[1], v::mod_velometer.evar->arrayValue[2] - 20 * v::mod_velometer.evar->arrayValue[3], v::mod_velometer.evar->arrayValue[3], v::mod_velometer.evar->arrayValue[3], 0, vec4_t{ 0,1,0,1 }, 0);
+		r::R_DrawText("Slide", v::mod_velometer.GetArray(1), v::mod_velometer.GetArray(2) - 20 * v::mod_velometer.GetArray(3), v::mod_velometer.GetArray(3), v::mod_velometer.GetArray(3), 0, vec4_t{0,1,0,1}, 0);
 
 }
 void cg::Mod_DrawVelocity()
@@ -77,7 +77,12 @@ void cg::Mod_DrawVelocity()
 		sprintf_s(buffer, "%i\n%i %s", velocity, jumpanalyzer.recommendedFPS, GetAsyncKeyState(VK_SPACE) < 0 == true && v::mod_autoFPS_space333.isEnabled() ? "(hold 333)" : "");
 
 	buffer[19] = '\0';
-	r::R_DrawText(buffer, "fonts/normalfont", v::mod_velometer.evar->arrayValue[1], v::mod_velometer.evar->arrayValue[2], v::mod_velometer.evar->arrayValue[3], v::mod_velometer.evar->arrayValue[3], 0, (float*)&col, 1);
+	//r::R_DrawText(buffer, "fonts/normalfont", v::mod_velometer.evar->arrayValue[1], v::mod_velometer.evar->arrayValue[2], v::mod_velometer.evar->arrayValue[3], v::mod_velometer.evar->arrayValue[3], 0, (float*)&col, 1);
+	
+	Material* fxMaterial = r::R_RegisterMaterial("decode_characters");
+	Material* fxMaterialGlow = r::R_RegisterMaterial("decode_characters_glow");
+
+	r::R_AddCmdDrawTextWithEffects(buffer, "fonts/objectivefont", v::mod_velometer.GetArray(1), v::mod_velometer.GetArray(2), v::mod_velometer.GetArray(3), v::mod_velometer.GetArray(3), 0.f, (float*)&col, 3, v::mod_velometer_glow.evar->vecValue, fxMaterial, fxMaterialGlow, 0, 500, 1000, 2000);
 
 
 }
@@ -99,7 +104,10 @@ void cg::Mod_DrawCoordinates()
 	if (clients->cgameOrigin[0] == (int)clients->cgameOrigin[0] || clients->cgameOrigin[1] == (int)clients->cgameOrigin[1])
 		col.b = 255;
 
-	r::R_DrawText(buffer, v::mod_coordinates.evar->arrayValue[1], v::mod_coordinates.evar->arrayValue[2], v::mod_coordinates.evar->arrayValue[3], v::mod_coordinates.evar->arrayValue[3], 0, (float*)&col, 0);
+	r::R_AddCmdDrawTextWithEffects(buffer, "fonts/normalfont", v::mod_coordinates.GetArray(1), v::mod_coordinates.GetArray(2), v::mod_coordinates.GetArray(3), v::mod_coordinates.GetArray(3), 0.f, vec4_t{0,1,0,1}, 3, vec4_t{1,1,1,0}, 0, 0, 0, 0, 0, 0);
+
+
+	//r::R_DrawText(buffer, v::mod_coordinates.evar->arrayValue[1], v::mod_coordinates.evar->arrayValue[2], v::mod_coordinates.evar->arrayValue[3], v::mod_coordinates.evar->arrayValue[3], 0, (float*)&col, 0);
 
 }
 #define BANGLE2COLOR( x )  ( (int)( ( x ) * 255.f / 35 ) & 255 )
@@ -409,9 +417,9 @@ void cg::Mod_DrawVelocityDirection()
 
 
 	vec3_t orgPos;
+	const jump_data* jData = analyzer.FetchFrameData(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, analyzer.preview_frame);
 
 	if (analyzer.isPreviewing()) {
-		const jump_data* jData = analyzer.FetchFrameData(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, analyzer.preview_frame);
 
 		if (jData) {
 			VectorCopy(jData->origin, orgPos);
@@ -425,7 +433,6 @@ void cg::Mod_DrawVelocityDirection()
 	float velAngle = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180.f / PI;
 
 	if (analyzer.isPreviewing()) {
-		jump_data* jData = analyzer.FetchFrameData(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, analyzer.preview_frame);
 
 		if (jData) {
 			velAngle = atan2(jData->velocity[1], jData->velocity[0]) * 180.f / PI;

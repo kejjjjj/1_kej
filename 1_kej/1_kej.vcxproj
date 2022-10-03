@@ -189,6 +189,7 @@
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
+    <ClInclude Include="imgui_color_gradient.hpp" />
     <ClInclude Include="koukku.hpp" />
     <ClInclude Include="menu_items.hpp" />
     <ClInclude Include="mod_analyzer.hpp" />
@@ -254,6 +255,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="imgui_color_gradient.cpp" />
     <ClCompile Include="koukku.cpp" />
     <ClCompile Include="menu_items.cpp" />
     <ClCompile Include="mod_analyzer.cpp" />

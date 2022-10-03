@@ -335,3 +335,51 @@ bool r::ButtonCentered(const char* label, float alignment)
 
 	return ImGui::Button(label);
 }
+LPDIRECT3DTEXTURE9 r::UI_FindImageByName(const char* name)
+{
+	for (const auto& i : imagePairs) {
+		if (!strcmp(name, fs::removeFileExtension(i.first.c_str(), 4).c_str()))
+			return i.second;
+	}
+	return nullptr;
+}
+void r::UI_CreateSettings(bool& editing)
+{
+	LPDIRECT3DTEXTURE9 tex = r::UI_FindImageByName("Settings_no_load");
+
+	if (!tex) {
+		tex = r::UI_FindImageByName("Error_no_load");
+		if (!tex) {
+			fs::Log_Write(LOG_FATAL, "unable to load the image '%s'", std::string(fs::GetExePath() + "\\1_kej\\images\\Error_no_load.png").c_str());
+			return;
+		}
+	}
+
+	ImGui::BeginGroup();
+
+	ImGui::Image(tex, ImVec2(24, 24));
+	
+	if (ImGui::IsItemHovered()) {
+		const ImVec2 mins = ImGui::GetItemRectMin();
+		const ImVec2 maxs = ImGui::GetItemRectMax();
+
+		ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(mins.x - 3, mins.y - 3), ImVec2(maxs.x + 3, maxs.y + 3), IM_COL32(255, 255, 255, 170));
+
+
+		if(ImGui::IsItemClicked())
+			editing = !editing;
+	}
+	ImGui::EndGroup();
+}
+
+
+void r::UI_DrawGradientZone(ImVec2 size)
+{
+	ImGradient grad;
+	grad.addMark(0, ImColor(255, 111, 0, 255));
+	grad.addMark(0.5f, ImColor(255, 175, 0, 255));
+	grad.addMark(1, ImColor(255, 230, 0, 255));
+	const ImVec2 sp = ImGui::GetCursorScreenPos();
+	ImGui::DrawGradientBar(&grad, sp, size.x, 5);
+	ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(sp.x, sp.y + 5), ImVec2(sp.x + size.x, sp.y + size.y), ImColor(0.08f, 0.07f, 0.075f, 0.8f));
+}
