@@ -55,6 +55,7 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 
 	ImGui::NewLine();
 
+	r::UI_DrawGradientZone(ImVec2(330, 80));
 	ImGui::PushItemWidth(100);
 	ImGui::SliderInt("Frame", &menu_frame, 0, analyzer.GetTotalFrames(container), "%u", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 
@@ -129,7 +130,12 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 	}
 
 	ImGui::Text("Jump Data");
-	ImGui::Separator();
+	r::UI_DrawGradientZone(ImVec2(330, 270));
+	ImGui::Text("\t");
+	ImGui::SameLine();
+
+	ImGui::BeginGroup();
+	//ImGui::Separator();
 
 	jump_data* jData = analyzer.FetchFrameData(container, menu_frame);
 
@@ -181,6 +187,8 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 
 		ImGui::Text("colliding: %i", jData->colliding);
 		ImGui::Text("jumped: %i", jData->jumped);
+
+		ImGui::EndGroup();
 		const vec3_t empty = { 0,0,0 };
 
 		if (!analyzer.InFreeMode() && v::mod_jumpv_forcepos.isEnabled() || GetAsyncKeyState('C') & 1 && VID_ACTIVE) {
@@ -189,12 +197,18 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 			ps_loc->origin[2] -= (70.f - jData->maxs[2]);
 			VectorCopy(empty, ps_loc->velocity);
 		}
-	
+		
 		R_JumpView_HandleWeapons(menu_frame, rpg_frames_min, rpg_frames_max);
+
+		static ImVec2 size = ImGui::GetItemRectSize();
 
 		ImGui::NewLine();
 		ImGui::Text("Events");
-		ImGui::Separator();
+		r::UI_DrawGradientZone(ImVec2(330, size.y + 20));
+		ImGui::Text("\t");
+		ImGui::SameLine();
+
+		ImGui::BeginGroup();
 
 		static int32_t bounce_indx(0);
 
@@ -203,14 +217,87 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 		if (ImGui::Button("highest point"))
 			menu_frame = analyzer.FindHighestPoint(container);
 
+		ImGui::EndGroup();
+
+		size = ImGui::GetItemRectSize();
+
 		ImGui::NewLine();
 		ImGui::Text("Segmenting");
-		ImGui::Separator();
+		r::UI_DrawGradientZone(ImVec2(330, 100));
+		ImGui::Text("\t");
+		ImGui::SameLine();
+
+		ImGui::BeginGroup();
 
 		if (ImGui::Button("Mark segment")) {
 			Com_Printf(CON_CHANNEL_OBITUARY, "^2Segment has been marked!\n");
 			analyzer.segment_frame = menu_frame;
 		}
+
+		if (!analyzer.Segmenter_RecordingExists())
+			ImGui::BeginDisabled();
+
+		static bool confirm(false);
+
+		if (ImGui::Button("Merge")) {
+			confirm = !confirm;
+
+
+		}ImGui::SameLine(); r::MetricsHelpMarker("Merges the original run and the segment\nWarning: This action cannot be undone");
+
+
+		if (confirm) {
+
+			ImGui::Begin("Confirmation##01", &confirm, ImGuiWindowFlags_AlwaysAutoResize);
+
+			ImGui::Text("Are you sure? This action will overwrite your original save.");
+
+			ImGui::NewLine();
+			ImGui::Separator();
+
+			if (r::ButtonCentered("yes##01")) {
+			//	std::vector<jump_data> tmp = analyzer.data;
+
+				std::cout << "result.size before: " << analyzer.data.size() << '\n';
+
+
+				analyzer.data.erase(analyzer.data.begin() + analyzer.segment_frame, analyzer.data.end());
+				
+
+		/*		for (int i = analyzer.segment_frame; i < tmp.size(); i++) {
+
+					analyzer.data.push_back(tmp[i]);
+				}*/
+
+				std::cout << "result.size before2: " << analyzer.data.size() << '\n';
+
+				analyzer.data.insert(analyzer.data.end(), analyzer.segData.begin(), analyzer.segData.end());
+
+				std::cout << "result.size after: " << analyzer.data.size() << '\n';
+				std::cout << "segment offset: " << analyzer.segmenterData.mergeFrame << '\n';
+				//std::cout << "tmp.size: " << tmp.size() << '\n';
+				if (analyzer.data.size() > 0) {
+					//std::cout << "result[0].angles[1]: " << tmp[0].angles[1] << '\n';
+					std::cout << "data[0].angles[1]  : " << analyzer.data[0].angles[1] << '\n';
+				}
+
+				analyzer.OnEndSegment();
+				analyzer.segData.erase(analyzer.segData.begin(), analyzer.segData.end());
+				analyzer.segData.clear();
+				analyzer.segData.resize(0);
+			}
+
+			else if (r::ButtonCentered("no##01"))
+				confirm = false;
+
+			ImGui::End();
+
+		}
+
+		if (!analyzer.Segmenter_RecordingExists())
+			ImGui::EndDisabled();
+
+		ImGui::EndGroup();
 		ImGui::EndGroup();
 		R_JumpView_IO();
 
@@ -218,6 +305,7 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 			ImGui::Text("\n\n\n");
 			ImGui::TextColored(ImVec4(255, 255, 0, 255), "Warning: fixed fps can cause playback issues!");
 		}
+		
 
 	}
 	else {
@@ -386,8 +474,11 @@ void r::R_JumpView_IO()
 	
 	ImGui::NewLine();
 	ImGui::Text("File");
-	ImGui::Separator();
+	r::UI_DrawGradientZone(ImVec2(330, 100));
+	ImGui::Text("\t");
+	ImGui::SameLine();
 
+	ImGui::BeginGroup();
 	static bool is_saving, is_loading;
 	static std::vector<std::string> existingRuns;
 	static std::vector<const char*> existingRuns_c;
@@ -449,6 +540,7 @@ void r::R_JumpView_IO()
 
 
 	}
+	ImGui::EndGroup();
 
 	if (is_loading && existingRuns.size() > 0) {
 
