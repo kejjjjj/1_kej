@@ -264,7 +264,7 @@ void Evar_Setup()
 	
 	float mod_velometer[4] = { 0, 960, 540, 3.f };
 	float mod_coordinates[4] = { 0, 0, 540, 1.3f };
-	float mod_fps_transferz[5] = { 0, 500, 10, 1.f, 0.f };
+	float mod_fps_transferz[6] = { 0, 500, 10, 1.f, 0.f, 0.f};
 	float mod_anglehelper[4] = { 0, 600, 10, 1.f };
 
 
@@ -282,7 +282,7 @@ void Evar_Setup()
 	v::mod_bounceable_surf.Register	("1_kej_bounceable_surf",			evartype_t::EVAR_BOOL,		(float)0,				true);
 	v::mod_pmove_fixed.Register		("1_kej_pmove_fixed",				evartype_t::EVAR_BOOL,		(float)0,				true);
 	v::mod_anglehelper.Register		("1_kej_anglehelper",				evartype_t::EVAR_ARRAY,		mod_anglehelper, 4,		true); //enabled, x, y, scale
-	v::mod_fps_transferz.Register	("1_kej_fps_transferz",				evartype_t::EVAR_ARRAY,		mod_fps_transferz, 5,	true); //enabled, y, height, fovscale, change crosshair color
+	v::mod_fps_transferz.Register	("1_kej_fps_transferz",				evartype_t::EVAR_ARRAY,		mod_fps_transferz, 6,	true); //enabled, y, height, fovscale, change crosshair color, width offset
 	v::mod_crosshair.Register		("1_kej_crosshair",					evartype_t::EVAR_VEC4,		vec4_t{1,1,1,0.5f},		true); //r,g,b,min alpha
 	v::mod_veldirection.Register	("1_kej_veldirection",				evartype_t::EVAR_BOOL,		(float)0,				true);
 	v::mod_show_worldaxes.Register	("1_kej_show_worldaxes",			evartype_t::EVAR_BOOL,		(float)0,				true);

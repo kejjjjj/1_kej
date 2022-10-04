@@ -257,7 +257,7 @@ void jAnalyzer::OnStartSegment()
 	analyzer.segData.clear();
 	analyzer.segData.resize(0);
 
-
+	preview_frame = NULL;
 
 
 	memset(&segmenterData, 0, sizeof(segmenter_data));

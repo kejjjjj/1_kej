@@ -189,7 +189,10 @@ void Visual_Features()
 
 				ImGui::PushItemWidth(100);
 				ImGui::DragFloat("fovscale", &v::mod_fps_transferz.evar->arrayValue[3], 0.25f, 0.f, 10.f, "%.2f");
-						
+				
+				ImGui::PushItemWidth(100);
+				ImGui::DragFloat("width offset", &v::mod_fps_transferz.evar->arrayValue[5], 1.f, 0.f, 1920.f, "%.0f");
+
 				if (ImGui::Checkbox("Long 125", &v::mod_autoFPS_long125.evar->enabled)) {
 					v::mod_autoFPS_long125.SetValue(v::mod_autoFPS_long125.isEnabled());
 				} ImGui::SameLine(); r::MetricsHelpMarker("Don't let 333fps overwrite most of the 125fps angle");
@@ -206,16 +209,16 @@ void Visual_Features()
 						
 
 				ImGui::ColorEdit3("125fps", v::mod_125col.evar->vecValue, ImGuiColorEditFlags_NoInputs); 
-				ImGui::SameLine(); ImGui::Text("\t "); ImGui::SameLine(); if (ImGui::Button(t125 == true ?	"hide##0" : "show##0")) { t125 = !t125; v::mod_125col.evar->vecValue[3] = (float)t125;}
+				ImGui::SameLine(); ImGui::Text("\t  "); ImGui::SameLine(); if (ImGui::Button(t125 == true ?	"hide##0" : "show##0")) { t125 = !t125; v::mod_125col.evar->vecValue[3] = (float)t125;}
 
 				ImGui::ColorEdit3("200fps", v::mod_200col.evar->vecValue, ImGuiColorEditFlags_NoInputs);
-				ImGui::SameLine(); ImGui::Text("\t "); ImGui::SameLine(); if (ImGui::Button(t200 == true ? "hide##01" : "show##01")) { t200 = !t200; v::mod_200col.evar->vecValue[3] = (float)t200; }
+				ImGui::SameLine(); ImGui::Text("\t  "); ImGui::SameLine(); if (ImGui::Button(t200 == true ? "hide##01" : "show##01")) { t200 = !t200; v::mod_200col.evar->vecValue[3] = (float)t200; }
 
 				ImGui::ColorEdit3("250fps", v::mod_250col.evar->vecValue, ImGuiColorEditFlags_NoInputs);
-				ImGui::SameLine(); ImGui::Text("\t "); ImGui::SameLine(); if (ImGui::Button(t250 == true ? "hide##02" : "show##02")) { t250 = !t250; v::mod_250col.evar->vecValue[3] = (float)t250; }
+				ImGui::SameLine(); ImGui::Text("\t  "); ImGui::SameLine(); if (ImGui::Button(t250 == true ? "hide##02" : "show##02")) { t250 = !t250; v::mod_250col.evar->vecValue[3] = (float)t250; }
 
 				ImGui::ColorEdit3("333fps", v::mod_333col.evar->vecValue, ImGuiColorEditFlags_NoInputs);
-				ImGui::SameLine(); ImGui::Text("\t "); ImGui::SameLine(); if (ImGui::Button(t333 == true ? "hide##03" : "show##03")) { t333 = !t333; v::mod_333col.evar->vecValue[3] = (float)t333; }
+				ImGui::SameLine(); ImGui::Text("\t  "); ImGui::SameLine(); if (ImGui::Button(t333 == true ? "hide##03" : "show##03")) { t333 = !t333; v::mod_333col.evar->vecValue[3] = (float)t333; }
 
 				ImGui::ColorEdit3("transfer", v::mod_markercol.evar->vecValue, ImGuiColorEditFlags_NoInputs); ImGui::SameLine(); r::MetricsHelpMarker("indicates when your velocity direction starts to shift");
 				ImGui::SameLine(); if (ImGui::Button(tmarker == true ? "hide##04" : "show##04")) { tmarker = !tmarker; v::mod_markercol.evar->vecValue[3] = (float)tmarker; }
@@ -495,17 +498,21 @@ void r::R_Features(bool& wantsEditor)
 	
 	bool justPressed(false);
 
-	for (size_t i = 0; i < r::imagePairs.size(); i++) {
+	size_t indx(0);
 
-		if (r::imagePairs[i].first.find("_no_load") != std::string::npos)
+	for (const auto& i : r::imagePairs) {
+
+		if (i.first.find("_no_load") != std::string::npos) {
+			++indx;
 			continue;
+		}
 
 		ImGui::BeginGroup();
-		ImGui::Image((ImTextureID)r::imagePairs[i].second, ImVec2(64, 64));
+		ImGui::Image((ImTextureID)i.second, ImVec2(64, 64));
 		ImGui::SameLine();
 		ImGui::BeginGroup();
 		ImGui::Text("\n");
-		ImGui::Text(fs::removeFileExtension(r::imagePairs[i].first.c_str(), 4).c_str());
+		ImGui::Text(fs::removeFileExtension(i.first.c_str(), 4).c_str());
 		ImGui::EndGroup();
 		ImGui::Separator();
 		ImGui::EndGroup();		
@@ -517,9 +524,11 @@ void r::R_Features(bool& wantsEditor)
 
 		if (ImGui::IsItemClicked()) {
 			justPressed = true;
-			//Com_Printf(CON_CHANNEL_OBITUARY, "item clicked ^2'%s'\n", imagePairs[i].first.c_str());
-			ActiveIndex = i;
+
+			ActiveIndex = indx;
+
 		}
+		++indx;
 
 	}
 	
@@ -545,7 +554,10 @@ void r::R_Features(bool& wantsEditor)
 
 	R_DrawMenuByName(fs::removeFileExtension(r::imagePairs[ActiveIndex].first, 4).c_str(), justPressed, wantsEditor);
 
+	if (r::imagePairs[ActiveIndex].first.find("Preview") != std::string::npos)
+		ActiveIndex = UI_GetImageIndex("Automation");
 
+	
 
 	childSize.x = rect.x + 10;
 	childSize.y = rect.y + 10;

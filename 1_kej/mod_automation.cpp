@@ -120,7 +120,7 @@ void cg::Mod_A_AutoSliding(pmove_t* pmove, pml_t* pml)
 	const DWORD ms = Sys_MilliSeconds();
 	
 
-	if ((old_ms + 100) < ms) { //allow 0.1s to slide
+	if ((old_ms + (move->jump == true && v::mod_bhop_nodelay.isEnabled() ? 0.1f : 100)) < ms) { //allow 100ms to slide and if jump is held, then stop slide instantly
 		old_ms = ms;
 		automation.currentlySliding = false;
 		a->write_addr(0x410660, "\x83", 1);

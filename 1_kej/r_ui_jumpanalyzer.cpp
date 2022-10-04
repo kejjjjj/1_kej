@@ -78,7 +78,7 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 		else isPlayback = false;
 	}
 	if (analyzer.isPlayback()) {
-		static int wait_incr(0);
+		static float wait_incr(0);
 		//static int32_t oldServerTime = jumpanalyzer.serverTime;
 
 		//if (glm::distance((float)oldServerTime, (float)jumpanalyzer.serverTime) > 100) //true on map restart
@@ -88,15 +88,18 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 		const jump_data* jData = analyzer.FetchFrameData(container, menu_frame);
 		
 
-		if (wait_incr > timeScale - 1 && jData && com_maxfps&& g_gravity) {
-			com_maxfps->current.integer = 125.f;
+		if (wait_incr > timeScale - 1.f && jData && com_maxfps&& g_gravity) {
+			if(jData->FPS == 200)
+				com_maxfps->current.integer = 250.f; //meh
+			else
+				com_maxfps->current.integer = 142.f;
 			g_gravity->current.value = 0;
 			wait_incr = 0;
 			if (menu_frame < analyzer.GetTotalFrames(container))
 				menu_frame++;
 			else isPlayback = false;
 		}
-		wait_incr++;
+		wait_incr += 1.f;
 
 	}
 
@@ -120,7 +123,7 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 
 	ImGui::SameLine();
 	ImGui::PushItemWidth(50);
-	ImGui::DragFloat("Slow-mo Scale", &timeScale, 0.1f, 1.f, 10.f, "%.3f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
+	ImGui::DragFloat("Slow-mo Scale\t", &timeScale, 0.1f, 1.f, 10.f, "%.3f", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 
 	if (VID_ACTIVE) {
 		if (menu_frame + 1 <= analyzer.GetTotalFrames())
@@ -250,41 +253,23 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 
 			ImGui::Begin("Confirmation##01", &confirm, ImGuiWindowFlags_AlwaysAutoResize);
 
-			ImGui::Text("Are you sure? This action will overwrite your original save.");
+			ImGui::Text("Are you sure? If yes, then make sure you SAVE the clip after merging so that you don't lose it!");
 
 			ImGui::NewLine();
 			ImGui::Separator();
 
 			if (r::ButtonCentered("yes##01")) {
-			//	std::vector<jump_data> tmp = analyzer.data;
 
-				std::cout << "result.size before: " << analyzer.data.size() << '\n';
 
 
 				analyzer.data.erase(analyzer.data.begin() + analyzer.segment_frame, analyzer.data.end());
-				
-
-		/*		for (int i = analyzer.segment_frame; i < tmp.size(); i++) {
-
-					analyzer.data.push_back(tmp[i]);
-				}*/
-
-				std::cout << "result.size before2: " << analyzer.data.size() << '\n';
-
 				analyzer.data.insert(analyzer.data.end(), analyzer.segData.begin(), analyzer.segData.end());
-
-				std::cout << "result.size after: " << analyzer.data.size() << '\n';
-				std::cout << "segment offset: " << analyzer.segmenterData.mergeFrame << '\n';
-				//std::cout << "tmp.size: " << tmp.size() << '\n';
-				if (analyzer.data.size() > 0) {
-					//std::cout << "result[0].angles[1]: " << tmp[0].angles[1] << '\n';
-					std::cout << "data[0].angles[1]  : " << analyzer.data[0].angles[1] << '\n';
-				}
 
 				analyzer.OnEndSegment();
 				analyzer.segData.erase(analyzer.segData.begin(), analyzer.segData.end());
 				analyzer.segData.clear();
 				analyzer.segData.resize(0);
+				confirm = false;
 			}
 
 			else if (r::ButtonCentered("no##01"))

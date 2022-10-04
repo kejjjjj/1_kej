@@ -343,6 +343,15 @@ LPDIRECT3DTEXTURE9 r::UI_FindImageByName(const char* name)
 	}
 	return nullptr;
 }
+size_t r::UI_GetImageIndex(const char* name)
+{
+	for (size_t i = 0; i < imagePairs.size(); i++) {
+
+		if (!strcmp(name, fs::removeFileExtension(imagePairs[i].first.c_str(), 4).c_str()))
+			return i;
+	}
+	return 0;
+}
 void r::UI_CreateSettings(bool& editing)
 {
 	LPDIRECT3DTEXTURE9 tex = r::UI_FindImageByName("Settings_no_load");

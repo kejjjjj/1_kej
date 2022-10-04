@@ -74,7 +74,7 @@ void cg::Mod_DrawVelocity()
 	if(!v::mod_showFPS.isEnabled())
 		sprintf_s(buffer, "%i", velocity);
 	else
-		sprintf_s(buffer, "%i\n%i %s", velocity, jumpanalyzer.recommendedFPS, GetAsyncKeyState(VK_SPACE) < 0 == true && v::mod_autoFPS_space333.isEnabled() ? "(hold 333)" : "");
+		sprintf_s(buffer, "%i\n%i %s", velocity, jumpanalyzer.recommendedFPS, GetAsyncKeyState(VK_SPACE) < 0 == true && v::mod_autoFPS_space333.isEnabled() && VID_ACTIVE ? "(hold 333)" : "");
 
 	buffer[19] = '\0';
 	//r::R_DrawText(buffer, "fonts/normalfont", v::mod_velometer.evar->arrayValue[1], v::mod_velometer.evar->arrayValue[2], v::mod_velometer.evar->arrayValue[3], v::mod_velometer.evar->arrayValue[3], 0, (float*)&col, 1);
@@ -338,7 +338,8 @@ void cg::Mod_DrawFPSHelpers()
 
 
 	if (v::mod_fps_transferz.evar->arrayValue[0] != NULL)
-		r::R_DrawRect("white", 958, BAR_START_Y - 10, 4, BAR_HEIGHT + 20, vec4_t{ 1,1,1,255 });
+		ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(958), r::Y(BAR_START_Y - 10)), ImVec2(r::X(962), r::Y(BAR_HEIGHT + BAR_START_Y + 10)), ImColor(1.f, 1.f, 1.f, 1.f));
+		//r::R_DrawRect("white", 958, BAR_START_Y - 10, 4, BAR_HEIGHT + 20, vec4_t{ 1,1,1,255 });
 
 
 	range_t ranges, ranges2;

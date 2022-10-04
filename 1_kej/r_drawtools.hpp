@@ -73,6 +73,7 @@ namespace r
 
 	void UI_CreateSettings(bool& isediting);
 	LPDIRECT3DTEXTURE9 UI_FindImageByName(const char* name);
+	size_t UI_GetImageIndex(const char* name);
 	void UI_DrawGradientZone(ImVec2 size);
 
 }

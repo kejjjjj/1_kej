@@ -18,7 +18,9 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 				Mod_DrawJumpPath();
 				Mod_DrawJumpHitbox();
 				Mod_DrawJumpDirection();
+				
 			}
+			Mod_DrawFPSHelpers();
 
 		}
 		R_EndRender();
@@ -32,7 +34,7 @@ void __cdecl r::CG_DrawActive()
 		Mod_DrawVelocity();
 		Mod_DrawCoordinates();
 		Mod_DrawSurfaceInfo();
-		Mod_DrawFPSHelpers();
+		/*Mod_DrawFPSHelpers();*/
 		Mod_DrawAngleHelper();
 		Mod_DrawCurveSpeed();
 		Mod_A_Strafebot();

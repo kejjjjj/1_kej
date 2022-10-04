@@ -43,16 +43,29 @@ void cg::CG_FillAngleYaw(float start, float end, float yaw, float y, float h, fl
 {
 
 	range_t const range = AnglesToRange(DEG2RAD(start), DEG2RAD(end), DEG2RAD(yaw), fov);
+
+	const float widthOffs = v::mod_fps_transferz.GetArray(5);
+	const float minX = widthOffs;
+	const float maxX = r::X(1920.f - widthOffs);
+
+	float x1 = range.x1 < minX ? minX : range.x1;
+	float x2 = range.x2 - range.x1;
+
+	
+	x1 = range.x1 > maxX ? maxX : x1;
+	x2 = range.x2 > maxX ? maxX - x1 : x2;
+	
+
 	if (!range.split) {
-		r::R_DrawRect("white", range.x1, y, range.x2 - range.x1, h, color);
-		//ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(range.x1, y), ImVec2(range.x1 + range.x2 - range.x1, y + h), IM_COL32(color[0], color[1], color[2], color[3]));
+		//r::R_DrawRect("white", range.x1, y, range.x2 - range.x1, h, color);
+		ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(x1), r::Y(y)), ImVec2(r::X(ImClamp(range.x2, minX, maxX)), r::Y(y + h)), ImColor(color[0], color[1], color[2], color[3]));
 	}
 	else {
-		r::R_DrawRect("white", 0, y, range.x1, h, color);
-		r::R_DrawRect("white", range.x2, y, 1920.f - range.x2, h, color);
+		//r::R_DrawRect("white", 0, y, range.x1, h, color);
+		//r::R_DrawRect("white", range.x2, y, 1920.f - range.x2, h, color);
 
-		//ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(0, y), ImVec2(range.x1, y + h), IM_COL32(color[0], color[1], color[2], color[3]));
-		//ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(range.x2, y), ImVec2(range.x2 + cgs->refdef.width - range.x2, y + h), IM_COL32(color[0], color[1], color[2], color[3]));
+		ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(minX), r::Y(y)), ImVec2(r::X(x1), r::Y(y + h)), ImColor(color[0], color[1], color[2], color[3]));
+		ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(ImClamp(range.x2, minX, maxX)), r::Y(y)), ImVec2(ImClamp(range.x2 + cgs->refdef.width - range.x2, minX, maxX), y + h), ImColor(color[0], color[1], color[2], color[3]));
 
 	}
 }

@@ -202,9 +202,9 @@ void cg::Mod_JumpView(pmove_t* pm, pml_t* pml)
 	VectorCopy(pm->ps->origin, prevOrigin);
 	VectorCopy(pm->ps->viewangles, prevAngles);
 
-	const float difference = (int)(1000.f / (cls->frametime == NULL ? 1 : cls->frametime)) / 125.f;
+	const float difference = (float)(1000.f / (cls->frametime == NULL ? 1 : cls->frametime)) / 125.f;
 
-	if (pm->cmd.serverTime > old_cmdTime + 3 * difference && !analyzer.RecordingPaused()) {
+	if (pm->cmd.serverTime > old_cmdTime + 2 * difference && !analyzer.RecordingPaused()) {
 		old_cmdTime = pm->cmd.serverTime;
 		if(!analyzer.isSegmenting())
 			Mod_SaveData(analyzer.data, pm, hasBounced, hasJumped, hasShotRPG);
