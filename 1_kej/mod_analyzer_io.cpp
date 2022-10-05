@@ -22,7 +22,6 @@ bool jAnalyzer::IO_WriteData(const std::string run_name, const std::vector<jump_
 	const std::string full_path = fs::GetExePath() + "\\1_kej\\recorder\\" + run_name + ".kej";
 
 
-
 	if (!fs::F_OpenFile(f, full_path, fs::fileopen::FILE_OUT)) {
 
 		char* messageBuffer = nullptr;

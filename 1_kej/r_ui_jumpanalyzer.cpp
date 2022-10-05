@@ -87,6 +87,8 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 		dvar_s* com_maxfps = Dvar_FindMalleableVar("com_maxfps");
 		const jump_data* jData = analyzer.FetchFrameData(container, menu_frame);
 		
+		if (clients->snap.ps.pm_type == PM_UFO && !analyzer.InFreeMode() && v::mod_jumpv_forcepos.isEnabled())
+			Cbuf_AddText("ufo\n", 0);
 
 		if (wait_incr > timeScale - 1.f && jData && com_maxfps&& g_gravity) {
 			if(jData->FPS == 200)
@@ -260,7 +262,7 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 
 			if (r::ButtonCentered("yes##01")) {
 
-
+				Com_Printf(CON_CHANNEL_OBITUARY, "^3Save the merged clip!\n");
 
 				analyzer.data.erase(analyzer.data.begin() + analyzer.segment_frame, analyzer.data.end());
 				analyzer.data.insert(analyzer.data.end(), analyzer.segData.begin(), analyzer.segData.end());
@@ -344,9 +346,11 @@ void r::R_JumpView_BounceButtons(int& menu_frame)
 
 	static DWORD end_recording_time = analyzer.LastRecordingStoppedTime();
 
-	std::set<int>& rpg = analyzer.isSegmenting() ? analyzer.s_rpgFrames : analyzer.rpgFrames;
-	std::set<int>& jump = analyzer.isSegmenting() ? analyzer.s_jumpFrame : analyzer.jumpFrame;
-	std::set<int>& bounce = analyzer.isSegmenting() ? analyzer.s_bounceFrames : analyzer.bounceFrames;
+	std::set<int>& rpg = analyzer.Segmenter_RecordingExists() ? analyzer.s_rpgFrames : analyzer.rpgFrames;
+	std::set<int>& jump = analyzer.Segmenter_RecordingExists() ? analyzer.s_jumpFrame : analyzer.jumpFrame;
+	std::set<int>& bounce = analyzer.Segmenter_RecordingExists() ? analyzer.s_bounceFrames : analyzer.bounceFrames;
+
+
 
 	if (analyzer.LastRecordingStoppedTime() != end_recording_time) { // a way to track if this is a new run
 		it = bounce.begin();
@@ -505,20 +509,55 @@ void r::R_JumpView_IO()
 
 	}
 
+	static bool already_exists(false);
 
 	if (is_saving) {
-
 		ImGui::Begin("Give the run a name", &is_saving, ImGuiWindowFlags_AlwaysAutoResize);
 
 		static char buff[MAX_PATH];
 		ImGui::PushItemWidth(300);
 		ImGui::InputText("Run name", buff, MAX_PATH, ImGuiTextFlags_None);
+		bool all_good = false;
+		if (already_exists) {
 
-		if (ButtonCentered("Save##02")) {
-			if (!analyzer.IO_WriteData(buff, analyzer.data)) {
-				Com_PrintError(CON_CHANNEL_OBITUARY, "See console or log file for more information\n");
+			ImGui::Begin("file already exists", &already_exists, ImGuiWindowFlags_AlwaysAutoResize);
+
+			ImGui::TextColored(ImVec4(255, 255, 0, 255), "the current file already exists. Do you want to overwrite it?");
+			ImGui::NewLine();
+			ImGui::Separator();
+
+			if (r::ButtonCentered("yes##02")) {
+				all_good = true;
+				already_exists = false;
 			}
-			is_saving = false;
+			else if (r::ButtonCentered("no##02")) {
+				already_exists = false;
+			}
+
+			ImGui::End();
+
+		}
+
+		if (ButtonCentered("Save##02") || all_good) {
+
+			const std::string full_path = fs::GetExePath() + "\\1_kej\\recorder";
+
+			already_exists = fs::F_FileAlreadyExists(full_path, buff);
+
+
+			if (!already_exists)
+				all_good = true;
+
+			
+			if (all_good) {
+				if (!analyzer.IO_WriteData(buff, analyzer.data)) {
+					Com_PrintError(CON_CHANNEL_OBITUARY, "See console or log file for more information\n");
+				}
+				is_saving = false;
+				already_exists = false;
+			}
+
+
 		}
 
 		ImGui::End();
@@ -554,9 +593,31 @@ void r::R_JumpView_IO()
 
 
 	}
+	if (analyzer.backup_data.size() < 1)
+		ImGui::BeginDisabled();
 
+	ImGui::Text("\t\t\t"); ImGui::SameLine();
+	if (ButtonCentered("Load backup##02")) {
 
+		if (analyzer.Segmenter_RecordingExists()) {
+			analyzer.segData.erase(analyzer.segData.begin(), analyzer.segData.end());
+			analyzer.segData.clear();
+			analyzer.segData.resize(0);
 
+			analyzer.segData.insert(analyzer.segData.begin(), analyzer.backup_data.begin(), analyzer.backup_data.end());
+
+		}else {
+			analyzer.data.erase(analyzer.data.begin(), analyzer.data.end());
+			analyzer.data.clear();
+			analyzer.data.resize(0);
+
+			analyzer.data.insert(analyzer.data.begin(), analyzer.backup_data.begin(), analyzer.backup_data.end());
+		}
+
+	}
+
+	if (analyzer.backup_data.size() < 1)
+		ImGui::EndDisabled();
 }
 void r::R_JumpView(bool& isOpen)
 {

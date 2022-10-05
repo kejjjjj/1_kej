@@ -232,12 +232,19 @@ void cg::Mod_SaveData(std::vector<jump_data>& storage, pmove_t* pm, bool& hasBou
 	std::set<int> &jump = analyzer.isSegmenting() ? analyzer.s_jumpFrame : analyzer.jumpFrame;
 	std::set<int> &bounce = analyzer.isSegmenting() ? analyzer.s_bounceFrames : analyzer.bounceFrames;
 
+	//if (analyzer.isSegmenting()) {
+	//	if (hasShotRPG) { analyzer.s_rpgFrames.insert(analyzer.current_frame);			hasShotRPG = false;		}
+	//	if (hasBounced) { analyzer.s_bounceFrames.insert(analyzer.current_frame);			hasBounced = false; }
+	//	if (hasJumped)  { analyzer.s_jumpFrame.insert(analyzer.current_frame);				hasJumped = false;  }
+	//}else {
+	//	if (hasShotRPG) { analyzer.rpgFrames.insert(analyzer.current_frame);			hasShotRPG = false; }
+	//	if (hasBounced) { analyzer.bounceFrames.insert(analyzer.current_frame);			hasBounced = false; }
+	//	if (hasJumped) { analyzer.jumpFrame.insert(analyzer.current_frame);				hasJumped = false; }
+	//}
 
 	if (hasShotRPG) { rpg.insert(analyzer.current_frame);			hasShotRPG = false; }
-	if (hasBounced) { 
-		bounce.insert(analyzer.current_frame);			hasBounced = false; }
-	if (hasJumped) {  
-		jump.insert(analyzer.current_frame);				hasJumped = false;  }
+	if (hasBounced) { bounce.insert(analyzer.current_frame);		hasBounced = false; }
+	if (hasJumped)  { jump.insert(analyzer.current_frame);			hasJumped  = false; }
 
 	//if (hasCollided) {	current->collisionFrames.insert(current->current_frame);	hasCollided = false; }
 

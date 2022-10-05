@@ -40,6 +40,7 @@ namespace cg
 
 				//std::unique_ptr<analyzer_data> ptr_data;
 		std::vector<jump_data> data; 
+		std::vector<jump_data> backup_data;
 		std::vector<jump_data> segData; //recorded segmenter data
 		std::set<int> bounceFrames;
 		std::set<int> rpgFrames;

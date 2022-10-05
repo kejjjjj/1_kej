@@ -16,6 +16,11 @@ auto jAnalyzer::GetData()
 
 void jAnalyzer::StartRecording()
 {
+	analyzer.backup_data.erase(analyzer.backup_data.begin(), analyzer.backup_data.end());
+	analyzer.backup_data.clear();
+	analyzer.backup_data.resize(0);
+	analyzer.backup_data.insert(analyzer.backup_data.begin(), analyzer.data.begin(), analyzer.data.end());
+
 
 	jAnalyzer::setPreviewState(false);
 	jAnalyzer::SetFreeMode(false);
@@ -32,6 +37,7 @@ bool jAnalyzer::isRecording()
 void jAnalyzer::StopRecording()
 {
 
+
 	std::vector<float> avg;
 	for (auto& i : data)
 		avg.push_back((float)glm::length(glm::vec2(i.velocity[0], i.velocity[1])));
@@ -40,6 +46,9 @@ void jAnalyzer::StopRecording()
 		average_velocity = GetAverage(avg.data(), avg.size());
 	}
 	analyzer.SetLastRecordingStopTime(clients->snap.ps.commandTime);
+
+	
+
 	is_recording = false;
 }
 void jAnalyzer::ClearData()
@@ -75,6 +84,10 @@ void jAnalyzer::ClearData()
 	segData.erase(segData.begin(), segData.end());
 	segData.clear();
 	segData.resize(0);
+
+	//analyzer.backup_data.erase(analyzer.backup_data.begin(), analyzer.backup_data.end());
+	//analyzer.backup_data.clear();
+	//analyzer.backup_data.resize(0);
 
 	SetLastRecordingStopTime(0);
 	average_velocity = 0;
@@ -252,6 +265,10 @@ void jAnalyzer::OnStartSegment()
 	//segmenterData.oldRPGcount = rpgFrames.size();
 	//segmenterData.oldJumpcount = jumpFrame.size();
 
+	analyzer.backup_data.erase(analyzer.backup_data.begin(), analyzer.backup_data.end());
+	analyzer.backup_data.clear();
+	analyzer.backup_data.resize(0);
+	analyzer.backup_data.insert(analyzer.backup_data.begin(), analyzer.segData.begin(), analyzer.segData.end());
 
 	analyzer.segData.erase(analyzer.segData.begin(), analyzer.segData.end());
 	analyzer.segData.clear();

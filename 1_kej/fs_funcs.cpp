@@ -297,3 +297,19 @@ fs::FS_CreatePairsForTextures()
 
 
 }
+bool fs::F_FileAlreadyExists(std::string directory, std::string file)
+{
+	std::vector<std::string> files;
+
+	F_FilesInThisDirectory(directory, &files);
+	std::string const full = directory + "\\" + file + ".kej";
+
+	for (const auto& i : files) {
+
+		if (!i.compare(full))
+			return true;
+
+	}
+
+	return false;
+}

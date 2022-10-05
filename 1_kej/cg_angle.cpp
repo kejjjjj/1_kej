@@ -46,7 +46,7 @@ void cg::CG_FillAngleYaw(float start, float end, float yaw, float y, float h, fl
 
 	const float widthOffs = v::mod_fps_transferz.GetArray(5);
 	const float minX = widthOffs;
-	const float maxX = r::X(1920.f - widthOffs);
+	const float maxX = 1920.f - widthOffs;
 
 	float x1 = range.x1 < minX ? minX : range.x1;
 	float x2 = range.x2 - range.x1;
@@ -65,7 +65,7 @@ void cg::CG_FillAngleYaw(float start, float end, float yaw, float y, float h, fl
 		//r::R_DrawRect("white", range.x2, y, 1920.f - range.x2, h, color);
 
 		ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(minX), r::Y(y)), ImVec2(r::X(x1), r::Y(y + h)), ImColor(color[0], color[1], color[2], color[3]));
-		ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(ImClamp(range.x2, minX, maxX)), r::Y(y)), ImVec2(ImClamp(range.x2 + cgs->refdef.width - range.x2, minX, maxX), y + h), ImColor(color[0], color[1], color[2], color[3]));
+		ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(ImClamp(range.x2, minX, maxX)), r::Y(y)), ImVec2(r::X(ImClamp((float)cgs->refdef.width, minX, maxX)), r::Y(y + h)), ImColor(color[0], color[1], color[2], color[3]));
 
 	}
 }

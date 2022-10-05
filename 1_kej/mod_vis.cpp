@@ -82,7 +82,7 @@ void cg::Mod_DrawVelocity()
 	Material* fxMaterial = r::R_RegisterMaterial("decode_characters");
 	Material* fxMaterialGlow = r::R_RegisterMaterial("decode_characters_glow");
 
-	r::R_AddCmdDrawTextWithEffects(buffer, "fonts/objectivefont", v::mod_velometer.GetArray(1), v::mod_velometer.GetArray(2), v::mod_velometer.GetArray(3), v::mod_velometer.GetArray(3), 0.f, (float*)&col, 3, v::mod_velometer_glow.evar->vecValue, fxMaterial, fxMaterialGlow, 0, 500, 1000, 2000);
+	r::R_AddCmdDrawTextWithEffects(buffer, "fonts/objectivefont", r::X(v::mod_velometer.GetArray(1)), r::Y(v::mod_velometer.GetArray(2)), v::mod_velometer.GetArray(3), v::mod_velometer.GetArray(3), 0.f, (float*)&col, 3, v::mod_velometer_glow.evar->vecValue, fxMaterial, fxMaterialGlow, 0, 500, 1000, 2000);
 
 
 }
@@ -104,7 +104,7 @@ void cg::Mod_DrawCoordinates()
 	if (clients->cgameOrigin[0] == (int)clients->cgameOrigin[0] || clients->cgameOrigin[1] == (int)clients->cgameOrigin[1])
 		col.b = 255;
 
-	r::R_AddCmdDrawTextWithEffects(buffer, "fonts/normalfont", v::mod_coordinates.GetArray(1), v::mod_coordinates.GetArray(2), v::mod_coordinates.GetArray(3), v::mod_coordinates.GetArray(3), 0.f, vec4_t{0,1,0,1}, 3, vec4_t{1,1,1,0}, 0, 0, 0, 0, 0, 0);
+	r::R_AddCmdDrawTextWithEffects(buffer, "fonts/normalfont", r::X(v::mod_coordinates.GetArray(1)), r::Y(v::mod_coordinates.GetArray(2)), v::mod_coordinates.GetArray(3), v::mod_coordinates.GetArray(3), 0.f, vec4_t{0,1,0,1}, 3, vec4_t{1,1,1,0}, 0, 0, 0, 0, 0, 0);
 
 
 	//r::R_DrawText(buffer, v::mod_coordinates.evar->arrayValue[1], v::mod_coordinates.evar->arrayValue[2], v::mod_coordinates.evar->arrayValue[3], v::mod_coordinates.evar->arrayValue[3], 0, (float*)&col, 0);
