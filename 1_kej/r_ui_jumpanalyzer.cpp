@@ -267,6 +267,15 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 				analyzer.data.erase(analyzer.data.begin() + analyzer.segment_frame, analyzer.data.end());
 				analyzer.data.insert(analyzer.data.end(), analyzer.segData.begin(), analyzer.segData.end());
 
+				for (const auto& vEvent : analyzer.s_rpgFrames) 
+					analyzer.rpgFrames.insert(vEvent+analyzer.segment_frame);
+
+				for (const auto& vEvent : analyzer.s_jumpFrame)
+					analyzer.jumpFrame.insert(vEvent + analyzer.segment_frame);
+
+				for (const auto& vEvent : analyzer.s_bounceFrames)
+					analyzer.bounceFrames.insert(vEvent + analyzer.segment_frame);
+
 				analyzer.OnEndSegment();
 				analyzer.segData.erase(analyzer.segData.begin(), analyzer.segData.end());
 				analyzer.segData.clear();

@@ -147,7 +147,7 @@ bool r::R_OpenMenu(IDirect3DDevice9* pDevice)
 		static bool wantsEditor = false;
 
 		if (!wantsEditor) {
-			ImGui::Begin("1_kej_v2 - github.com/kejjjjj/", &r::should_draw_menu, ImGuiWindowFlags_AlwaysAutoResize);
+			ImGui::Begin("[ALPHA] 1_kej_v2 - github.com/kejjjjj/", &r::should_draw_menu, ImGuiWindowFlags_AlwaysAutoResize);
 
 			ImGui::SetWindowFontScale(1.2f);
 
