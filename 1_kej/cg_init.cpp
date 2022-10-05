@@ -56,6 +56,7 @@ void cg::CG_PrepareHooks()
 	r::CL_ShutdownRenderer_f		= (void*(__stdcall*)())								(0x46CA40);
 	r::R_RecoverLostDevice_f		= (char(__stdcall*)())								(0x5F5360);
 	r::oWndProc						= (LRESULT(__stdcall*)(HWND, UINT, WPARAM, LPARAM))	(r::WndProcAddr);
+	PM_WalkMove_f					= (void(__cdecl*)(pmove_t*, pml_t*))				(0x40F7A0);
 	PM_AirMove_f					= (void(__cdecl*)(pmove_t*, pml_t*))				(0x40F680);
 	PM_UFOMove_f					= (void(__cdecl*)(pmove_t*, pml_t*))				(0x40FCD0);
 
@@ -105,6 +106,7 @@ void cg::CG_InitHooks()
 	a->install(&(PVOID&)r::R_RecoverLostDevice_f, r::R_RecoverLostDevice);
 	a->install(&(PVOID&)r::oWndProc, r::WndProc);
 	a->install(&(PVOID&)PM_AirMove_f, PM_AirMove);
+	a->install(&(PVOID&)PM_WalkMove_f, PM_WalkMove);
 	a->install(&(PVOID&)PM_UFOMove_f, PM_UFOMove);
 	a->install(&(PVOID&)PM_Weapon_f, PM_Weapon);
 	a->install(&(PVOID&)r::CG_DrawActive_f, r::CG_DrawActive); 
@@ -139,6 +141,7 @@ void cg::CG_RemoveHooks()
 	a->remove(&(PVOID&)r::CL_ShutdownRenderer_f, r::CL_ShutdownRenderer);
 	a->remove(&(PVOID&)r::R_RecoverLostDevice_f, r::R_RecoverLostDevice);
 	a->remove(&(PVOID&)r::oWndProc, r::WndProc);
+	a->remove(&(PVOID&)PM_WalkMove_f, PM_WalkMove);
 	a->remove(&(PVOID&)PM_AirMove_f, PM_AirMove);
 	a->remove(&(PVOID&)PM_UFOMove_f, PM_UFOMove);
 	a->remove(&(PVOID&)PM_Weapon_f, PM_Weapon);

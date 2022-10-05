@@ -8,11 +8,25 @@ BOOL cg::PM_SlideMove(pmove_t* pm, pml_t* pml, int gravity)
 
 	return clipped;
 }
-void cg::PM_AirMove(pmove_t* pm, pml_t* pml)
+void cg::PM_WalkMove(pmove_t* pm, pml_t* pml)
 {
 
-	memcpy_s(&h_pm, sizeof(pmove_t), pm, sizeof(pmove_t*));
-	memcpy_s(&h_pml, sizeof(pml_t), pml, sizeof(pml_t*));
+	Mod_DetermineFPS(pm, pml);
+
+	PM_WalkMove_f(pm, pml);
+
+	Mod_A_AdjustRPG(pm, pml);
+
+	if (jbuilder.get_playerState) {
+		memcpy_s(&h_pm, sizeof(pmove_t), pm, sizeof(pmove_t));
+		memcpy_s(&h_pml, sizeof(pml_t), pml, sizeof(pml_t));
+		memcpy_s(&h_ps, sizeof(playerState_s), pm->ps, sizeof(playerState_s));
+		jbuilder.OnCreateNew();
+		jbuilder.get_playerState = false;
+	}
+}
+void cg::PM_AirMove(pmove_t* pm, pml_t* pml)
+{
 	
 	Mod_DetermineFPS(pm, pml);
 
@@ -21,6 +35,16 @@ void cg::PM_AirMove(pmove_t* pm, pml_t* pml)
 	Mod_HitAnalyzer(pm, pml);
 	Mod_JumpAnalyzer(pm, pml);
 	Mod_A_AdjustRPG(pm, pml);
+
+
+	if (jbuilder.get_playerState) {
+		memcpy_s(&h_pm, sizeof(pmove_t), pm, sizeof(pmove_t));
+		memcpy_s(&h_pml, sizeof(pml_t), pml, sizeof(pml_t));
+		memcpy_s(&h_ps, sizeof(playerState_s), pm->ps, sizeof(playerState_s));
+		jbuilder.OnCreateNew();
+		jbuilder.get_playerState = false;
+	}
+
 
 }
 void cg::PM_UFOMove(pmove_t* pmm, pml_t* pmll)
@@ -34,6 +58,8 @@ void cg::PM_UFOMove(pmove_t* pmm, pml_t* pmll)
 
 	jumpanalyzer.commandTime = pm->ps->commandTime;
 	jumpanalyzer.serverTime = pm->cmd.serverTime;
+
+	jbuilder.OnUpdatePosition();
 
 	return;
 }
@@ -259,6 +285,7 @@ void cg::PM_ModCode(pml_t* pml, pmove_t* pm)
 
 	Mod_JumpView(pm, pml);
 	Mod_A_AutoSliding(pm, pml);
+	jbuilder.OnUpdatePosition();
 	//Mod_A_Strafebot(pm);
 
 	return;

@@ -455,6 +455,9 @@ void r::R_DrawMenuByName(const char* category, bool justPressed, bool& wantsEdit
 	else if (!strcmp("Game", category)) {
 		R_OtherTab();
 	}
+	else if (!strcmp("Jump Builder", category)) {
+		R_JumpBuilder_Main();
+	}
 	else if (!strcmp("Jump Preview", category)) {
 		if (justPressed) {
 			analyzer.is_playback = false;

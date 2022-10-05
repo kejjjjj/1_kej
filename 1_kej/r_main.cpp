@@ -20,7 +20,25 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 				Mod_DrawJumpDirection();
 				
 			}
+
+			if (jbuilder.MovementExists()) {
+				jump_data* jData = jbuilder.FetchFrameData(jbuilder.current_frame-1);
+
+				if (jData) {
+
+					r::box_s box = r::R_ConstructBoxFromBounds(jData->origin, jData->mins, jData->maxs);
+
+					r::R_DrawConstructedBoxEdges(box, vec4_t{ 255,0,0,255 });
+					r::R_DrawConstructedBox(box, vec4_t{ 255,0,0,50 });
+
+				}
+
+			}
+
 			Mod_DrawFPSHelpers();
+
+			
+
 
 		}
 		R_EndRender();

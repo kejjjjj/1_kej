@@ -225,6 +225,12 @@
     <ClInclude Include="imgui_color_gradient.hpp">
       <Filter>Header Files\lib\ImGradient</Filter>
     </ClInclude>
+    <ClInclude Include="mod_jBuilder.hpp">
+      <Filter>Source Files\mod</Filter>
+    </ClInclude>
+    <ClInclude Include="r_ui_jbuilder.hpp">
+      <Filter>Source Files\render\ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -373,6 +379,12 @@
     </ClCompile>
     <ClCompile Include="imgui_color_gradient.cpp">
       <Filter>Header Files\lib\ImGradient</Filter>
+    </ClCompile>
+    <ClCompile Include="mod_jBuilder.cpp">
+      <Filter>Source Files\mod</Filter>
+    </ClCompile>
+    <ClCompile Include="r_ui_jbuilder.cpp">
+      <Filter>Source Files\render\ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

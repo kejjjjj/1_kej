@@ -10,7 +10,7 @@ namespace cg
 	//typedef void(*Pmove_h)(pmove_t* pmove);
 	inline void (*PmoveSingle)(pmove_t* pm) = (void(__cdecl*)(pmove_t*))0x4143A0;
 
-
+	inline void(__cdecl* PM_WalkMove_f)(pmove_t* pm, pml_t* pml);
 	inline void(__cdecl* PM_AirMove_f)(pmove_t* pm, pml_t* pml);
 	inline void(__cdecl* PM_UFOMove_f)(pmove_t* pm, pml_t* pml);
 	inline void(__cdecl* PM_Weapon_f)(pml_t* pml, pmove_t* pm);
@@ -21,6 +21,7 @@ namespace cg
 	inline void(*Pmove_f)(pmove_t* pmove);
 
 
+	void PM_WalkMove(pmove_t* pm, pml_t* pml);
 	void PM_AirMove(pmove_t* pm, pml_t* pml);
 	void PM_UFOMove(pmove_t* pm, pml_t* pml);
 	void PM_Weapon(pml_t* pml, pmove_t* pm);
@@ -37,6 +38,7 @@ namespace cg
 
 	inline pmove_t h_pm;
 	inline pml_t h_pml;
+	inline playerState_s h_ps;
 
 	struct fps_zones_s
 	{

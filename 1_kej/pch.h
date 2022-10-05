@@ -122,6 +122,7 @@ typedef vec_t vec4_t[4];
 
 #include "mod_jumps.hpp"
 #include "mod_automation.hpp"
+#include "mod_jBuilder.hpp"
 
 #include "cg_angle.hpp"
 #include "cg_main.hpp"
@@ -152,6 +153,7 @@ typedef vec_t vec4_t[4];
 #include "r_drawtools.hpp"
 #include "r_world.hpp"
 #include "r_ui.hpp"
+#include "r_ui_jbuilder.hpp"
 
 #include "cl_main.hpp"
 

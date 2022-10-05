@@ -85,7 +85,6 @@ void cg::setPitch(float ref, float ang)
 	ref -= ref * 2 - ang;
 
 	clients->viewangles[0] += ref;
-
 }
 void cg::setRoll(float ref, float ang)
 {

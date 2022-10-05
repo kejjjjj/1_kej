@@ -194,6 +194,7 @@
     <ClInclude Include="menu_items.hpp" />
     <ClInclude Include="mod_analyzer.hpp" />
     <ClInclude Include="mod_automation.hpp" />
+    <ClInclude Include="mod_jBuilder.hpp" />
     <ClInclude Include="mod_jumps.hpp" />
     <ClInclude Include="mod_vis.hpp" />
     <ClInclude Include="pch.h" />
@@ -201,6 +202,7 @@
     <ClInclude Include="r_drawtools.hpp" />
     <ClInclude Include="r_init.hpp" />
     <ClInclude Include="r_ui.hpp" />
+    <ClInclude Include="r_ui_jbuilder.hpp" />
     <ClInclude Include="r_world.hpp" />
     <ClInclude Include="scr_cmd.hpp" />
     <ClInclude Include="scr_functions.hpp" />
@@ -261,6 +263,7 @@
     <ClCompile Include="mod_analyzer.cpp" />
     <ClCompile Include="mod_analyzer_io.cpp" />
     <ClCompile Include="mod_automation.cpp" />
+    <ClCompile Include="mod_jBuilder.cpp" />
     <ClCompile Include="mod_jumps.cpp" />
     <ClCompile Include="mod_vis.cpp" />
     <ClCompile Include="pch.cpp">
@@ -275,6 +278,7 @@
     <ClCompile Include="r_main.cpp" />
     <ClCompile Include="r_ui_automation.cpp" />
     <ClCompile Include="r_ui_features.cpp" />
+    <ClCompile Include="r_ui_jbuilder.cpp" />
     <ClCompile Include="r_ui_jumpanalyzer.cpp" />
     <ClCompile Include="r_ui_menus.cpp" />
     <ClCompile Include="r_world.cpp" />
