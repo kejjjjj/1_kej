@@ -11,6 +11,7 @@ namespace cg
 	{
 		pmove_t* pm;
 		pml_t* pml;
+		bool run_created;
 	};
 
 	struct jump_builder_s
@@ -35,6 +36,8 @@ namespace cg
 
 		jump_data* FetchFrameData(int32_t frame);
 		int32_t current_frame; //updated when generating movement
+		int32_t preview_frame; //currently selected frame in the menu
+
 
 	private:
 		bool is_generating_movement;

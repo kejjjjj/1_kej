@@ -26,6 +26,8 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 
 				if (jData) {
 
+					VectorCopy(jData->origin, ps_loc->origin);
+
 					r::box_s box = r::R_ConstructBoxFromBounds(jData->origin, jData->mins, jData->maxs);
 
 					r::R_DrawConstructedBoxEdges(box, vec4_t{ 255,0,0,255 });

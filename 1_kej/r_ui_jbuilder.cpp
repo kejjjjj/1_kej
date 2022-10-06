@@ -5,28 +5,51 @@ void r::R_JumpBuilder_Main()
 {
 
 	
-	ImGui::Text("Hello world! This is an example text\t\t");
+	if (!jbuilder.builder_data.run_created) {
+		ImGui::Text("Create Project");
+		UI_DrawGradientZone(ImVec2(150, 100));
 
-	ImGui::NewLine();
-	ImGui::Text("testing");
-	UI_DrawGradientZone(ImVec2(150, 100));
+		ImGui::Text("\t");
+		ImGui::SameLine();
 
-	ImGui::Text("\t");
-	ImGui::SameLine();
+		ImGui::BeginGroup();
 
-	ImGui::BeginGroup();
+		if (ImGui::Button("Create New"))
+			jbuilder.get_playerState = true;
 
-	if (ImGui::Button("Create New"))
-		jbuilder.get_playerState = true;
-	else if (ImGui::Button(jbuilder.isGeneratingMovement() == false ? "Generate Movement" : "Stop Generating")) {
-		if (!jbuilder.isGeneratingMovement())
-			jbuilder.OnStartGenerating();
-		else {
-			jbuilder.OnStopGenerating();
-			Com_Printf(CON_CHANNEL_OBITUARY, "recorded [%i]\n", jbuilder.jData.size());
-		}
+		ImGui::EndGroup();
+	}else{
+
+		ImGui::Text("Editing");
+		UI_DrawGradientZone(ImVec2(150, 200));
+
+		ImGui::Text("\t");
+		ImGui::SameLine();
+
+		ImGui::BeginGroup();
+
+		ImGui::SliderInt("Frame", &jbuilder.preview_frame, 0, 100, "%d");
+		ImGui::NewLine();
+
+		ImGui::Text("\t");
+		ImGui::SameLine();
+		if (ImGui::Button("W##01"));
+		if (ImGui::Button("A##01"));
+		ImGui::SameLine(); 		
+		ImGui::Text("\t");
+		ImGui::SameLine();		
+		if (ImGui::Button("D##01"));
+
+		ImGui::Text("\t");
+		ImGui::SameLine();
+		if (ImGui::Button("S##01"));
+
+		ImGui::EndGroup();
+
+	
 	}
+	
 
-	ImGui::EndGroup();
+	
 
 }

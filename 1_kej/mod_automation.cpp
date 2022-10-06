@@ -39,7 +39,7 @@ void cg::Mod_A_AutoFPS()
 	
 
 
-	if (jumpanalyzer.recommendedFPS != NULL && !analyzer.isPreviewing() && VID_ACTIVE)
+	if (jumpanalyzer.recommendedFPS != NULL && !analyzer.isPreviewing() && VID_ACTIVE && !jbuilder.isGeneratingMovement())
 	{
 		int fps = jumpanalyzer.recommendedFPS;
 

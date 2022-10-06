@@ -14,6 +14,7 @@ void jump_builder_s::OnCreateNew()
 
 	Com_Printf(CON_CHANNEL_OBITUARY, "^2Data Created!\n");
 
+	this->builder_data.run_created = true;
 
 	//bData.pm->ps->velocity[0] = 3000;
 }
@@ -39,6 +40,8 @@ void jump_builder_s::ClearData()
 	this->jData.erase(this->jData.begin(), this->jData.end());
 	this->jData.clear();
 	this->jData.resize(0);
+
+	this->builder_data.run_created = false;
 
 	this->current_frame = NULL;
 }
@@ -78,6 +81,19 @@ void jump_builder_s::OnUpdatePosition()
 	pm->cmd.forwardmove = 127;
 	pm->oldcmd.forwardmove = 127;
 
+	//pm->cmd.angles[0] = ANGLE2SHORT(clients->cgameViewangles[0]);
+	//pm->cmd.angles[1] = ANGLE2SHORT(clients->cgameViewangles[1]);
+	//pm->cmd.angles[2] = ANGLE2SHORT(clients->cgameViewangles[2]);
+
+
+	VectorCopy(clients->cgameViewangles, pm->ps->viewangles);
+	pm->ps->viewangles[YAW] += 90;
+	//((void(*)(playerState_s*, usercmd_s*))0x412980)(pm->ps, &pm->cmd); //call groundtrace after 
+	AngleVectors(pm->ps->viewangles, pml->right, pml->forward, pml->up);
+
+	if (move->jump)
+		pm->cmd.buttons |= 1024;
+
 	if (pml->walking)
 		PM_WalkMove_f(pm, pml);
 	else
@@ -87,7 +103,11 @@ void jump_builder_s::OnUpdatePosition()
 
 	const float difference = (float)(1000.f / (cls->frametime == NULL ? 1 : cls->frametime)) / 125.f;
 
-	if (jumpanalyzer.serverTime > old_cmdTime + 2 * difference) {
+
+	dvar_s* com_maxfps = Dvar_FindMalleableVar("com_maxfps");
+	com_maxfps->current.integer = 60;
+
+	if (jumpanalyzer.serverTime > old_cmdTime + 3 * difference) {
 		old_cmdTime = jumpanalyzer.serverTime;
 		jump_data jData;
 
@@ -104,7 +124,7 @@ void jump_builder_s::OnUpdatePosition()
 		jData.jumped = false;
 
 		memcpy(&pm->oldcmd, &pm->cmd, sizeof(pm->oldcmd));
-
+		pm->cmd.buttons = 0;
 		this->SaveFrameData(jData);
 		this->OnFrameUpdate();
 	}

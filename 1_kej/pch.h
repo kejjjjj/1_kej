@@ -13,6 +13,9 @@
 #define NOT_SERVER *(int*)0x0797520 == 0
 #define VID_ACTIVE (*(BYTE*)0x0CC1B704 != 0)
 
+#define ANGLE2SHORT( x )  ( (int)( ( x ) * 65536 / 360 ) & 65535 )
+#define SHORT2ANGLE( x )  ( ( x ) * ( 360.0 / 65536 ) )
+
 typedef float vec_t;
 typedef vec_t vec2_t[2];
 typedef vec_t vec3_t[3];
