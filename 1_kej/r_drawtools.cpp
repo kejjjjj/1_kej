@@ -392,3 +392,53 @@ void r::UI_DrawGradientZone(ImVec2 size)
 	ImGui::DrawGradientBar(&grad, sp, size.x, 5);
 	ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(sp.x, sp.y + 5), ImVec2(sp.x + size.x, sp.y + size.y), ImColor(0.08f, 0.07f, 0.075f, 0.8f));
 }
+
+
+std::vector<ImVec2> r::OriginsToScreen(std::vector<jump_data> data, std::vector<ImVec2>* color, float average) 
+{
+	std::vector<ImVec2> points;
+	color->clear();
+	color->resize(1);
+	color->erase(color->begin(), color->end());
+
+	int validPoints{ 0 };
+	vec2_t xy;
+
+	for (unsigned i = 0; i < data.size(); i++) {
+		if (r::WorldToScreen(data[i].origin, xy)) {
+			points.push_back(ImVec2(xy[0], xy[1]));
+
+			ImVec2 fcolor;
+
+			float col = VALUE2COLOR(glm::length(glm::vec2(data[i].velocity[0], data[i].velocity[1])), average);
+
+			fcolor.x = 255.f - col;
+			fcolor.y = col;
+			if (col > 255) {
+				fcolor.x = 0;
+				fcolor.y = 255; //green because we got more speed
+			}
+			color->push_back(fcolor);
+			validPoints += 1;
+		}
+	}
+	points.resize(validPoints);
+	color->resize(validPoints);
+	return points;
+}
+std::vector<ImVec2> r::OriginsToScreen(std::vector<jump_data> data)
+{
+	std::vector<ImVec2> points;
+
+	int validPoints{ 0 };
+	vec2_t xy;
+
+	for (unsigned i = 0; i < data.size(); i++) {
+		if (r::WorldToScreen(data[i].origin, xy)) {
+			points.push_back(ImVec2(xy[0], xy[1]));
+			validPoints += 1;
+		}
+	}
+	points.resize(validPoints);
+	return points;
+}

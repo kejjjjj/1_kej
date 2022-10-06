@@ -76,6 +76,9 @@ namespace r
 	size_t UI_GetImageIndex(const char* name);
 	void UI_DrawGradientZone(ImVec2 size);
 
+	std::vector<ImVec2> OriginsToScreen(std::vector<jump_data> data, std::vector<ImVec2>* color, float average);
+	std::vector<ImVec2> OriginsToScreen(std::vector<jump_data> data);
+
 }
 
 #endif

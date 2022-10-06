@@ -127,8 +127,8 @@ float cg::R_getOptAngle(const bool rightmove, float& diff)
 	else if (GROUND)
 		g_speed = 281.f;
 
-	const float velocitydirection = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180.f / PI;
-	const float accelerationAng = atan2(-(int)*sidemove, (int)*forwardmove) * 180.f / PI;
+	const double velocitydirection = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180.f / PI;
+	const double accelerationAng = atan2(-(int)*sidemove, (int)*forwardmove) * 180.f / PI;
 	diff = acos((g_speed - accel) / _speed) * 180.f / PI;
 	//const float minAngle = acos(g_speed / _speed) * 180.f / PI;
 
@@ -184,9 +184,9 @@ float cg::getOptAngle(float& _opt)
 	else if (GROUND)
 		g_speed = 224.f;
 
-	const float velocitydirection = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180.f / PI;
-	const float accelerationAng = atan2(-rightmove, forwardmove) * 180.f / PI;
-	float diff = acos((g_speed - accel) / _speed) * 180.f / PI;
+	const double velocitydirection = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180.f / PI;
+	const double accelerationAng = atan2(-rightmove, forwardmove) * 180.f / PI;
+	double diff = acos((g_speed - accel) / _speed) * 180.f / PI;
 	//const float minAngle = acos(g_speed / _speed) * 180.f / PI;
 
 	if (jumpanalyzer.recommendedFPS == 125)

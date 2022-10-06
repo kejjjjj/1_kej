@@ -555,12 +555,20 @@ void r::R_Features(bool& wantsEditor)
 	ImGui::SameLine();  ImGui::Text(" ");
 	ImGui::SameLine();
 
-	R_DrawMenuByName(fs::removeFileExtension(r::imagePairs[ActiveIndex].first, 4).c_str(), justPressed, wantsEditor);
+	std::string category = fs::removeFileExtension(r::imagePairs[ActiveIndex].first, 4);
+
+	R_DrawMenuByName(category.c_str(), justPressed, wantsEditor);
 
 	if (r::imagePairs[ActiveIndex].first.find("Preview") != std::string::npos)
 		ActiveIndex = UI_GetImageIndex("Automation");
 
-	
+
+	const bool isMenu = !category.compare("Jump Builder");
+	if (jbuilder.isEditing() && !isMenu)
+		jbuilder.SetEditMode(false);
+
+	else if (!jbuilder.isEditing() && isMenu)
+		jbuilder.SetEditMode(true);
 
 	childSize.x = rect.x + 10;
 	childSize.y = rect.y + 10;

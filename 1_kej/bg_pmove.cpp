@@ -59,7 +59,7 @@ void cg::PM_UFOMove(pmove_t* pmm, pml_t* pmll)
 	jumpanalyzer.commandTime = pm->ps->commandTime;
 	jumpanalyzer.serverTime = pm->cmd.serverTime;
 
-	jbuilder.OnUpdatePosition();
+	//jbuilder.OnUpdatePosition();
 
 	return;
 }
@@ -285,7 +285,7 @@ void cg::PM_ModCode(pml_t* pml, pmove_t* pm)
 
 	Mod_JumpView(pm, pml);
 	Mod_A_AutoSliding(pm, pml);
-	jbuilder.OnUpdatePosition();
+	//jbuilder.OnUpdatePosition();
 	//Mod_A_Strafebot(pm);
 
 	return;

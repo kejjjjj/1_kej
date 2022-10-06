@@ -12,6 +12,7 @@ void cg::CL_Disconnect(int localClientNum)
 			analyzer.StopRecording();
 
 		analyzer.ClearData();
+		jbuilder.ClearData();
 
 		Mod_EditMemory(true);
 

@@ -685,40 +685,40 @@ void cg::Mod_DrawJumpPath()
 	if (!analyzer.RecordingExists() && !analyzer.Segmenter_RecordingExists() || !v::mod_jumpv_path.isEnabled())
 		return;
 
-	const auto OriginsToScreen = [](std::vector<jump_data> data, std::vector<ImVec2>* color) -> std::vector<ImVec2> {
-		std::vector<ImVec2> points;
-		color->clear();
-		color->resize(1);
-		color->erase(color->begin(), color->end());
+	//const auto OriginsToScreen = [](std::vector<jump_data> data, std::vector<ImVec2>* color) -> std::vector<ImVec2> {
+	//	std::vector<ImVec2> points;
+	//	color->clear();
+	//	color->resize(1);
+	//	color->erase(color->begin(), color->end());
 
-		int validPoints{ 0 };
-		vec2_t xy;
+	//	int validPoints{ 0 };
+	//	vec2_t xy;
 
-		for (unsigned i = 0; i < data.size(); i++) {
-			if (r::WorldToScreen(data[i].origin, xy)) {
-				points.push_back(ImVec2(xy[0], xy[1]));
+	//	for (unsigned i = 0; i < data.size(); i++) {
+	//		if (r::WorldToScreen(data[i].origin, xy)) {
+	//			points.push_back(ImVec2(xy[0], xy[1]));
 
-				ImVec2 fcolor;
+	//			ImVec2 fcolor;
 
-				float col = VALUE2COLOR(glm::length(glm::vec2(data[i].velocity[0], data[i].velocity[1])), analyzer.average_velocity);
+	//			float col = VALUE2COLOR(glm::length(glm::vec2(data[i].velocity[0], data[i].velocity[1])), analyzer.average_velocity);
 
-				fcolor.x = 255.f - col;
-				fcolor.y = col;
-				if (col > 255) {
-					fcolor.x = 0;
-					fcolor.y = 255; //green because we got more speed
-				}
-				color->push_back(fcolor);
-				validPoints += 1;
-			}
-		}
-		points.resize(validPoints);
-		color->resize(validPoints);
-		return points;
-	};
+	//			fcolor.x = 255.f - col;
+	//			fcolor.y = col;
+	//			if (col > 255) {
+	//				fcolor.x = 0;
+	//				fcolor.y = 255; //green because we got more speed
+	//			}
+	//			color->push_back(fcolor);
+	//			validPoints += 1;
+	//		}
+	//	}
+	//	points.resize(validPoints);
+	//	color->resize(validPoints);
+	//	return points;
+	//};
 
 	std::vector<ImVec2> color;
-	std::vector<ImVec2> points = OriginsToScreen(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, &color);
+	std::vector<ImVec2> points = r::OriginsToScreen(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, &color, true);
 	if (points.size() > 1)
 		for (int i = 0; i < points.size() - 1; i++)
 			ImGui::GetBackgroundDrawList()->AddLine(points[i], points[i + 1], IM_COL32(color[i].x, color[i].y, 0, 255), 3.f);
@@ -788,5 +788,25 @@ void cg::Mod_DrawJumpDirection()
 
 
 	
+
+}
+void cg::Mod_B_DrawPath()
+{
+	std::vector<ImVec2> points = r::OriginsToScreen(jbuilder.jData);
+	if (points.size() > 1)
+		for (int i = 0; i < points.size() - 1; i++)
+			ImGui::GetBackgroundDrawList()->AddLine(points[i], points[i + 1], IM_COL32(0,255,0,255), 3.f);
+
+
+	jump_data* jData = jbuilder.FetchFrameData(jbuilder.preview_frame);
+	
+	if (jData) {
+		//vec2_t xy;
+		//if (r::WorldToScreen(jData->origin, xy)) {
+			r::box_s box = r::R_ConstructBoxFromBounds(jData->origin, jData->mins, jData->maxs);
+			r::R_DrawConstructedBoxEdges(box, vec4_t{ 0,255,255,255 });
+			r::R_DrawConstructedBox(box, vec4_t{ 0,255,255,50 });
+		//}
+	}
 
 }
