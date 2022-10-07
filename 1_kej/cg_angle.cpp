@@ -207,14 +207,9 @@ float cg::getOptAngle(float& _opt)
 
 	return yaw;
 }
-float cg::getOptForAnalyzer(jump_data* data)
+float cg::getOptForAnalyzer(jump_data* data, bool onGround)
 {
-
-	char* forwardmove = &input->move;
-	char* sidemove = &input->strafe;
-
-
-	float _speed = glm::length(glm::vec2(data->velocity[0], data->velocity[1]));
+	const float _speed = glm::length(glm::vec2(data->velocity[0], data->velocity[1]));
 
 	if (_speed < 1)
 		return -400.0;
@@ -227,16 +222,16 @@ float cg::getOptForAnalyzer(jump_data* data)
 
 	if (_speed < 190)
 		g_speed = 190.f - (190.f - _speed);
-	else if (GROUND)
-		g_speed = 281.f;
+	else if (onGround && _speed < 370)
+		g_speed = 224.f;
 
 	const float velocitydirection = atan2(data->velocity[1], data->velocity[0]) * 180.f / PI;
-	const float accelerationAng = atan2((int)-data->rightmove, (int)data->forwardmove) * 180.f / PI;
+	const float accelerationAng = atan2(-(int)data->rightmove, (int)data->forwardmove) * 180.f / PI;
 	float diff = acos((g_speed - accel) / _speed) * 180.f / PI;
 	//const float minAngle = acos(g_speed / _speed) * 180.f / PI;
 
-	if (jumpanalyzer.recommendedFPS == 125)
-		diff += accel;
+	//if (jumpanalyzer.recommendedFPS == 125)
+	//	diff += accel;
 
 	float delta = yaw;
 

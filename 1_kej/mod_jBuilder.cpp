@@ -36,6 +36,15 @@ void jump_builder_s::OnCreateNew()
 	this->OnAddSegment();
 	//bData.pm->ps->velocity[0] = 3000;
 }
+void jump_builder_s::OnDeleteProject()
+{
+	this->builder_data.run_created = false;
+	this->ClearData();
+
+	Com_Printf(CON_CHANNEL_OBITUARY, "^1Project deleted!\n");
+
+
+}
 bool jump_builder_s::isGeneratingMovement()
 {
 	return this->is_generating_movement;
@@ -66,6 +75,8 @@ void jump_builder_s::ClearData()
 	this->builder_data.run_created = false;
 
 	this->current_frame = NULL;
+	this->current_segment = NULL;
+	this->total_frames = NULL;
 }
 void jump_builder_s::OnFrameUpdate()
 {
@@ -80,6 +91,16 @@ void jump_builder_s::SaveFrameData(jump_data& jData)
 		this->OnStopGenerating();
 	}
 }
+void jump_builder_s::SaveFrameData(std::vector<jump_data>& container, jump_data& jData)
+{
+	if (container.size() + 1 < container.max_size())
+		container.push_back(jData);
+	else {
+		Com_PrintError(CON_CHANNEL_ERROR, "exceeded maximum amount of frames!\n");
+		this->OnStopGenerating();
+	}
+	Com_Printf(CON_CHANNEL_OBITUARY, "container size: %i\n", container.size());
+}
 size_t jump_builder_s::GetTotalFrames()
 {
 	size_t total(0);
@@ -90,43 +111,110 @@ size_t jump_builder_s::GetTotalFrames()
 	return this->segments[this->segments.size()-1].end;
 
 }
-void jump_builder_s::OnUpdatePosition(const bool erase)
+void jump_builder_s::OnGetSegmentData()
 {
-	//if (!this->isGeneratingMovement())
-	//	return;
-
 	if (this->segments.empty())
 		return;
 
 	builder_data_s& bData = this->builder_data;
 
-	if (erase) {
-		this->jData.erase(this->jData.begin(), this->jData.end());
-		this->jData.clear();
-		this->jData.resize(0);
-		
+	if (this->current_segment == NULL) {
 		memcpy_s(&pm_copy, sizeof(pmove_t), &cg::h_pm, sizeof(pmove_t));
 		memcpy_s(&pml_copy, sizeof(pml_t), &cg::h_pml, sizeof(pml_t));
 		memcpy_s(&ps_copy, sizeof(playerState_s), &cg::h_ps, sizeof(playerState_s));
 
-		bData.pm = reinterpret_cast<pmove_t*>(&pm_copy);
-		bData.pml = reinterpret_cast<pml_t*>(&pml_copy);
-		bData.pm->ps = reinterpret_cast<playerState_s*>(&ps_copy);
-
-		current_frame = NULL;
 	}
+	else {
+		const segment_data_s prev_segment = this->segments[this->current_segment - 1];
+
+		memcpy_s(&pm_copy, sizeof(pmove_t), &prev_segment.end_pm, sizeof(pmove_t));
+		memcpy_s(&pml_copy, sizeof(pml_t), &prev_segment.end_pml, sizeof(pml_t));
+		memcpy_s(&ps_copy, sizeof(playerState_s), &prev_segment.end_ps, sizeof(playerState_s));
+	}
+
+	bData.pm = reinterpret_cast<pmove_t*>(&pm_copy);
+	bData.pml = reinterpret_cast<pml_t*>(&pml_copy);
+	bData.pm->ps = reinterpret_cast<playerState_s*>(&ps_copy);
+
+
+}
+void jump_builder_s::OnUpdateAllPositions()
+{
+	const int tmp_save = jbuilder.current_segment;
+
+	for (size_t i = 0; i < jbuilder.segments.size(); i++) {
+		jbuilder.current_segment = i;
+		jbuilder.OnUpdatePosition(true);
+	}
+	jbuilder.current_segment = tmp_save;
+}
+
+void Sys_SnapVector(float* v)
+{
+	int i;
+	float f;
+
+	f = *v;
+	__asm	fld		f;
+	__asm	fistp	i;
+	*v = i;
+	v++;
+	f = *v;
+	__asm	fld		f;
+	__asm	fistp	i;
+	*v = i;
+	v++;
+	f = *v;
+	__asm	fld		f;
+	__asm	fistp	i;
+	*v = i;
+	/*
+	*v = fastftol(*v);
+	v++;
+	*v = fastftol(*v);
+	v++;
+	*v = fastftol(*v);
+	*/
+}
+
+
+void jump_builder_s::OnUpdatePosition(const bool erase)
+{
+	//if (!this->isGeneratingMovement())
+	//	return;
+
+	
+
+	if (this->segments.empty())
+		return;
+
+	builder_data_s& bData = this->builder_data;
 	pmove_t* pm = bData.pm;
 	pml_t* pml = bData.pml;
 	segment_data_s& segment = this->segments[this->current_segment];
 
-	if (&segment == nullptr)
-		return;
+	if (erase || !pm || !pml) {
+
+		segment.jData.erase(segment.jData.begin(), segment.jData.begin());
+		segment.jData.clear();
+		segment.jData.resize(0);
+		
+		this->OnGetSegmentData();
+
+		pm = bData.pm;
+		pml = bData.pml;
+
+		current_frame = NULL;
+	}
+	hook* a = nullptr;
+
+	a->write_addr(0x405360, "\xC3",  1); //stop an animation related crash
 
 	for (size_t i = 0; i < segment.framecount; i++) {
 
 		pm->cmd.forwardmove = segment.forwardmove;
 		pm->cmd.rightmove = segment.rightmove;
-
+		pm->ps->clientNum = cgs->clientNum;
 		//pm->oldcmd.forwardmove = 127;
 
 		//VectorCopy(clients->cgameViewangles, pm->ps->viewangles);
@@ -136,13 +224,6 @@ void jump_builder_s::OnUpdatePosition(const bool erase)
 		//if (move->jump)
 		//	pm->cmd.buttons |= 1024;
 
-		if (pml->walking)
-			PM_WalkMove_f(pm, pml);
-		else
-			PM_AirMove_f(pm, pml);
-
-		((void(__cdecl*)(pmove_t * pm, pml_t * pml))0x410660)(pm, pml); //call groundtrace after 
-
 		jump_data jData;
 
 		VectorCopy(pm->ps->viewangles, jData.angles);
@@ -150,19 +231,75 @@ void jump_builder_s::OnUpdatePosition(const bool erase)
 		VectorCopy(pm->ps->velocity, jData.velocity);
 		jData.forwardmove = pm->cmd.forwardmove;
 		jData.rightmove = pm->cmd.rightmove;
-		VectorCopy(pm->mins, jData.mins);
-		VectorCopy(pm->maxs, jData.maxs);
-		jData.rpg_fired = false;
-		jData.bounced = false;
-		jData.colliding = false;
-		jData.jumped = false;
+		jData.FPS = 250;
+		
 
-		memcpy(&pm->oldcmd, &pm->cmd, sizeof(pm->oldcmd));
-		pm->cmd.buttons = 0;
-		this->SaveFrameData(jData);
-		this->OnFrameUpdate();
+		if (pml->walking) {
+			pm->cmd.buttons |= 8194;
+			jData.FPS = 125;
+		}
+
+		((void(__cdecl*)(pmove_t*))0x40E6A0)(pm); //update sprint
+
+		if (glm::length(glm::vec2(pm->ps->velocity[0], pm->ps->velocity[1])) >= 224 || !pml->walking)
+			pm->ps->viewangles[YAW] = getOptForAnalyzer(&jData, pml->walking);
+
+		AngleVectors(pm->ps->viewangles, pml->forward, pml->right, pml->up);
+
+
+		pml->msec = 1000 / jData.FPS;
+		pml->frametime = (float)pml->msec / 1000.f;
+
+
+		if (pml->walking) {
+			
+
+			if (glm::length(glm::vec2(pm->ps->velocity[0], pm->ps->velocity[1])) >= 360.f) {
+				pm->cmd.buttons |= 1024;
+			}
+
+			PM_WalkMove_f(pm, pml);
+		}
+		else
+			PM_AirMove_f(pm, pml);
+
+		((void(__cdecl*)(pmove_t*, pml_t*))0x410660)(pm, pml); //call groundtrace after 
+
+		PM_OverBounce(pm, pml);
+		Sys_SnapVector(pm->ps->velocity); //Sys_SnapVector
+
+		if (pm && pml) {
+		
+
+			//jump_data jData;
+
+			VectorCopy(pm->ps->viewangles, jData.angles);
+			VectorCopy(pm->ps->origin, jData.origin);
+			VectorCopy(pm->ps->velocity, jData.velocity);
+			jData.forwardmove = pm->cmd.forwardmove;
+			jData.rightmove = pm->cmd.rightmove;
+			VectorCopy(pm->mins, jData.mins);
+			VectorCopy(pm->maxs, jData.maxs);
+			jData.rpg_fired = false;
+			jData.bounced = false;
+			jData.colliding = false;
+			jData.jumped = false;
+
+			memcpy(&pm->oldcmd, &pm->cmd, sizeof(pm->oldcmd));
+			pm->cmd.buttons = 0;
+			this->SaveFrameData(segment.jData, jData);
+			this->OnFrameUpdate();
+		}
+		else {
+			std::cout << "EPIC PMOVE FAILURe\n";
+		}
 	}
-	Com_Printf(CON_CHANNEL_OBITUARY, "Generated [%i] frames\n", segment.framecount);
+	memcpy_s(&segment.end_pm, sizeof(pmove_t), pm, sizeof(pmove_t));
+	memcpy_s(&segment.end_pml, sizeof(pml_t), pml, sizeof(pml_t));
+	memcpy_s(&segment.end_ps, sizeof(playerState_s), pm->ps, sizeof(playerState_s));
+
+	a->write_addr(0x405360, "\x53", 1);
+	Com_Printf(CON_CHANNEL_OBITUARY, "velocity %.1f\npml->walking: %i\n", glm::length(glm::vec2(pm->ps->velocity[0], pm->ps->velocity[1])), pml->walking);
 	
 }
 jump_data* jump_builder_s::FetchFrameData(int32_t frame)

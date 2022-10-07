@@ -175,7 +175,7 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 
 		const int32_t velocity = (int32_t)glm::length(glm::vec2(jData->velocity[0], jData->velocity[1]));
 
-		const float opt = getOptForAnalyzer(jData);
+		const float opt = getOptForAnalyzer(jData, GROUND);
 
 		ImGui::Text("fps: %i", jData->FPS);
 		ImGui::Text("velocity: %i (Z: %.3f)", velocity, jData->velocity[2]);

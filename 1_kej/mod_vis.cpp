@@ -552,7 +552,7 @@ void cg::Mod_DrawWorldAxes()
 
 	else {
 		if (jData)
-			opt = getOptForAnalyzer(jData);
+			opt = getOptForAnalyzer(jData, GROUND);
 		else
 			opt = R_getOptAngle(rightmove, delta);
 
@@ -583,7 +583,7 @@ void cg::Mod_GetAccelerationAngles(const bool rightmove, vec2_t out)
 
 	else {
 		if (jData)
-			opt = getOptForAnalyzer(jData);
+			opt = getOptForAnalyzer(jData, GROUND);
 		else
 			opt = R_getOptAngle(rightmove, delta);
 
@@ -792,21 +792,71 @@ void cg::Mod_DrawJumpDirection()
 }
 void cg::Mod_B_DrawPath()
 {
-	std::vector<ImVec2> points = r::OriginsToScreen(jbuilder.jData);
-	if (points.size() > 1)
-		for (int i = 0; i < points.size() - 1; i++)
-			ImGui::GetBackgroundDrawList()->AddLine(points[i], points[i + 1], IM_COL32(0,255,0,255), 3.f);
+	size_t indx(0);
+	for (auto& a : jbuilder.segments) {
+		std::vector<ImVec2> points = r::OriginsToScreen(a.jData);
+		if (points.size() > 1)
+			for (int i = 0; i < points.size() - 1; i++)
+				ImGui::GetBackgroundDrawList()->AddLine(points[i], points[i + 1], IM_COL32(0, 255, indx % 2 == true ? 0 : 255 , 255), 3.f);
 
 
-	jump_data* jData = jbuilder.FetchFrameData(jbuilder.preview_frame);
-	
-	if (jData) {
-		//vec2_t xy;
-		//if (r::WorldToScreen(jData->origin, xy)) {
-			r::box_s box = r::R_ConstructBoxFromBounds(jData->origin, jData->mins, jData->maxs);
-			r::R_DrawConstructedBoxEdges(box, vec4_t{ 0,255,255,255 });
-			r::R_DrawConstructedBox(box, vec4_t{ 0,255,255,50 });
+
+		//vec2_t xy, xy_end;
+
+
+
+		//if (a.jData.size() > 1) {
+		//	jump_data jData = a.jData[0];
+
+		//	vec3_t origin;
+		//	VectorCopy(jData.origin, origin);
+
+		//	origin[2] += jData.maxs[2] / 2;
+
+		//	const float accelerationAng = atan2(-(int)jData.rightmove, (int)jData.forwardmove) * 180.f / PI;
+		//	const float velAngle = atan2(-(int)jData.velocity[1], (int)jData.velocity[0] ) * 180.f / PI;
+
+		//	axis_s ax = CG_GetNearestWorldAxisFromYaw(velAngle);
+
+		//	
+
+		//	vec3_t ang{0,0,0};
+
+		//	if (jData.rightmove) {
+		//		ang[YAW] = velAngle + ax.angle;
+		//	}
+		//	else {
+		//		ang[YAW] = velAngle - ax.angle;
+
+		//	}
+
+		//	AnglesToForward(ang, origin, 50, ang);
+
+		//	if (r::WorldToScreen(origin, xy) && r::WorldToScreen(ang, xy_end)) {
+		//		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(xy[0], xy[1]), ImVec2(xy_end[0], xy_end[1]), IM_COL32(255, 0, 0, 255), 3);
+		//	}
 		//}
+
+		//jump_data* jData = jbuilder.FetchFrameData(jbuilder.preview_frame);
+
+		if (jbuilder.preview_frame > a.begin && jbuilder.preview_frame < a.end) {
+
+			if (a.jData.size() > 1) {
+
+
+				jump_data jData = a.jData[jbuilder.preview_frame - a.begin];
+
+
+				//vec2_t xy;
+				//if (r::WorldToScreen(jData->origin, xy)) {
+				r::box_s box = r::R_ConstructBoxFromBounds(jData.origin, jData.mins, jData.maxs);
+				r::R_DrawConstructedBoxEdges(box, vec4_t{ 0,255,255,255 });
+				r::R_DrawConstructedBox(box, vec4_t{ 0,255,255,50 });
+				//}
+
+			}
+		}
+		indx++;
 	}
 
 }

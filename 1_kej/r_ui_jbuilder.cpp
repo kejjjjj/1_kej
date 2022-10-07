@@ -11,7 +11,7 @@ void r::R_JumpBuilder_ConstructKey(char& direction, char value, const char* butt
 		else
 			direction = value;
 
-		jbuilder.OnUpdatePosition(true);
+		jbuilder.OnUpdateAllPositions();
 
 	}
 
@@ -47,8 +47,14 @@ void r::R_JumpBuilder_Main()
 
 		ImGui::BeginGroup();
 
+		static int old_segment = jbuilder.current_segment;
+
 		if (ImGui::SliderInt("Segment", &jbuilder.current_segment, 0, jbuilder.segments.size() - 1, "%d")) {
 
+			if(jbuilder.current_segment != old_segment)
+				jbuilder.OnUpdatePosition(true);
+
+			old_segment = jbuilder.current_segment;
 		}
 		const size_t total_frames = jbuilder.GetTotalFrames();
 
@@ -88,7 +94,7 @@ void r::R_JumpBuilder_Main()
 			old_count = segments[jbuilder.current_segment].framecount;
 
 			jbuilder.OnUpdateOffsets();
-			jbuilder.OnUpdatePosition(true);
+			jbuilder.OnUpdateAllPositions();
 
 		}
 
@@ -117,7 +123,18 @@ void r::R_JumpBuilder_Main()
 
 	
 	}
+	ImGui::Text("Project\t\t\t\t");
+	UI_DrawGradientZone(ImVec2(550, 100));
+
+	ImGui::Text("\t");
+	ImGui::SameLine();
+
+	ImGui::BeginGroup();
+
+	if (ImGui::Button("Delete Project"))
+		jbuilder.OnDeleteProject();
 	
+	ImGui::EndGroup();
 
 	
 

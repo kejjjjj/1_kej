@@ -10,10 +10,10 @@ BOOL cg::PM_SlideMove(pmove_t* pm, pml_t* pml, int gravity)
 }
 void cg::PM_WalkMove(pmove_t* pm, pml_t* pml)
 {
-
 	Mod_DetermineFPS(pm, pml);
 
 	PM_WalkMove_f(pm, pml);
+	jumpanalyzer.walking = pml->walking;
 
 	Mod_A_AdjustRPG(pm, pml);
 
@@ -27,10 +27,10 @@ void cg::PM_WalkMove(pmove_t* pm, pml_t* pml)
 }
 void cg::PM_AirMove(pmove_t* pm, pml_t* pml)
 {
-	
 	Mod_DetermineFPS(pm, pml);
 
 	PM_AirMove_f(pm, pml);
+	jumpanalyzer.walking = pml->walking;
 
 	Mod_HitAnalyzer(pm, pml);
 	Mod_JumpAnalyzer(pm, pml);

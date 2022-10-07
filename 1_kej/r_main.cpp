@@ -21,7 +21,7 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 				
 			}
 
-			if (jbuilder.isEditing() && !jbuilder.segments.empty() && !jbuilder.jData.empty()) {
+			if (jbuilder.isEditing() && !jbuilder.segments.empty()) {
 				Mod_B_DrawPath();
 
 

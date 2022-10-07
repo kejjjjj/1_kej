@@ -30,7 +30,7 @@ namespace cg
 
 	float getOptAngle(float& delta);
 	float R_getOptAngle(const bool rightmove, float& delta); //more suited for visual stuff
-	float getOptForAnalyzer(jump_data* data);
+	float getOptForAnalyzer(jump_data* data, bool onGround);
 	float DistanceToOpt(float delta, const float& yaw);
 
 	enum axis_e {

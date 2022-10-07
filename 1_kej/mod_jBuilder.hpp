@@ -20,7 +20,10 @@ namespace cg
 		int32_t framecount;
 		char forwardmove;
 		char rightmove;
-
+		pmove_t end_pm; //data @ segment's last frame
+		pml_t end_pml; //data @ segment's last frame
+		playerState_s end_ps; //LOTS OF DATA
+		std::vector<jump_data> jData; 
 	};
 	struct jump_builder_s
 	{
@@ -32,6 +35,8 @@ namespace cg
 		void SetEditMode(bool mode);
 
 		void OnCreateNew();
+		void OnDeleteProject();
+		void OnUpdateAllPositions();
 		void OnUpdatePosition(const bool erase);
 
 		void OnStartGenerating();
@@ -40,11 +45,13 @@ namespace cg
 		bool isGeneratingMovement();
 		bool MovementExists();
 
-	
+		void OnGetSegmentData();
 
 		void ClearData();
 		void OnFrameUpdate();
 		void SaveFrameData(jump_data& jData);
+		void SaveFrameData(std::vector<jump_data>& container, jump_data& jData);
+
 		size_t GetTotalFrames();
 
 		void OnUpdateOffsets();
