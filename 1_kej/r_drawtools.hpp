@@ -38,6 +38,13 @@ namespace r
 
 	struct box_s
 	{
+		box_s(vec3_t origin, vec3_t mins, vec3_t maxs);
+
+		void R_DrawConstructedBox(vec4_t col) const;
+		void R_DrawConstructedBoxEdges(vec4_t col) const;
+
+	private:
+
 		vec2_t lowA;
 		vec2_t lowB;
 		vec2_t lowC;
@@ -58,13 +65,12 @@ namespace r
 		bool highC_valid;
 		bool highD_valid;
 
-
 	};
 
-	box_s R_ConstructBoxFromBounds(vec3_t origin, vec3_t mins, vec3_t maxs);
+	//box_s R_ConstructBoxFromBounds(vec3_t origin, vec3_t mins, vec3_t maxs);
 
-	void R_DrawConstructedBox(box_s box, vec4_t col);
-	void R_DrawConstructedBoxEdges(box_s box, vec4_t col);
+	//void R_DrawConstructedBox(box_s box, vec4_t col);
+	//void R_DrawConstructedBoxEdges(box_s box, vec4_t col);
 
 	void R_DrawTriangle(vec3_t points[3], vec4_t col);
 	void R_DrawTriangle(vec3_t pointA, vec3_t pointB, vec3_t pointC, vec4_t col);

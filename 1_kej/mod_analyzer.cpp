@@ -312,7 +312,7 @@ int jAnalyzer::Segmenter_Prepare()
 	if (segment_frame >= GetTotalFrames())
 		return -1;
 
-	if (startTime + 2000 < Sys_MilliSeconds()) {
+	if ((startTime + (DWORD)(v::mod_jumpv_segtime.GetFloat() * 1000)) < Sys_MilliSeconds()) {
 
 		jump_data* jData = FetchFrameData(segment_frame);
 
@@ -340,7 +340,7 @@ int jAnalyzer::Segmenter_Prepare()
 
 
 
-	return (startTime + 2000) - Sys_MilliSeconds();
+	return (startTime + (DWORD)(v::mod_jumpv_segtime.GetFloat() * 1000)) - Sys_MilliSeconds();
 }
 bool jAnalyzer::Segmenter_RecordingExists()
 {

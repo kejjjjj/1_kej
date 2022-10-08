@@ -456,6 +456,7 @@ void r::R_DrawMenuByName(const char* category, bool justPressed, bool& wantsEdit
 		R_OtherTab();
 	}
 	else if (!strcmp("Jump Builder", category)) {
+		r::R_MenuStyle(0.5f);
 		R_JumpBuilder_Main();
 	}
 	else if (!strcmp("Jump Preview", category)) {

@@ -36,6 +36,7 @@ namespace v
 		mod_jumpv_forcepos,
 		mod_jumpv_path,
 		mod_jumpv_hitbox,
+		mod_jumpv_segtime,
 		mod_125col,
 		mod_200col,
 		mod_250col,
@@ -47,7 +48,10 @@ namespace v
 		mod_autoFPS_space333,
 		mod_strafebot,
 		mod_strafebot_all,
-		mod_autoanglerpg;
+		mod_autoanglerpg,
+		mod_jbuild_hitbox,
+		mod_jbuild_wasd,
+		mod_jbuild_forcepos;
 		
 
 

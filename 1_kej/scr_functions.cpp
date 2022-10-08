@@ -375,7 +375,7 @@ void GScr_CanLoadPosition()
 		return;
 	}
 
-	Scr_AddInt(analyzer.isPreviewing() == false);
+	Scr_AddInt(analyzer.isPreviewing() == false && jbuilder.isEditing() == false);
 
 }
 void Scr_LoadMethods()

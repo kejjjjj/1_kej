@@ -168,17 +168,25 @@ void cg::Mod_DrawSurfaceInfo()
 		endpos[1] = rg->viewOrg[1] + trace.fraction * (angles[1] - rg->viewOrg[1]);
 		endpos[2] = rg->viewOrg[2] + trace.fraction * (angles[2] - rg->viewOrg[2]);
 
+		vec3_t normals, out2;
+		VectorCopy(trace.normal, normals);
+		vectoangles(normals, normals);
+
+		AnglesToForward(normals, endpos, -1.1, out2);
+
 		VectorClear(angles);		 
 		angles[YAW] = normalX == 1.f ? (trace.normal[0] > 0  ? -180 : 0) : (trace.normal[1] > 0 ? -90 : 90);
 		_AnglesToForward(angles, out);
 		VectorScale(out, 0.125, out);
 		VectorAdd(out, endpos, out);
 		VectorAddAll(out, angles[YAW] < 0 ? 14 : -14, out);
+		CG_TracePoint(maxs, &trace, out2, mins, out, cgs->clientNum, MASK_PLAYERSOLID, 0, 1);
 
+		if (trace.startsolid) {
+			sprintf_s(buffer, "elevator (%c: %.6f)", normalX == 1.f ? 'X' : 'Y', normalX == 1.f ? out[0] : out[1]);
 
-		sprintf_s(buffer, "elevator (%c: %.6f)", normalX == 1.f ? 'X' : 'Y', normalX == 1.f ? out[0] : out[1]);
-
-		r::R_DrawText(buffer, 960, 700, 1.6f, 1.6f, 0.f, vec4_t{0,1,0,1}, 0); //can never be true when bounce is true, so draw on top of it
+			r::R_DrawText(buffer, 960, 700, 1.6f, 1.6f, 0.f, vec4_t{ 0,1,0,1 }, 0); //can never be true when bounce is true, so draw on top of it
+		}
 
 	}
 }
@@ -209,8 +217,14 @@ void cg::Mod_DrawFPSHelpers()
 	const float fov = _fov->current.value * fovscale->current.value * v::mod_fps_transferz.evar->arrayValue[3];
 	bool isInverted = clients->cgameViewangles[YAW] < fov || clients->cgameViewangles[YAW] > 180.f - fov;
 
-	if (analyzer.isPreviewing()) {
-		const jump_data* jData = analyzer.FetchFrameData(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, analyzer.preview_frame);
+	if (analyzer.isPreviewing() || jbuilder.isEditing()) {
+
+		jump_data* jData;
+		if (analyzer.isPreviewing())
+			jData = analyzer.FetchFrameData(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, analyzer.preview_frame);
+		else
+			jData = jbuilder.FetchFrameData(jbuilder.preview_frame);
+
 
 		if (jData) {
 			aa = atan2(-(int)jData->rightmove, (int)jData->forwardmove) * 57.2957795f;
@@ -748,10 +762,9 @@ void cg::Mod_DrawJumpHitbox()
 
 	if (jData) {
 
-		r::box_s box = r::R_ConstructBoxFromBounds(jData->origin, jData->mins, jData->maxs);
-
-		r::R_DrawConstructedBoxEdges(box, vec4_t{ 255,255,0,255 });
-		r::R_DrawConstructedBox(box, vec4_t{ 255,255,0,50 });
+		r::box_s box(jData->origin, jData->mins, jData->maxs);
+		box.R_DrawConstructedBoxEdges(vec4_t{ 255,255,0,255 });
+		box.R_DrawConstructedBox(vec4_t{ 255,255,0,50 });
 
 	}
 }
@@ -794,52 +807,57 @@ void cg::Mod_B_DrawPath()
 {
 	size_t indx(0);
 	for (auto& a : jbuilder.segments) {
+
 		std::vector<ImVec2> points = r::OriginsToScreen(a.jData);
-		if (points.size() > 1)
-			for (int i = 0; i < points.size() - 1; i++)
-				ImGui::GetBackgroundDrawList()->AddLine(points[i], points[i + 1], IM_COL32(0, 255, indx % 2 == true ? 0 : 255 , 255), 3.f);
+		if (points.size() > 1) {
+			for (int i = 0; i < points.size() - 1; i++) {
+				glm::vec4 rgb;
+
+				rgb.r = indx == jbuilder.current_segment ? 255 : 0;
+				rgb.g = indx == jbuilder.current_segment ? 0 : 255;
+				rgb.b = 0;
+
+
+				rgb.a = 255;
+
+				ImGui::GetBackgroundDrawList()->AddLine(points[i], points[i + 1], IM_COL32(rgb.r, rgb.g, rgb.b, rgb.a), 3.f);
+			}
+
+		}
 
 
 
-		//vec2_t xy, xy_end;
+		if (a.jData.size() > 1 && v::mod_jbuild_wasd.isEnabled()) {
+			jump_data jData = a.jData[0];
+
+			vec3_t origin, vel, ang;
+			vec2_t xy, xy_end;
+			VectorCopy(jData.origin, origin);
+			VectorCopy(jData.velocity, vel);
+
+			vectoangles(vel, vel);
 
 
+			if (jData.rightmove > 0) {
+				vel[YAW] -= 90;
+			}
+			else {
+				vel[YAW] += 90;
 
-		//if (a.jData.size() > 1) {
-		//	jump_data jData = a.jData[0];
+			}
+			vel[PITCH] = 0;
+			vel[ROLL] = 0;
 
-		//	vec3_t origin;
-		//	VectorCopy(jData.origin, origin);
+			AnglesToForward(vel, origin, 50, ang);
 
-		//	origin[2] += jData.maxs[2] / 2;
-
-		//	const float accelerationAng = atan2(-(int)jData.rightmove, (int)jData.forwardmove) * 180.f / PI;
-		//	const float velAngle = atan2(-(int)jData.velocity[1], (int)jData.velocity[0] ) * 180.f / PI;
-
-		//	axis_s ax = CG_GetNearestWorldAxisFromYaw(velAngle);
-
-		//	
-
-		//	vec3_t ang{0,0,0};
-
-		//	if (jData.rightmove) {
-		//		ang[YAW] = velAngle + ax.angle;
-		//	}
-		//	else {
-		//		ang[YAW] = velAngle - ax.angle;
-
-		//	}
-
-		//	AnglesToForward(ang, origin, 50, ang);
-
-		//	if (r::WorldToScreen(origin, xy) && r::WorldToScreen(ang, xy_end)) {
-		//		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(xy[0], xy[1]), ImVec2(xy_end[0], xy_end[1]), IM_COL32(255, 0, 0, 255), 3);
-		//	}
-		//}
+			if (r::WorldToScreen(origin, xy) && r::WorldToScreen(ang, xy_end)) {
+				ImGui::GetBackgroundDrawList()->AddLine(ImVec2(xy[0], xy[1]), ImVec2(xy_end[0], xy_end[1]), IM_COL32(255, 255, 0, 255), 3);
+			}
+		}
 
 		//jump_data* jData = jbuilder.FetchFrameData(jbuilder.preview_frame);
 
-		if (jbuilder.preview_frame > a.begin && jbuilder.preview_frame < a.end) {
+		if (jbuilder.preview_frame > a.begin && jbuilder.preview_frame < a.end && v::mod_jbuild_hitbox.isEnabled() && !v::mod_jbuild_forcepos.isEnabled()) {
 
 			if (a.jData.size() > 1) {
 
@@ -847,12 +865,10 @@ void cg::Mod_B_DrawPath()
 				jump_data jData = a.jData[jbuilder.preview_frame - a.begin];
 
 
-				//vec2_t xy;
-				//if (r::WorldToScreen(jData->origin, xy)) {
-				r::box_s box = r::R_ConstructBoxFromBounds(jData.origin, jData.mins, jData.maxs);
-				r::R_DrawConstructedBoxEdges(box, vec4_t{ 0,255,255,255 });
-				r::R_DrawConstructedBox(box, vec4_t{ 0,255,255,50 });
-				//}
+				r::box_s box(jData.origin, jData.mins, jData.maxs);
+				box.R_DrawConstructedBoxEdges(vec4_t{ 255,102,255,255 });
+				box.R_DrawConstructedBox(vec4_t{ 255,102,255,50 });
+			
 
 			}
 		}

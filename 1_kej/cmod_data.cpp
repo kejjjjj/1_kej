@@ -139,9 +139,9 @@ void cg::CMod_HighlightSelected()
 		//r::R_DrawTriangle(dst, brush->mins, brush->maxs, vec4_t{ 0,255,0,200 });
 		//r::R_DrawTriangle(dst, yMins, brush->maxs, vec4_t{ 0,255,0,200 });
 
-		r::box_s box = r::R_ConstructBoxFromBounds(brush_org, mins, maxs);
-		r::R_DrawConstructedBoxEdges(box, vec4_t{ 0,255,0,255 });
-		r::R_DrawConstructedBox(box, vec4_t{ 0,255,0,50});
+		r::box_s box(brush_org, mins, maxs);
+		box.R_DrawConstructedBoxEdges(vec4_t{ 0,255,0,255 });
+		box.R_DrawConstructedBox(vec4_t{ 0,255,0,50});
 
 	}
 

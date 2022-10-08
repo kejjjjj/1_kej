@@ -48,6 +48,8 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 	const ImGuiIO& io = ImGui::GetIO();
 	static float timeScale = 1.f;
 
+
+
 	ImGui::BeginGroup();
 
 	R_JumpView_ToggleFreeMode();
@@ -465,6 +467,10 @@ void r::R_JumpView_Preferences()
 
 	if (ImGui::Checkbox("Show Hitbox", &v::mod_jumpv_hitbox.evar->enabled))
 		v::mod_jumpv_hitbox.SetValue(v::mod_jumpv_hitbox.isEnabled());
+
+	ImGui::PushItemWidth(75);
+	ImGui::DragFloat("Segment Start Delay", &v::mod_jumpv_segtime.evar->floatValue, 0.1, 0, 10, "%.1f");
+	ImGui::SameLine(); MetricsHelpMarker("Time in-between pressing the bind and launching (in seconds)");
 
 }
 void r::R_JumpView_IO()

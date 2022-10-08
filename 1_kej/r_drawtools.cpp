@@ -161,9 +161,9 @@ std::string r::R_UserCmdKeysPressed(char forwardmove, char sidemove)
 
 	return key;
 }
-r::box_s r::R_ConstructBoxFromBounds(vec3_t origin, vec3_t mins, vec3_t maxs)
+r::box_s::box_s(vec3_t origin, vec3_t mins, vec3_t maxs)
 {
-	box_s box{};
+	//box_s box{};
 
 	vec3_t lowA, lowB, lowC, lowD;
 	vec3_t highA, highB, highC, highD;
@@ -200,93 +200,93 @@ r::box_s r::R_ConstructBoxFromBounds(vec3_t origin, vec3_t mins, vec3_t maxs)
 	highD[1] = lowD[1];
 	highD[2] = origin[2] + maxs[2];
 
-	box.lowA_valid = WorldToScreen(lowA, box.lowA);
-	box.lowB_valid = WorldToScreen(lowB, box.lowB);
-	box.lowC_valid = WorldToScreen(lowC, box.lowC);
-	box.lowD_valid = WorldToScreen(lowD, box.lowD);
+	this->lowA_valid = WorldToScreen(lowA, this->lowA);
+	this->lowB_valid = WorldToScreen(lowB, this->lowB);
+	this->lowC_valid = WorldToScreen(lowC, this->lowC);
+	this->lowD_valid = WorldToScreen(lowD, this->lowD);
 
-	box.highA_valid = WorldToScreen(highA, box.highA);
-	box.highB_valid = WorldToScreen(highB, box.highB);
-	box.highC_valid = WorldToScreen(highC, box.highC);
-	box.highD_valid = WorldToScreen(highD, box.highD);
+	this->highA_valid = WorldToScreen(highA, this->highA);
+	this->highB_valid = WorldToScreen(highB, this->highB);
+	this->highC_valid = WorldToScreen(highC, this->highC);
+	this->highD_valid = WorldToScreen(highD, this->highD);
 
-	return box;
+	//return box;
 }
-void r::R_DrawConstructedBoxEdges(box_s box, vec4_t col)
+void r::box_s::R_DrawConstructedBoxEdges(vec4_t col) const
 {
 	if (!ImGui::GetCurrentContext())
 		return;
 
-	if(box.lowA_valid && box.lowC_valid)
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.lowC[0], box.lowC[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
+	if(this->lowA_valid && this->lowC_valid)
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(this->lowA[0], this->lowA[1]), ImVec2(this->lowC[0], this->lowC[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
 
-	if (box.lowB_valid && box.lowD_valid)
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.lowD[0], box.lowD[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
+	if (this->lowB_valid && this->lowD_valid)
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(this->lowB[0], this->lowB[1]), ImVec2(this->lowD[0], this->lowD[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
 
-	if (box.lowC_valid && box.lowB_valid)
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowC[0], box.lowC[1]), ImVec2(box.lowB[0], box.lowB[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
+	if (this->lowC_valid && this->lowB_valid)
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(this->lowC[0], this->lowC[1]), ImVec2(this->lowB[0], this->lowB[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
 
-	if (box.lowD_valid && box.lowA_valid)
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowD[0], box.lowD[1]), ImVec2(box.lowA[0], box.lowA[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
+	if (this->lowD_valid && this->lowA_valid)
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(this->lowD[0], this->lowD[1]), ImVec2(this->lowA[0], this->lowA[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
 
-	if (box.highA_valid && box.highC_valid)
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.highA[0], box.highA[1]), ImVec2(box.highC[0], box.highC[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
+	if (this->highA_valid && this->highC_valid)
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(this->highA[0], this->highA[1]), ImVec2(this->highC[0], this->highC[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
 
-	if (box.highB_valid && box.highD_valid)
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.highB[0], box.highB[1]), ImVec2(box.highD[0], box.highD[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
+	if (this->highB_valid && this->highD_valid)
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(this->highB[0], this->highB[1]), ImVec2(this->highD[0], this->highD[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
 
-	if (box.highC_valid && box.highB_valid)
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.highC[0], box.highC[1]), ImVec2(box.highB[0], box.highB[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
+	if (this->highC_valid && this->highB_valid)
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(this->highC[0], this->highC[1]), ImVec2(this->highB[0], this->highB[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
 
-	if (box.highD_valid && box.highA_valid)
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.highD[0], box.highD[1]), ImVec2(box.highA[0], box.highA[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
+	if (this->highD_valid && this->highA_valid)
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(this->highD[0], this->highD[1]), ImVec2(this->highA[0], this->highA[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
 
-	if (box.lowA_valid && box.highA_valid)
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.highA[0], box.highA[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
+	if (this->lowA_valid && this->highA_valid)
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(this->lowA[0], this->lowA[1]), ImVec2(this->highA[0], this->highA[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
 
-	if (box.lowB_valid && box.highB_valid)
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.highB[0], box.highB[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
+	if (this->lowB_valid && this->highB_valid)
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(this->lowB[0], this->lowB[1]), ImVec2(this->highB[0], this->highB[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
 
-	if (box.lowC_valid && box.highC_valid)
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowC[0], box.lowC[1]), ImVec2(box.highC[0], box.highC[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
+	if (this->lowC_valid && this->highC_valid)
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(this->lowC[0], this->lowC[1]), ImVec2(this->highC[0], this->highC[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
 
-	if (box.lowD_valid && box.highD_valid)
-		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(box.lowD[0], box.lowD[1]), ImVec2(box.highD[0], box.highD[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
+	if (this->lowD_valid && this->highD_valid)
+		ImGui::GetBackgroundDrawList()->AddLine(ImVec2(this->lowD[0], this->lowD[1]), ImVec2(this->highD[0], this->highD[1]),IM_COL32(col[0], col[1], col[2], col[3]), 1.f);
 }
-void r::R_DrawConstructedBox(box_s box, vec4_t col)
+void r::box_s::R_DrawConstructedBox(vec4_t col) const
 {
 	if (!ImGui::GetCurrentContext())
 		return;
 
-	if (box.lowA_valid && box.highC_valid && box.lowC_valid)
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.highC[0], box.highC[1]), ImVec2(box.lowC[0], box.lowC[1]), IM_COL32(col[0], col[1], col[2], col[3]));
-	if (box.lowA_valid && box.highA_valid && box.highC_valid)
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.highA[0], box.highA[1]), ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.highC[0], box.highC[1]), IM_COL32(col[0], col[1], col[2], col[3]));
+	if (this->lowA_valid && this->highC_valid && this->lowC_valid)
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(this->lowA[0], this->lowA[1]), ImVec2(this->highC[0], this->highC[1]), ImVec2(this->lowC[0], this->lowC[1]), IM_COL32(col[0], col[1], col[2], col[3]));
+	if (this->lowA_valid && this->highA_valid && this->highC_valid)
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(this->highA[0], this->highA[1]), ImVec2(this->lowA[0], this->lowA[1]), ImVec2(this->highC[0], this->highC[1]), IM_COL32(col[0], col[1], col[2], col[3]));
 
-	if (box.lowB_valid && box.highD_valid && box.lowD_valid)
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.highD[0], box.highD[1]), ImVec2(box.lowD[0], box.lowD[1]), IM_COL32(col[0], col[1], col[2], col[3]));
-	if (box.lowB_valid && box.highB_valid && box.highD_valid)
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.highB[0], box.highB[1]), ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.highD[0], box.highD[1]), IM_COL32(col[0], col[1], col[2], col[3]));
+	if (this->lowB_valid && this->highD_valid && this->lowD_valid)
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(this->lowB[0], this->lowB[1]), ImVec2(this->highD[0], this->highD[1]), ImVec2(this->lowD[0], this->lowD[1]), IM_COL32(col[0], col[1], col[2], col[3]));
+	if (this->lowB_valid && this->highB_valid && this->highD_valid)
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(this->highB[0], this->highB[1]), ImVec2(this->lowB[0], this->lowB[1]), ImVec2(this->highD[0], this->highD[1]), IM_COL32(col[0], col[1], col[2], col[3]));
 
-	if (box.lowC_valid && box.highB_valid && box.lowB_valid)
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowC[0], box.lowC[1]), ImVec2(box.highB[0], box.highB[1]), ImVec2(box.lowB[0], box.lowB[1]), IM_COL32(col[0], col[1], col[2], col[3]));
-	if (box.lowC_valid && box.highC_valid && box.highB_valid)
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.highC[0], box.highC[1]), ImVec2(box.lowC[0], box.lowC[1]), ImVec2(box.highB[0], box.highB[1]), IM_COL32(col[0], col[1], col[2], col[3]));
+	if (this->lowC_valid && this->highB_valid && this->lowB_valid)
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(this->lowC[0], this->lowC[1]), ImVec2(this->highB[0], this->highB[1]), ImVec2(this->lowB[0], this->lowB[1]), IM_COL32(col[0], col[1], col[2], col[3]));
+	if (this->lowC_valid && this->highC_valid && this->highB_valid)
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(this->highC[0], this->highC[1]), ImVec2(this->lowC[0], this->lowC[1]), ImVec2(this->highB[0], this->highB[1]), IM_COL32(col[0], col[1], col[2], col[3]));
 
-	if (box.lowD_valid && box.highA_valid && box.lowA_valid)
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowD[0], box.lowD[1]), ImVec2(box.highA[0], box.highA[1]), ImVec2(box.lowA[0], box.lowA[1]), IM_COL32(col[0], col[1], col[2], col[3]));
-	if (box.lowD_valid && box.highD_valid && box.highA_valid)
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.highD[0], box.highD[1]), ImVec2(box.lowD[0], box.lowD[1]), ImVec2(box.highA[0], box.highA[1]), IM_COL32(col[0], col[1], col[2], col[3]));
+	if (this->lowD_valid && this->highA_valid && this->lowA_valid)
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(this->lowD[0], this->lowD[1]), ImVec2(this->highA[0], this->highA[1]), ImVec2(this->lowA[0], this->lowA[1]), IM_COL32(col[0], col[1], col[2], col[3]));
+	if (this->lowD_valid && this->highD_valid && this->highA_valid)
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(this->highD[0], this->highD[1]), ImVec2(this->lowD[0], this->lowD[1]), ImVec2(this->highA[0], this->highA[1]), IM_COL32(col[0], col[1], col[2], col[3]));
 
-	if (box.highA_valid && box.highB_valid && box.highC_valid)
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.highA[0], box.highA[1]), ImVec2(box.highB[0], box.highB[1]), ImVec2(box.highC[0], box.highC[1]), IM_COL32(col[0], col[1], col[2], col[3]));
-	if (box.highA_valid && box.highB_valid && box.highD_valid)
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.highA[0], box.highA[1]), ImVec2(box.highB[0], box.highB[1]), ImVec2(box.highD[0], box.highD[1]), IM_COL32(col[0], col[1], col[2], col[3]));
+	if (this->highA_valid && this->highB_valid && this->highC_valid)
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(this->highA[0], this->highA[1]), ImVec2(this->highB[0], this->highB[1]), ImVec2(this->highC[0], this->highC[1]), IM_COL32(col[0], col[1], col[2], col[3]));
+	if (this->highA_valid && this->highB_valid && this->highD_valid)
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(this->highA[0], this->highA[1]), ImVec2(this->highB[0], this->highB[1]), ImVec2(this->highD[0], this->highD[1]), IM_COL32(col[0], col[1], col[2], col[3]));
 	
-	if (box.lowA_valid && box.lowB_valid && box.lowC_valid)
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.lowC[0], box.lowC[1]), IM_COL32(col[0], col[1], col[2], col[3]));
-	if (box.lowA_valid && box.lowB_valid && box.lowD_valid)
-		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(box.lowA[0], box.lowA[1]), ImVec2(box.lowB[0], box.lowB[1]), ImVec2(box.lowD[0], box.lowD[1]), IM_COL32(col[0], col[1], col[2], col[3]));
+	if (this->lowA_valid && this->lowB_valid && this->lowC_valid)
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(this->lowA[0], this->lowA[1]), ImVec2(this->lowB[0], this->lowB[1]), ImVec2(this->lowC[0], this->lowC[1]), IM_COL32(col[0], col[1], col[2], col[3]));
+	if (this->lowA_valid && this->lowB_valid && this->lowD_valid)
+		ImGui::GetBackgroundDrawList()->AddTriangleFilled(ImVec2(this->lowA[0], this->lowA[1]), ImVec2(this->lowB[0], this->lowB[1]), ImVec2(this->lowD[0], this->lowD[1]), IM_COL32(col[0], col[1], col[2], col[3]));
 }
 void r::R_DrawTriangle(vec3_t points[3], vec4_t col) {
 

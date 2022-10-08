@@ -296,6 +296,8 @@ void Evar_Setup()
 	v::mod_jumpv_forcepos.Register	("1_kej_jumpv_forcepos",			evartype_t::EVAR_BOOL,		(float)0,				false);
 	v::mod_jumpv_path.Register		("1_kej_jumpv_path",				evartype_t::EVAR_BOOL,		(float)0,				true);
 	v::mod_jumpv_hitbox.Register	("1_kej_jumpv_hitbox",				evartype_t::EVAR_BOOL,		(float)0,				true);
+	v::mod_jumpv_segtime.Register	("1_kej_jumpv_segtime",				evartype_t::EVAR_FLOAT,		(float)2,				true);
+
 
 	v::mod_125col.Register			("1_kej_125col",					evartype_t::EVAR_VEC4,		vec4_t{ 0,1,0,1 },		true);
 	v::mod_200col.Register			("1_kej_200col",					evartype_t::EVAR_VEC4,		vec4_t{ 1,1,0,1 },		true);
@@ -312,6 +314,9 @@ void Evar_Setup()
 
 	v::mod_autoanglerpg.Register	("1_kej_autoanglerpg",				evartype_t::EVAR_BOOL,		(float)0,				true);
 
+	v::mod_jbuild_hitbox.Register	("1_kej_jbuild_hitbox",				evartype_t::EVAR_BOOL,		(float)1,				true);
+	v::mod_jbuild_wasd.Register		("1_kej_jbuild_wasd",				evartype_t::EVAR_BOOL,		(float)1,				true);
+	v::mod_jbuild_forcepos.Register	("1_kej_jbuild_forcepos",			evartype_t::EVAR_BOOL,		(float)0,				false);
 
 
 }

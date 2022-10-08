@@ -116,3 +116,91 @@ void cg::Mod_RPGAnalyzer(pmove_t* pm, pml_t* pml)
 	}
 
 }
+int32_t cg::Mod_RecommendedFPS(float yaw, char forwardmove, char rightmove)
+{
+	static bool _rightmove{};
+
+	if (rightmove > 0)
+		_rightmove = true;
+	else if (rightmove < 0)
+		_rightmove = false;
+
+	yaw = yaw > 0 ? yaw : 180.f - yaw * -1; //mirror the yaw
+
+	float aa = atan2(-(int)rightmove, (int)forwardmove) * 57.2957795f;
+	const dvar_s* _fov = Dvar_FindMalleableVar("cg_fov");
+	const dvar_s* fovscale = Dvar_FindMalleableVar("cg_fovscale");
+
+	const float fov = _fov->current.value * fovscale->current.value * v::mod_fps_transferz.evar->arrayValue[3];
+
+	aa > 0 ? aa -= 45 : aa += 45;
+
+	vec2_t zone125 = { fps_zones.fps125, 90.f + fps_zones.fps125 };
+	vec2_t zone200 = { fps_zones.fps200, 90.f + fps_zones.fps200 };
+	vec2_t zone250 = { fps_zones.fps250, 90.f + fps_zones.fps250 };
+	vec2_t zone333 = { fps_zones.fps333, 90.f + fps_zones.fps333 };
+
+	if (_rightmove) {
+		zone125[0] = 180.f - zone125[0] - fps_zones.length125;
+		zone125[1] = 180.f - zone125[1] - fps_zones.length125;
+		zone200[0] = 180.f - zone200[0] - fps_zones.length200;
+		zone200[1] = 180.f - zone200[1] - fps_zones.length200;
+		zone250[0] = 180.f - zone250[0] - fps_zones.length250;
+		zone250[1] = 180.f - zone250[1] - fps_zones.length250;
+		//yaw -= 10;
+	}
+
+	yaw = AngleNormalize180(yaw += aa);
+	if (yaw < 0)
+		yaw = 180.f - fabs(yaw);
+
+
+	const bool isLong125 = v::mod_autoFPS_long125.isEnabled();
+
+	range_t ranges, ranges2;
+
+	if (!isLong125) {
+		ranges = AnglesToRange(DEG2RAD(zone333[0]), DEG2RAD(zone333[0] + fps_zones.length333), DEG2RAD(fmodf(yaw, 90)), fov);
+		ranges2 = AnglesToRange(DEG2RAD(zone333[1]), DEG2RAD(zone333[1] + fps_zones.length333), DEG2RAD(fmodf(yaw, 90)), fov);
+	}
+	else {
+		ranges = AnglesToRange(DEG2RAD(zone125[0]), DEG2RAD(zone125[0] + fps_zones.length125), DEG2RAD(fmodf(yaw, 90)), fov);
+		ranges2 = AnglesToRange(DEG2RAD(zone125[1]), DEG2RAD(zone125[1] + fps_zones.length125), DEG2RAD(fmodf(yaw, 90)), fov);
+	}
+
+	if (ranges.x1 <= 960 && ranges.x2 > 960 || ranges2.x1 <= 960 && ranges2.x2 > 960) {
+		jumpanalyzer.recommendedFPS = isLong125 == false ? 333 : 125;
+		return isLong125 == false ? 333 : 125;
+	}
+
+	if (!isLong125) {
+		ranges = AnglesToRange(DEG2RAD(zone125[0]), DEG2RAD(zone125[0] + fps_zones.length125), DEG2RAD(fmodf(yaw, 90)), fov);
+		ranges2 = AnglesToRange(DEG2RAD(zone125[1]), DEG2RAD(zone125[1] + fps_zones.length125), DEG2RAD(fmodf(yaw, 90)), fov);
+	}
+	else {
+		ranges = AnglesToRange(DEG2RAD(zone333[0]), DEG2RAD(zone333[0] + fps_zones.length333), DEG2RAD(fmodf(yaw, 90)), fov);
+		ranges2 = AnglesToRange(DEG2RAD(zone333[1]), DEG2RAD(zone333[1] + fps_zones.length333), DEG2RAD(fmodf(yaw, 90)), fov);
+	}
+
+	if (ranges.x1 <= 960 && ranges.x2 > 960 || ranges2.x1 <= 960 && ranges2.x2 > 960) {
+		jumpanalyzer.recommendedFPS = isLong125 == false ? 125 : 333;
+		return  isLong125 == false ? 125 : 333;
+	}
+
+	ranges = AnglesToRange(DEG2RAD(zone200[0]), DEG2RAD(zone200[0] + fps_zones.length200), DEG2RAD(fmodf(yaw, 90)), fov);
+	ranges2 = AnglesToRange(DEG2RAD(zone200[1]), DEG2RAD(zone200[1] + fps_zones.length200), DEG2RAD(fmodf(yaw, 90)), fov);
+
+	if (ranges.x1 <= 960 && ranges.x2 > 960 || ranges2.x1 <= 960 && ranges2.x2 > 960) {
+		jumpanalyzer.recommendedFPS = 200;
+		return 200;
+	}
+
+	ranges = AnglesToRange(DEG2RAD(zone250[0]), DEG2RAD(zone250[0] + fps_zones.length250), DEG2RAD(fmodf(yaw, 90)), fov);
+	ranges2 = AnglesToRange(DEG2RAD(zone250[1]), DEG2RAD(zone250[1] + fps_zones.length250), DEG2RAD(fmodf(yaw, 90)), fov);
+
+	if (ranges.x1 <= 960 && ranges.x2 > 960 || ranges2.x1 <= 960 && ranges2.x2 > 960) {
+		jumpanalyzer.recommendedFPS = 250;
+		return 250;
+	}
+	return 500;
+}

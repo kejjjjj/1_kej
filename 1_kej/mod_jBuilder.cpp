@@ -2,7 +2,7 @@
 
 bool jump_builder_s::isEditing()
 {
-	return this->is_editing;
+	return this->is_editing && !this->segments.empty();
 }
 void jump_builder_s::SetEditMode(bool mode)
 {
@@ -77,6 +77,7 @@ void jump_builder_s::ClearData()
 	this->current_frame = NULL;
 	this->current_segment = NULL;
 	this->total_frames = NULL;
+	this->preview_frame = NULL;
 }
 void jump_builder_s::OnFrameUpdate()
 {
@@ -99,7 +100,7 @@ void jump_builder_s::SaveFrameData(std::vector<jump_data>& container, jump_data&
 		Com_PrintError(CON_CHANNEL_ERROR, "exceeded maximum amount of frames!\n");
 		this->OnStopGenerating();
 	}
-	Com_Printf(CON_CHANNEL_OBITUARY, "container size: %i\n", container.size());
+	//Com_Printf(CON_CHANNEL_OBITUARY, "container size: %i\n", container.size());
 }
 size_t jump_builder_s::GetTotalFrames()
 {
@@ -231,7 +232,6 @@ void jump_builder_s::OnUpdatePosition(const bool erase)
 		VectorCopy(pm->ps->velocity, jData.velocity);
 		jData.forwardmove = pm->cmd.forwardmove;
 		jData.rightmove = pm->cmd.rightmove;
-		jData.FPS = 250;
 		
 
 		if (pml->walking) {
@@ -245,11 +245,19 @@ void jump_builder_s::OnUpdatePosition(const bool erase)
 			pm->ps->viewangles[YAW] = getOptForAnalyzer(&jData, pml->walking);
 
 		AngleVectors(pm->ps->viewangles, pml->forward, pml->right, pml->up);
+		if(!pml->walking)
+			jData.FPS = cg::Mod_RecommendedFPS(pm->ps->viewangles[YAW], pm->cmd.forwardmove, pm->cmd.rightmove);
 
 
 		pml->msec = 1000 / jData.FPS;
 		pml->frametime = (float)pml->msec / 1000.f;
 
+		dvar_s* g_gravity = Dvar_FindMalleableVar("g_gravity");
+
+		if (g_gravity) {
+			if (g_gravity->current.value == 0)
+				pm->ps->gravity = 800;
+		}
 
 		if (pml->walking) {
 			
@@ -284,6 +292,7 @@ void jump_builder_s::OnUpdatePosition(const bool erase)
 			jData.bounced = false;
 			jData.colliding = false;
 			jData.jumped = false;
+			jData.FPS = 1000 / pml->msec;
 
 			memcpy(&pm->oldcmd, &pm->cmd, sizeof(pm->oldcmd));
 			pm->cmd.buttons = 0;
@@ -299,15 +308,29 @@ void jump_builder_s::OnUpdatePosition(const bool erase)
 	memcpy_s(&segment.end_ps, sizeof(playerState_s), pm->ps, sizeof(playerState_s));
 
 	a->write_addr(0x405360, "\x53", 1);
-	Com_Printf(CON_CHANNEL_OBITUARY, "velocity %.1f\npml->walking: %i\n", glm::length(glm::vec2(pm->ps->velocity[0], pm->ps->velocity[1])), pml->walking);
+	//Com_Printf(CON_CHANNEL_OBITUARY, "velocity %.1f\npml->walking: %i\n", glm::length(glm::vec2(pm->ps->velocity[0], pm->ps->velocity[1])), pml->walking);
 	
 }
 jump_data* jump_builder_s::FetchFrameData(int32_t frame)
 {
-	if (this->jData.size() > frame)
-		return &this->jData[frame];
+	const auto SegmentFromFrame = [frame](std::vector<segment_data_s>& seg) -> segment_data_s*
+	{
+		for (auto& i : seg) {
+			if (i.begin <= frame && i.end >= frame)
+				return &i;
+		}
+		return nullptr;
+	};
 
-	return nullptr;
+	if (this->segments.empty())
+		return nullptr;
+
+	segment_data_s* seg = SegmentFromFrame(this->segments);
+	
+	if (!seg)
+		return nullptr;
+
+	return &seg->jData[frame - seg->begin];
 }
 
 
@@ -327,7 +350,40 @@ void jump_builder_s::OnAddSegment()
 	this->segments.push_back(seg);
 
 }
+void jump_builder_s::OnDeleteSegment()
+{
+	if (this->segments.size() == 1) {
+		this->OnDeleteProject();
+		this->OnCreateNew();
+		return;
+	}
 
+	this->segments.erase(this->segments.begin() + this->current_segment);
+	this->OnUpdateOffsets();
+	this->OnUpdateAllPositions();
+
+	Com_Printf(CON_CHANNEL_OBITUARY, "^1Segment deleted!\n");
+}
+void jump_builder_s::OnInsertSegment()
+{
+	segment_data_s seg;
+
+	seg.framecount = 100;
+
+	if(this->current_segment == NULL || this->segments.empty()) {
+		seg.begin = 0;
+		seg.end = seg.framecount;
+	}
+	else {
+		seg.begin = this->segments[this->current_segment-1].end + 1;
+		seg.end = seg.begin + seg.framecount;
+	}
+	this->segments.insert(this->segments.begin() + this->current_segment, seg);
+
+	this->OnUpdateOffsets();
+	this->OnUpdateAllPositions();
+	Com_Printf(CON_CHANNEL_OBITUARY, "^2Segment inserted!\n");
+}
 //fix all frame gaps/overlaps in-between segments
 //called when changing the framecount of a segment
 void jump_builder_s::OnUpdateOffsets()
@@ -381,4 +437,12 @@ void jump_builder_s::OnUpdateOffsets()
 		++indx;
 	}
 
+}
+bool jump_builder_s::InFreeMode()
+{
+	return in_free_mode;
+}
+void jump_builder_s::SetFreeMode(bool isTrue)
+{
+	in_free_mode = isTrue;
 }

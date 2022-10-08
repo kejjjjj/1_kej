@@ -56,7 +56,12 @@ namespace cg
 
 		void OnUpdateOffsets();
 
+		bool InFreeMode();
+		void SetFreeMode(bool isTrue);
+
 		void OnAddSegment();
+		void OnDeleteSegment();
+		void OnInsertSegment();
 
 		jump_data* FetchFrameData(int32_t frame);
 		int32_t current_frame; //updated when generating movement
@@ -69,6 +74,7 @@ namespace cg
 	private:
 		bool is_generating_movement;
 		bool is_editing;
+		bool in_free_mode;
 		size_t total_frames;
 
 	};
