@@ -309,7 +309,7 @@ int jAnalyzer::Segmenter_Prepare()
 		return -1;
 
 
-	if (segment_frame >= GetTotalFrames())
+	if (segment_frame >= GetTotalFrames()+1)
 		return -1;
 
 	if ((startTime + (DWORD)(v::mod_jumpv_segtime.GetFloat() * 1000)) < Sys_MilliSeconds()) {

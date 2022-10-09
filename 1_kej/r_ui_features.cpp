@@ -111,6 +111,40 @@ void Visual_Features()
 		ImGui::EndGroup();
 
 	}
+	ImGui::Text("\nViewhands\t"); {
+
+		r::UI_DrawGradientZone(ImVec2(300, 150));
+
+		//ImGui::GradientButton(&grad);
+
+		ImGui::Text("\t"); ImGui::SameLine();
+		ImGui::BeginGroup();
+
+		if (ImGui::Checkbox("Chams", &v::mod_chams.evar->enabled))
+			v::mod_chams.SetValue(v::mod_chams.isEnabled());
+
+		ImGui::SameLine();
+		ImGui::ColorEdit3("##aaaa", v::mod_chams_col.evar->vecValue, ImGuiColorEditFlags_NoInputs);
+
+		if (!v::mod_chams.isEnabled())
+			ImGui::BeginDisabled();
+
+		if (ImGui::Checkbox("use Z buffer", &v::mod_chams_z.evar->enabled))
+			v::mod_chams.SetValue(v::mod_chams_z.isEnabled());
+
+		ImGui::SameLine();
+		ImGui::ColorEdit3("##aaaab", v::mod_chams_zcol.evar->vecValue, ImGuiColorEditFlags_NoInputs);
+
+		if (ImGui::Checkbox("Wireframe", &v::mod_chams_wireframe.evar->enabled))
+			v::mod_chams_wireframe.SetValue(v::mod_chams_wireframe.isEnabled());
+
+		if (!v::mod_chams.isEnabled())
+			ImGui::EndDisabled();
+
+		ImGui::EndGroup();
+
+		ImGui::Text("\n\n");
+	}
 	ImGui::EndGroup();
 
 	
@@ -423,14 +457,14 @@ void Jump_Features()
 void r::R_OtherTab()
 {
 
-	ImGui::TextColored(ImVec4(0, 255, 0, 255), "These features aren't necessarily related to cj,\nbut rather tools to analyze the game data");
+	ImGui::TextColored(ImVec4(0, 255, 0, 255), "These features aren't necessarily related to cj,\nbut rather tools to analyze/modify the game data");
 	ImGui::Separator();
 	ImGui::NewLine();
 
-	static bool inMenuView(false);
+	static bool inMenuView(false), inAssMan(false);
 	
 	ImGui::Text("Game\t");
-	r::UI_DrawGradientZone(ImVec2(225, 60));
+	r::UI_DrawGradientZone(ImVec2(225, 120));
 
 	ImGui::Text("\t");
 	ImGui::SameLine();
@@ -438,10 +472,12 @@ void r::R_OtherTab()
 
 	if (ImGui::Button("Menu Browser"))
 		inMenuView = !inMenuView;
-
+	if (ImGui::Button("Asset Manager"))
+		inAssMan = !inAssMan;
 	ImGui::EndGroup();
 
 	R_GameMenuBrowser(inMenuView);
+	R_AssMan_Main(inAssMan);
 
 }
 void r::R_DrawMenuByName(const char* category, bool justPressed, bool& wantsEditor)

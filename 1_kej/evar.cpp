@@ -318,6 +318,11 @@ void Evar_Setup()
 	v::mod_jbuild_wasd.Register		("1_kej_jbuild_wasd",				evartype_t::EVAR_BOOL,		(float)1,				true);
 	v::mod_jbuild_forcepos.Register	("1_kej_jbuild_forcepos",			evartype_t::EVAR_BOOL,		(float)0,				false);
 
+	v::mod_chams.Register			("1_kej_chams",						evartype_t::EVAR_BOOL,		(float)0,				true);
+	v::mod_chams_z.Register			("1_kej_chams_z",					evartype_t::EVAR_BOOL,		(float)0,				true);
+	v::mod_chams_col.Register		("1_kej_chams_col",					evartype_t::EVAR_VEC4,		vec4_t{ 1,1,1,1 },		true);
+	v::mod_chams_zcol.Register		("1_kej_chams_zcol",				evartype_t::EVAR_VEC4,		vec4_t{ 1,0,0,1 },		true);
+	v::mod_chams_wireframe.Register ("1_kej_chams_wireframe",			evartype_t::EVAR_BOOL,		(float)0,				true);
 
 }
 int evar_o::GetInt()

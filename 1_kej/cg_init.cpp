@@ -28,6 +28,10 @@ void cg::cod4x()
 		return;
 	}
 
+	a->write_addr((cod4x_entry + 0x43580), "\xC3", 1); //put a return to the beginning of the function that checks for hooks and crashes the game if a hook is installed.. nice cod4x
+	a->write_addr(0x452BFA, "\xE8\xA1\xF9\xFA\xFF", 5);  //re-enable aim-assist removed by cod4x
+	a->write_addr(0x434200, "\x51\x53\x8B\x5C\x24", 5);  //remove the CG_DObjGetLocalTagMatrix hook from cod4x
+
 }
 void cg::CG_Init()
 {
@@ -50,26 +54,27 @@ void cg::CG_Init()
 }
 void cg::CG_PrepareHooks()
 {
-	stub							= (void(*)())										(0x54DE59); //scriptmenusresponse
-	stub2							= (void(*)())										(0x46D4CF); //openscriptmenu
-	r::CG_DrawActive_f				= (void(__cdecl*)())								(r::CG_DrawActive_fnc); //r_init.cpp
-	r::CL_ShutdownRenderer_f		= (void*(__stdcall*)())								(0x46CA40);
-	r::R_RecoverLostDevice_f		= (char(__stdcall*)())								(0x5F5360);
-	r::oWndProc						= (LRESULT(__stdcall*)(HWND, UINT, WPARAM, LPARAM))	(r::WndProcAddr);
-	PM_WalkMove_f					= (void(__cdecl*)(pmove_t*, pml_t*))				(0x40F7A0);
-	PM_AirMove_f					= (void(__cdecl*)(pmove_t*, pml_t*))				(0x40F680);
-	PM_UFOMove_f					= (void(__cdecl*)(pmove_t*, pml_t*))				(0x40FCD0);
+	stub							= (void(*)())																				(0x54DE59); //scriptmenusresponse
+	stub2							= (void(*)())																				(0x46D4CF); //openscriptmenu
+	r::CG_DrawActive_f				= (void(__cdecl*)())																		(r::CG_DrawActive_fnc);
+	r::CL_ShutdownRenderer_f		= (void*(__stdcall*)())																		(0x46CA40);
+	r::R_RecoverLostDevice_f		= (char(__stdcall*)())																		(0x5F5360);
+	r::oWndProc						= (LRESULT(__stdcall*)(HWND, UINT, WPARAM, LPARAM))											(r::WndProcAddr);
+	PM_WalkMove_f					= (void(__cdecl*)(pmove_t*, pml_t*))														(0x40F7A0);
+	PM_AirMove_f					= (void(__cdecl*)(pmove_t*, pml_t*))														(0x40F680);
+	PM_UFOMove_f					= (void(__cdecl*)(pmove_t*, pml_t*))														(0x40FCD0);
 
-	PM_Weapon_f						= (void(__cdecl*)(pml_t*, pmove_t*))				(0x41A470);
-	Pmove_f							= (void(*)(pmove_t * pmove))						(0x414D10);
-	CG_CalcCrosshairColor_f			= (char(*)())										(0x430A33);
-	PM_Weapon_WeaponTimeAdjust_f	= (void(*)())										(0x41A4D8);
-	PmoveSingle_stub_f				= (void(*)())										(0x414BB4);
-	PM_SlideMove_f					= (BOOL(*)(pmove_t*, pml_t*, int))					(0x414F40);
-	PM_OverBounce_f					= (void(*)())										(0x414BBB);
+	PM_Weapon_f						= (void(__cdecl*)(pml_t*, pmove_t*))														(0x41A470);
+	Pmove_f							= (void(*)(pmove_t * pmove))																(0x414D10);
+	CG_CalcCrosshairColor_f			= (char(*)())																				(0x430A33);
+	PM_Weapon_WeaponTimeAdjust_f	= (void(*)())																				(0x41A4D8);
+	PmoveSingle_stub_f				= (void(*)())																				(0x414BB4);
+	PM_SlideMove_f					= (BOOL(*)(pmove_t*, pml_t*, int))															(0x414F40);
+	PM_OverBounce_f					= (void(*)())																				(0x414BBB);
 
-	Menu_PostParse_f				= (itemDef_s * (*)(menuDef_t * menu))				(0x5583E0);
-	UI_AddMenuList_f				= (int(*)(UiContext*, MenuList*))					(0x554F40);
+	Menu_PostParse_f				= (itemDef_s * (*)(menuDef_t * menu))														(0x5583E0);
+	UI_AddMenuList_f				= (int(*)(UiContext*, MenuList*))															(0x554F40);
+	r::R_DrawXModelSkinnedCached_h  = (HRESULT(*)(cg::GfxCmdBufSourceState*, cg::GfxCmdBufState*, cg::GfxModelSkinnedSurface*))	(0x646870);
 }
 void cg::CG_InitForeverHooks()
 {
@@ -120,6 +125,7 @@ void cg::CG_InitHooks()
 	a->install(&(PVOID&)PM_OverBounce_f, PM_OverBounce_stub);
 	a->install(&(PVOID&)Menu_PostParse_f, Menu_PostParse);
 	a->install(&(PVOID&)UI_AddMenuList_f, UI_AddMenuList);
+	a->install(&(PVOID&)r::R_DrawXModelSkinnedCached_h, r::R_DrawXModelSkinnedCached);
 
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, " done!\n");
 
@@ -156,6 +162,7 @@ void cg::CG_RemoveHooks()
 	a->remove(&(PVOID&)PM_OverBounce_f, PM_OverBounce_stub);
 	a->remove(&(PVOID&)Menu_PostParse_f, Menu_PostParse);
 	a->remove(&(PVOID&)UI_AddMenuList_f, UI_AddMenuList);
+	a->remove(&(PVOID&)r::R_DrawXModelSkinnedCached_h, r::R_DrawXModelSkinnedCached);
 
 
 	if (r::pEndScene) {

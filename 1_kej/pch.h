@@ -157,6 +157,7 @@ typedef vec_t vec4_t[4];
 #include "r_world.hpp"
 #include "r_ui.hpp"
 #include "r_ui_jbuilder.hpp"
+#include "r_ui_assetmanager.hpp"
 
 #include "cl_main.hpp"
 

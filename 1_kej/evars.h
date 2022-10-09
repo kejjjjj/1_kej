@@ -51,7 +51,12 @@ namespace v
 		mod_autoanglerpg,
 		mod_jbuild_hitbox,
 		mod_jbuild_wasd,
-		mod_jbuild_forcepos;
+		mod_jbuild_forcepos,
+		mod_chams,
+		mod_chams_z,
+		mod_chams_col,
+		mod_chams_zcol,
+		mod_chams_wireframe;
 		
 
 

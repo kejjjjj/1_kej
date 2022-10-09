@@ -26,7 +26,17 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 
 
 			}
+			//if (GetAsyncKeyState(VK_NUMPAD9) & 1) {
+			//	for (size_t i = 0; i < 2047; i++) {
 
+			//		Material* mtl = rgp->sortedMaterials[i];
+
+			//		if (mtl) {
+			//			Com_Printf(CON_CHANNEL_OBITUARY, "[%i]: ^5%s\n", i, mtl->info.name);
+			//		}
+
+			//	}
+			//}
 			//if (jbuilder.MovementExists()) {
 			//	jump_data* jData = jbuilder.FetchFrameData(jbuilder.current_frame-1);
 

@@ -231,6 +231,9 @@
     <ClInclude Include="r_ui_jbuilder.hpp">
       <Filter>Source Files\render\ui</Filter>
     </ClInclude>
+    <ClInclude Include="r_ui_assetmanager.hpp">
+      <Filter>Source Files\render\ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -384,6 +387,9 @@
       <Filter>Source Files\mod</Filter>
     </ClCompile>
     <ClCompile Include="r_ui_jbuilder.cpp">
+      <Filter>Source Files\render\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="r_ui_assetmanager.cpp">
       <Filter>Source Files\render\ui</Filter>
     </ClCompile>
   </ItemGroup>

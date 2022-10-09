@@ -23,4 +23,5 @@ NOTE: requires a custom 1_kej_v2 cod4 mod, which will be included at some point.
 <a href="https://www.flaticon.com/free-icons/cancel" title="cancel icons">Cancel icons created by Freepik - Flaticon</a>\
 <a href="https://www.flaticon.com/free-icons/question" title="question icons">Question icons created by Freepik - Flaticon</a>\
 <a href="https://www.flaticon.com/free-icons/preferences" title="preferences icons">Preferences icons created by Creatype - Flaticon</a>\
-<a href="https://www.flaticon.com/free-icons/sketch" title="sketch icons">Sketch icons created by Freepik - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/sketch" title="sketch icons">Sketch icons created by Freepik - Flaticon</a>\
+<a href="https://www.flaticon.com/free-icons/project" title="project icons">Project icons created by Freepik - Flaticon</a>

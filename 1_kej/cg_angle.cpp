@@ -120,12 +120,15 @@ float cg::R_getOptAngle(const bool rightmove, float& diff)
 	float g_speed = (float)cgs->snap->ps.speed;
 	const float FPS = 1000.f / (cgs->frametime == NULL ? 1 : cgs->frametime);
 
-	const float accel = FPS / g_speed;
+	float accel = FPS / g_speed;
+
+	if (jumpanalyzer.recommendedFPS == 125)
+		accel = g_speed / FPS;
 
 	if (_speed < 190)
 		g_speed = 190.f - (190.f - _speed);
 	else if (GROUND)
-		g_speed = 281.f;
+		g_speed = 224.f;
 
 	const double velocitydirection = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180.f / PI;
 	const double accelerationAng = atan2(-(int)*sidemove, (int)*forwardmove) * 180.f / PI;
@@ -177,7 +180,12 @@ float cg::getOptAngle(float& _opt)
 	float g_speed = (float)clients->snap.ps.speed;
 	const float FPS = (float)Dvar_FindMalleableVar("com_maxfps")->current.integer;
 
-	const float accel = FPS / g_speed;
+	float accel = FPS / g_speed;
+
+	if (jumpanalyzer.recommendedFPS == 125)
+		accel = g_speed / FPS;
+
+	//float r = sqrtf();
 
 	if (_speed < 190)
 		g_speed = 190.f - (190.f - _speed);
@@ -189,8 +197,8 @@ float cg::getOptAngle(float& _opt)
 	double diff = acos((g_speed - accel) / _speed) * 180.f / PI;
 	//const float minAngle = acos(g_speed / _speed) * 180.f / PI;
 
-	if (jumpanalyzer.recommendedFPS == 125)
-		diff += accel; 
+	//if (jumpanalyzer.recommendedFPS == 125)
+	//	diff += accel; 
 
 	float delta = yaw;
 
@@ -205,6 +213,8 @@ float cg::getOptAngle(float& _opt)
 	}
 	yaw = delta;
 
+	
+
 	return yaw;
 }
 float cg::getOptForAnalyzer(jump_data* data, bool onGround)
@@ -218,7 +228,10 @@ float cg::getOptForAnalyzer(jump_data* data, bool onGround)
 	float g_speed = (float)cgs->snap->ps.speed;
 	const float FPS = (float)data->FPS;
 
-	const float accel = FPS / g_speed;
+	float accel = FPS / g_speed;
+
+	if (jumpanalyzer.recommendedFPS == 125)
+		accel = g_speed / FPS;
 
 	if (_speed < 190)
 		g_speed = 190.f - (190.f - _speed);
@@ -280,7 +293,7 @@ axis_s cg::CG_GetNearestWorldAxisFromYaw(float yawangle)
 	}
 	ax.axis = axis_e::xPositive;
 	ax.angle = 0;
-	return ax;  //X backward
+	return ax;  
 
 
 }
@@ -307,6 +320,6 @@ axis_s cg::CG_GetNearestWorldAxisFromYaw()
 	}
 	ax.axis = axis_e::xPositive;
 	ax.angle = 0;
-	return ax;  //X backward
+	return ax; 
 
 }
