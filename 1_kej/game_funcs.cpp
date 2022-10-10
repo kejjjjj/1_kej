@@ -104,6 +104,10 @@ void OpenMenu_f()
     }
     VectorCopy(clients->cgameViewangles, r::angles_before_menu);
     r::R_RemoveInput(r::should_draw_menu);
+
+    hook* a = nullptr;
+
+   
 }
 void Cmd_Init()
 {

@@ -110,6 +110,7 @@ void r::R_RemoveInput(bool _true, bool save_file)
 		
 		a->write_addr(MouseInput, "\x00", 1);
 		a->write_addr(KeyInput, "\xC3", 1);
+		a->write_addr(0x467EB0, "\xC3", 1); //CL_KeyEvent
 		return;
 	}
 
@@ -118,7 +119,7 @@ void r::R_RemoveInput(bool _true, bool save_file)
 	
 	a->write_addr(MouseInput, "\x01", 1);
 	a->write_addr(KeyInput, "\x51", 1);
-
+	a->write_addr(0x467EB0, "\x8B", 1); //CL_KeyEvent
 	if(save_file)
 		Evar_SaveToFile(v::cfg::cfgDirectory);
 
