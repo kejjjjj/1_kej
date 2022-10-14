@@ -211,7 +211,7 @@ bool jAnalyzer::IO_ReadVector1(std::fstream& fp, t& value)
 //IO_ReadVector2 assumes the current character is the character before {
 bool jAnalyzer::IO_ReadVector2(std::fstream& fp, vec2_t value)
 {
-
+	return true;
 }
 
 //IO_ReadVector3 assumes the current character is the character before {

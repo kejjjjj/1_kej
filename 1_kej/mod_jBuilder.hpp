@@ -7,6 +7,10 @@
 
 namespace cg
 {
+	inline playerState_s ps_copy;
+	inline pmove_t pm_copy;
+	inline pml_t pml_copy;
+
 	struct builder_data_s
 	{
 		pmove_t* pm;
@@ -25,8 +29,10 @@ namespace cg
 		playerState_s end_ps; //LOTS OF DATA
 		std::vector<jump_data> jData; 
 	};
+	
 	struct jump_builder_s
 	{
+		
 		bool get_playerState;
 		builder_data_s builder_data;
 		std::vector<jump_data> jData;
@@ -68,6 +74,9 @@ namespace cg
 		int32_t preview_frame; //currently selected frame in the menu
 		int32_t current_segment;
 		int32_t segment_frameCount;
+		bool start_was_modified;
+		vec3_t new_start_origin;
+		vec3_t new_start_angles;
 
 		std::vector<segment_data_s> segments;
 

@@ -7,6 +7,9 @@
 
 namespace r
 {
+	inline XAssetHeader(*Material_Register_FastFile_f)(const char* name);
+	XAssetHeader Material_Register_FastFile(const char* name);
+
 	struct ass_material_s
 	{
 		size_t selectedIndex;

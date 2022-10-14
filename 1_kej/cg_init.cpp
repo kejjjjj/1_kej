@@ -75,6 +75,8 @@ void cg::CG_PrepareHooks()
 	Menu_PostParse_f				= (itemDef_s * (*)(menuDef_t * menu))														(0x5583E0);
 	UI_AddMenuList_f				= (int(*)(UiContext*, MenuList*))															(0x554F40);
 	r::R_DrawXModelSkinnedCached_h  = (HRESULT(*)(cg::GfxCmdBufSourceState*, cg::GfxCmdBufState*, cg::GfxModelSkinnedSurface*))	(0x646870);
+
+	r::Material_Register_FastFile_f	= (XAssetHeader(*)(const char* name))														(0x5F2A80);
 }
 void cg::CG_InitForeverHooks()
 {
@@ -126,6 +128,7 @@ void cg::CG_InitHooks()
 	a->install(&(PVOID&)Menu_PostParse_f, Menu_PostParse);
 	a->install(&(PVOID&)UI_AddMenuList_f, UI_AddMenuList);
 	a->install(&(PVOID&)r::R_DrawXModelSkinnedCached_h, r::R_DrawXModelSkinnedCached);
+	//a->install(&(PVOID&)r::Material_Register_FastFile_f, r::Material_Register_FastFile);
 
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, " done!\n");
 

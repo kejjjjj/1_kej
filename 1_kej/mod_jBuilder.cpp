@@ -8,9 +8,7 @@ void jump_builder_s::SetEditMode(bool mode)
 {
 	this->is_editing = mode;
 }
-static playerState_s ps_copy;
-static pmove_t pm_copy;
-static pml_t pml_copy;
+
 void jump_builder_s::OnCreateNew()
 {
 	builder_data_s& bData = this->builder_data;
@@ -34,6 +32,10 @@ void jump_builder_s::OnCreateNew()
 
 	this->builder_data.run_created = true;
 	this->OnAddSegment();
+
+	VectorCopy(pm_copy.ps->viewangles, this->new_start_angles);
+	VectorCopy(pm_copy.ps->origin, this->new_start_origin);
+
 	//bData.pm->ps->velocity[0] = 3000;
 }
 void jump_builder_s::OnDeleteProject()
@@ -124,6 +126,9 @@ void jump_builder_s::OnGetSegmentData()
 		memcpy_s(&pml_copy, sizeof(pml_t), &cg::h_pml, sizeof(pml_t));
 		memcpy_s(&ps_copy, sizeof(playerState_s), &cg::h_ps, sizeof(playerState_s));
 
+		VectorCopy(this->new_start_angles, ps_copy.viewangles);
+		VectorCopy(this->new_start_origin, ps_copy.origin);
+
 	}
 	else {
 		const segment_data_s prev_segment = this->segments[this->current_segment - 1];
@@ -136,7 +141,6 @@ void jump_builder_s::OnGetSegmentData()
 	bData.pm = reinterpret_cast<pmove_t*>(&pm_copy);
 	bData.pml = reinterpret_cast<pml_t*>(&pml_copy);
 	bData.pm->ps = reinterpret_cast<playerState_s*>(&ps_copy);
-
 
 }
 void jump_builder_s::OnUpdateAllPositions()

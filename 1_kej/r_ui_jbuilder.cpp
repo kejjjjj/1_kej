@@ -231,9 +231,14 @@ void r::R_JumpBuilder_Builder()
 		ImGui::SameLine();
 
 		ImGui::BeginGroup();
+		static bool editingStart(FALSE);
 		jump_data* jData = jbuilder.FetchFrameData(jbuilder.preview_frame);
 		if (jData) {
-			ImGui::Text("fps: %i", jData->FPS);
+			if(jbuilder.current_segment == NULL)
+				if (ImGui::Button("Modify Start"))
+					editingStart = !editingStart;
+
+			ImGui::SameLine();  MetricsHelpMarker("modify the starting position in case you created the project from a bad spot");
 
 			if (v::mod_jbuild_forcepos.isEnabled() && !jbuilder.InFreeMode()) {
 				const vec3_t null = { 0,0,0 };
@@ -245,14 +250,80 @@ void r::R_JumpBuilder_Builder()
 
 		}
 		if (jbuilder.GetTotalFrames() > 0) {
-			if (ImGui::Button("Delete Project"))
+			if (ImGui::Button("Delete Project")) {
+				editingStart = false;
 				jbuilder.OnDeleteProject();
+			}
 		}
 
 		ImGui::EndGroup();
 
 		R_JumpBuilder_ToggleFreeMode();
 
+		if (editingStart) {
+			static DWORD ms = Sys_MilliSeconds();
+			ImGui::Begin("Edit Start", &editingStart, ImGuiWindowFlags_AlwaysAutoResize);
+			ImGui::Text("\t");
+			ImGui::SameLine();
+			//ImGui::SameLine();
+			ImGui::Button("W##0022");
+			if (ImGui::IsItemActive()) {
+				if (ms + 200 < Sys_MilliSeconds()) {
+					vec3_t outDir;
+					vec3_t angles = { 0, jbuilder.segments[NULL].jData[0].angles[YAW], 0 };
+					AnglesToForward(angles, jbuilder.segments[NULL].jData[0].origin, 2, jbuilder.new_start_origin);
+					ms = Sys_MilliSeconds();
+					jbuilder.OnUpdateAllPositions();
+
+				}
+			}
+			ImGui::Button("A##0022");
+			if (ImGui::IsItemActive()) {
+				if (ms + 200 < Sys_MilliSeconds()) {
+					vec3_t outDir;
+					vec3_t angles = { 0,  jbuilder.segments[NULL].jData[0].angles[YAW], 0 };
+					AnglesToRight(angles, jbuilder.segments[NULL].jData[0].origin, -2, jbuilder.new_start_origin);
+					ms = Sys_MilliSeconds();
+					jbuilder.OnUpdateAllPositions();
+
+				}
+			}
+			ImGui::SameLine();
+			ImGui::Text("\t");
+			ImGui::SameLine();
+			ImGui::Button("D##0022");
+			if (ImGui::IsItemActive()) {
+				if (ms + 200 < Sys_MilliSeconds()) {
+					vec3_t outDir;
+					vec3_t angles = { 0, jbuilder.segments[NULL].jData[0].angles[YAW], 0 };
+					AnglesToRight(angles, jbuilder.segments[NULL].jData[0].origin, 2, jbuilder.new_start_origin);
+					ms = Sys_MilliSeconds();
+					jbuilder.OnUpdateAllPositions();
+
+				}
+			}
+
+			ImGui::Text("\t ");
+			ImGui::SameLine();
+			ImGui::Button("S##0022");
+			if (ImGui::IsItemActive()) {
+				if (ms + 200 < Sys_MilliSeconds()) {
+					vec3_t outDir;
+					vec3_t angles = { 0, jbuilder.segments[NULL].jData[0].angles[YAW], 0 };
+					AnglesToForward(angles, jbuilder.segments[NULL].jData[0].origin, -2, jbuilder.new_start_origin);
+					ms = Sys_MilliSeconds();
+					jbuilder.OnUpdateAllPositions();
+
+				}
+			}
+			if(ImGui::SliderFloat("YAW", &cg::jbuilder.new_start_angles[YAW], -180.f, 180.f, "%.3f"))
+				jbuilder.OnUpdateAllPositions();
+
+
+			ImGui::End();
+
+
+		}
 
 	}
 	

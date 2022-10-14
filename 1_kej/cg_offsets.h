@@ -199,7 +199,7 @@ namespace cg
 	inline cmd_function_s** cmd_ptr = reinterpret_cast<cmd_function_s**>(0x1410B3C);
 
 	inline XZone* g_zones = reinterpret_cast<XZone*>(0xFFEFD0);
-	inline XAssetEntry* g_assetEntryPool = reinterpret_cast<XAssetEntry*>(0xF0D640);
+	inline XAssetEntryPoolEntry* g_assetEntryPool = reinterpret_cast<XAssetEntryPoolEntry*>(0xF0D640);
 	inline unsigned short* db_hashTable = reinterpret_cast<unsigned short*>(0xE62A80);
 	inline infoParm_t* infoParams = reinterpret_cast<infoParm_t*>(0x71FBD0); // Count 0x1C
 

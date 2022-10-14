@@ -1,6 +1,14 @@
 #include "pch.h"
 
-
+XAssetHeader r::Material_Register_FastFile(const char* name)
+{
+	//static int matIndx(0);
+	//if (std::string(name).find("decode") == std::string::npos && matIndx < 2048) {
+	//	Com_Printf(CON_CHANNEL_CONSOLEONLY, "^5[%i]: %s\n", matIndx, name);
+	//	++matIndx;
+	//}
+	return Material_Register_FastFile_f(name);
+}
 void r::R_AssMan_Main(bool& isOpen)
 {
 	if (!isOpen)
@@ -79,7 +87,7 @@ void r::R_AssMan_Main(bool& isOpen)
 				
 
 				ImGui::EndGroup();
-				if (ImGui::IsItemHovered()) {
+				if (ImGui::IsItemHovered() && !ass.isEditing) {
 					const ImVec2 mins = ImGui::GetItemRectMin();
 					const ImVec2 maxs = ImGui::GetItemRectMax();
 
@@ -130,6 +138,7 @@ void r::R_AssMan_EditMaterial(ass_material_s& _mtl)
 	static bool replaceTexture(0), replacePixelShader(0), replaceVertexShader(0);
 
 	ImGui::Begin("Material Properties##01", &_mtl.isEditing);
+	ImGui::TextColored(ImVec4(255, 255, 0, 255), "Warning: Some specific materials might crash the game\n");
 	ImGui::SetWindowSize(ImVec2(600, 600), ImGuiCond_FirstUseEver);
 
 	static char searchBuf[128];

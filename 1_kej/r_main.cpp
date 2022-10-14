@@ -1,7 +1,10 @@
 #include "pch.h"
 
 
-
+XAssetHeader __cdecl Material_Register_FastFile(const char* a1)
+{
+	return ((XAssetHeader(*)(const char* a1))0x489570)(a1);
+}
 HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 {
 	r::device_needs_reset = false;
@@ -28,34 +31,10 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 			}
 			
 			//if (GetAsyncKeyState(VK_NUMPAD9) & 1) {
-			//	Material* first = nullptr;
-			//	bool frst(false);
-			//	for (size_t i = 0; i < 2047; i++) {
 
-			//		Material* mtl = rgp->sortedMaterials[i];
-
-			//		if (mtl) {
-			//			rgp->defaultMaterial = mtl;
-			//		}
-
-			//	}
-			//}
-			//if (jbuilder.MovementExists()) {
-			//	jump_data* jData = jbuilder.FetchFrameData(jbuilder.current_frame-1);
-
-			//	if (jData) {
-
-			//		//VectorCopy(jData->origin, ps_loc->origin);
-
-			//		r::box_s box = r::R_ConstructBoxFromBounds(jData->origin, jData->mins, jData->maxs);
-
-			//		r::R_DrawConstructedBoxEdges(box, vec4_t{ 255,0,0,255 });
-			//		r::R_DrawConstructedBox(box, vec4_t{ 255,0,0,50 });
-
-			//	}
+			
 
 			//}
-
 			Mod_DrawFPSHelpers();
 
 			

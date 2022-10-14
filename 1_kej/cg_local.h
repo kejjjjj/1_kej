@@ -3571,11 +3571,23 @@ enum FxElemType : char
 	FX_ELEM_TYPE_LAST_SPRITE = 0x3,
 	FX_ELEM_TYPE_LAST_DRAWN = 0x7,
 };
+struct XModelPiece
+{
+	XModel* model;
+	float offset[3];
+};
+struct XModelPieces
+{
+	const char* name;
+	int numpieces;
+	XModelPiece* pieces;
+};
+
 
 union XAssetHeader
 {
 	void* data;
-	// 			XModelPieces *xmodelPieces;
+	//XModelPieces *xmodelPieces;
 	PhysPreset* physPreset;
 	XAnimParts* parts;
 	XModel* model;
@@ -3620,7 +3632,11 @@ struct XAssetEntry
 	unsigned __int16 nextOverride;
 	unsigned __int16 usageFrame;
 };
-
+union XAssetEntryPoolEntry
+{
+	XAssetEntry entry;
+	XAssetEntryPoolEntry* next;
+};
 struct XBlock
 {
 	char* data;
@@ -7491,16 +7507,13 @@ public:
 		return &cmds[cmdNum & CMD_MASK];
 	}
 };//Size=0x2E44
-typedef enum
-{
-	UNKNOW,
-	CONSOLE,
-	KILLPOSITION,
-	CENTERED,
-
-} prints_t;
 #pragma warning( push )
 #pragma warning( disable : 4324 )
+struct BuiltInMaterialTable
+{
+	const char* name;
+	Material** material;
+};
 struct __declspec(align(128)) r_global_permanent_t
 {
 	Material* sortedMaterials[2048];
