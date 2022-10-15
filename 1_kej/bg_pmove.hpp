@@ -15,6 +15,8 @@ namespace cg
 	inline void(__cdecl* PM_UFOMove_f)(pmove_t* pm, pml_t* pml);
 	inline void(__cdecl* PM_Weapon_f)(pml_t* pml, pmove_t* pm);
 	inline void(__cdecl* PM_OverBounce_f)();
+	inline void(*CM_IsEdgeWalkable_f)(int edgeIndex, int triIndex);
+
 	inline BOOL(*PM_SlideMove_f)(pmove_t* pm, pml_t* pml, int gravity);
 
 
@@ -25,6 +27,7 @@ namespace cg
 	void PM_AirMove(pmove_t* pm, pml_t* pml);
 	void PM_UFOMove(pmove_t* pm, pml_t* pml);
 	void PM_Weapon(pml_t* pml, pmove_t* pm);
+	bool CM_IsEdgeWalkable(int edgeIndex, int triIndex);
 	BOOL PM_SlideMove(pmove_t* pm, pml_t* pml, int gravity);
 
 	void Pmove(pmove_t* pmove);

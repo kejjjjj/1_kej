@@ -440,6 +440,15 @@ void cg::PM_OverBounce(pmove_t* pm, pml_t* pml)
 	pm->ps->oldVelocity[0] = pm->ps->oldVelocity[0] + frameX;
 	pm->ps->oldVelocity[1] = pm->ps->oldVelocity[1] + frameY;
 
+	static float previousZ = pm->ps->jumpOriginZ;
+
+	if(pm->ps->jumpOriginZ != NULL)
+		previousZ = pm->ps->jumpOriginZ;
+
+	if (v::mod_unlim_bounces.isEnabled()) {
+		pm->ps->pm_flags = pm->ps->pm_flags & 0xFFFFFE7F | PMF_JUMPING; //reset bouncing flags
+		pm->ps->jumpOriginZ = previousZ;
+	}
 	//((void(__cdecl*)(float* vec))0x578FE0)(pm->ps->velocity); //Sys_SnapVector
 
 	return;
@@ -463,4 +472,8 @@ __declspec(naked) void cg::PM_OverBounce_stub()
 		jmp _jmp;
 		//retn;
 	}
+}
+bool cg::CM_IsEdgeWalkable(int edgeIndex, int triIndex)
+{
+	return v::mod_terrain_bounces.isEnabled() == false ? (cm->triEdgeIsWalkable[(triIndex + edgeIndex + 2 * triIndex) >> 3] & (1 << ((triIndex + edgeIndex + 2 * triIndex) & 7))) != 0 : 0;
 }

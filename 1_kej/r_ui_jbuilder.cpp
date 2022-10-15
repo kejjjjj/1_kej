@@ -111,10 +111,9 @@ void r::R_JumpBuilder_ToggleFreeMode()
 	}
 }
 void r::R_JumpBuilder_Builder()
-
 {
 	std::vector<segment_data_s> &segments = jbuilder.segments; 
-	
+	const ImGuiIO* io = &ImGui::GetIO();
 	if (!jbuilder.builder_data.run_created) {
 		ImGui::Text("Create Project\t\t\t\t");
 		UI_DrawGradientZone(ImVec2(170, 70));
@@ -132,7 +131,7 @@ void r::R_JumpBuilder_Builder()
 	}else{
 
 		ImGui::Text("Segments\t\t\t\t");
-		UI_DrawGradientZone(ImVec2(550, 100));
+		UI_DrawGradientZone(ImVec2(550, 130));
 
 		ImGui::Text("\t");
 		ImGui::SameLine();
@@ -148,7 +147,7 @@ void r::R_JumpBuilder_Builder()
 
 			old_segment = jbuilder.current_segment;
 		}
-		const size_t total_frames = jbuilder.GetTotalFrames();
+		const size_t total_frames = jbuilder.GetTotalFrames()-1;
 
 
 		if (ImGui::Button("Add"))
@@ -164,6 +163,32 @@ void r::R_JumpBuilder_Builder()
 		if (ImGui::Button("Insert"))
 			jbuilder.OnInsertSegment();
 
+		static bool isPlayback(false);
+		static int& menu_frame = jbuilder.preview_frame;
+
+		if (!isPlayback) {
+			if (ImGui::Button(">##03") || io->KeysDownDuration['P'] == 0.f)
+				isPlayback = true;
+		}
+		else {
+			if (ImGui::Button("P##03") || io->KeysDownDuration['P'] == 0.f)
+				isPlayback = false;
+		}
+
+		if (isPlayback && menu_frame < total_frames) {
+			menu_frame++;
+		}
+		else
+			isPlayback = false;
+
+
+		ImGui::SameLine();
+		if (ImGui::Button("R##022") || io->KeysDownDuration['R'] == 0.f)
+			menu_frame = NULL;
+
+
+
+
 		ImGui::EndGroup();
 
 
@@ -175,7 +200,8 @@ void r::R_JumpBuilder_Builder()
 
 		ImGui::BeginGroup();
 
-		if (ImGui::SliderInt("Frame", &jbuilder.preview_frame, 0, total_frames, "%d")) {
+		if (ImGui::SliderInt("Frame", &jbuilder.preview_frame, 1, total_frames, "%d", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput)) {
+
 			size_t indx(0);
 			for (const auto& i : jbuilder.segments) {
 				if (i.end > jbuilder.preview_frame && i.begin < jbuilder.preview_frame)
@@ -234,11 +260,14 @@ void r::R_JumpBuilder_Builder()
 		static bool editingStart(FALSE);
 		jump_data* jData = jbuilder.FetchFrameData(jbuilder.preview_frame);
 		if (jData) {
-			if(jbuilder.current_segment == NULL)
+			if (jbuilder.current_segment == NULL) {
 				if (ImGui::Button("Modify Start"))
 					editingStart = !editingStart;
 
-			ImGui::SameLine();  MetricsHelpMarker("modify the starting position in case you created the project from a bad spot");
+				ImGui::SameLine();  MetricsHelpMarker("modify the starting position in case you created the project from a bad spot");
+			}
+			else
+				ImGui::Text("fps: %i", jData->FPS);
 
 			if (v::mod_jbuild_forcepos.isEnabled() && !jbuilder.InFreeMode()) {
 				const vec3_t null = { 0,0,0 };

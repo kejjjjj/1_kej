@@ -324,6 +324,9 @@ void Evar_Setup()
 	v::mod_chams_zcol.Register		("1_kej_chams_zcol",				evartype_t::EVAR_VEC4,		vec4_t{ 1,0,0,1 },		true);
 	v::mod_chams_wireframe.Register ("1_kej_chams_wireframe",			evartype_t::EVAR_BOOL,		(float)0,				true);
 
+	v::mod_unlim_bounces.Register	("1_kej_unlim_bounces",				evartype_t::EVAR_BOOL,		(float)0,				true);
+	v::mod_terrain_bounces.Register	("1_kej_terrain_bounces",			evartype_t::EVAR_BOOL,		(float)0,				true);
+
 }
 int evar_o::GetInt()
 {

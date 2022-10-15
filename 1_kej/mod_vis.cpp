@@ -13,9 +13,16 @@ void cg::Mod_DrawEvents()
 
 		r::R_DrawText(buffer, 0, 800, 2, 2, 0, isPaused == false ? vec4_t{ 1,1,1,1 } : vec4_t{ 1,0,0,1 }, 0);
 	}
-	if (automation.pendingSlide)
-		r::R_DrawText("Slide", v::mod_velometer.GetArray(1), v::mod_velometer.GetArray(2) - 20 * v::mod_velometer.GetArray(3), v::mod_velometer.GetArray(3), v::mod_velometer.GetArray(3), 0, vec4_t{0,1,0,1}, 0);
+	if (automation.pendingSlide) {
 
+		Material* fxMaterial = r::R_RegisterMaterial("decode_characters");
+		Material* fxMaterialGlow = r::R_RegisterMaterial("decode_characters_glow");
+
+		r::R_AddCmdDrawTextWithEffects((char*)"Slide", "fonts/objectivefont", r::X(v::mod_velometer.GetArray(1)), r::Y(v::mod_velometer.GetArray(2) - 40) , v::mod_velometer.GetArray(3), v::mod_velometer.GetArray(3), 0.f, vec4_t{ 0,1,0,1 }, 3, v::mod_velometer_glow.evar->vecValue, fxMaterial, fxMaterialGlow, 0, 500, 1000, 2000);
+
+
+		//r::R_DrawText("Slide", v::mod_velometer.GetArray(1), v::mod_velometer.GetArray(2) - 20 * v::mod_velometer.GetArray(3), v::mod_velometer.GetArray(3), v::mod_velometer.GetArray(3), 0, vec4_t{ 0,1,0,1 }, 0);
+	}
 }
 void cg::Mod_DrawVelocity()
 {

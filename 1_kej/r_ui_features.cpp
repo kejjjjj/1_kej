@@ -368,7 +368,7 @@ void Jump_Features()
 	//ImGui::Separator();
 	ImGui::BeginGroup();
 	ImGui::Text("Utilities\t"); {
-		r::UI_DrawGradientZone(ImVec2(245, 100));
+		r::UI_DrawGradientZone(ImVec2(295, 100));
 
 		ImGui::Text("\t");
 		ImGui::SameLine();
@@ -382,9 +382,28 @@ void Jump_Features()
 		} ImGui::SameLine(); r::MetricsHelpMarker("print the jump velocity and velocity on bounce hit");
 		ImGui::EndGroup();
 
+
+
 	}
-	//ImGui::Text("Movement");
-	//ImGui::Separator();
+	ImGui::Text("Bounces\t"); {
+		r::UI_DrawGradientZone(ImVec2(295, 100));
+
+		ImGui::Text("\t");
+		ImGui::SameLine();
+
+		ImGui::BeginGroup();
+
+		if (ImGui::Checkbox("Terrain Bouncing", &v::mod_terrain_bounces.evar->enabled)) {
+			v::mod_terrain_bounces.SetValue(v::mod_terrain_bounces.evar->enabled);
+		} ImGui::SameLine(); r::MetricsHelpMarker("Allows bouncing from terrain edges\nVertical terrain edge support will be added soon... maybe");
+
+		if (ImGui::Checkbox("Unlimited Bouncing", &v::mod_unlim_bounces.evar->enabled)) {
+			v::mod_unlim_bounces.SetValue(v::mod_unlim_bounces.evar->enabled);
+		} ImGui::SameLine(); r::MetricsHelpMarker("Bounce flags do not reset when you bounce");
+
+		ImGui::EndGroup();
+
+	}
 
 	ImGui::EndGroup();
 

@@ -36,6 +36,8 @@ void jump_builder_s::OnCreateNew()
 	VectorCopy(pm_copy.ps->viewangles, this->new_start_angles);
 	VectorCopy(pm_copy.ps->origin, this->new_start_origin);
 
+	//jbuilder.preview_frame = 1;
+
 	//bData.pm->ps->velocity[0] = 3000;
 }
 void jump_builder_s::OnDeleteProject()

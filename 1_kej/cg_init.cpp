@@ -77,6 +77,8 @@ void cg::CG_PrepareHooks()
 	r::R_DrawXModelSkinnedCached_h  = (HRESULT(*)(cg::GfxCmdBufSourceState*, cg::GfxCmdBufState*, cg::GfxModelSkinnedSurface*))	(0x646870);
 
 	r::Material_Register_FastFile_f	= (XAssetHeader(*)(const char* name))														(0x5F2A80);
+
+	CM_IsEdgeWalkable_f				= (void(*)(int edgeIndex, int triIndex))													(0x4EFCB0);
 }
 void cg::CG_InitForeverHooks()
 {
@@ -128,6 +130,8 @@ void cg::CG_InitHooks()
 	a->install(&(PVOID&)Menu_PostParse_f, Menu_PostParse);
 	a->install(&(PVOID&)UI_AddMenuList_f, UI_AddMenuList);
 	a->install(&(PVOID&)r::R_DrawXModelSkinnedCached_h, r::R_DrawXModelSkinnedCached);
+	a->install(&(PVOID&)CM_IsEdgeWalkable_f, CM_IsEdgeWalkable);
+
 	//a->install(&(PVOID&)r::Material_Register_FastFile_f, r::Material_Register_FastFile);
 
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, " done!\n");
@@ -166,6 +170,7 @@ void cg::CG_RemoveHooks()
 	a->remove(&(PVOID&)Menu_PostParse_f, Menu_PostParse);
 	a->remove(&(PVOID&)UI_AddMenuList_f, UI_AddMenuList);
 	a->remove(&(PVOID&)r::R_DrawXModelSkinnedCached_h, r::R_DrawXModelSkinnedCached);
+	a->remove(&(PVOID&)CM_IsEdgeWalkable_f, CM_IsEdgeWalkable);
 
 
 	if (r::pEndScene) {
