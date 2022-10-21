@@ -151,6 +151,24 @@ void cg::CG_RemoveHooks()
 
 	r::R_RemoveInput(false);
 
+	for (auto& i : r::imagePairs) {
+		i.second->Release();
+		delete i.second;
+	}
+
+	r::imagePairs.erase(r::imagePairs.begin(), r::imagePairs.end());
+	r::imagePairs.clear();
+	r::imagePairs.resize(0);
+
+	if (ImGui::GetCurrentContext()) {
+		Com_Printf(CON_CHANNEL_CONSOLEONLY, "also removing imgui context\n");
+		//ImGui_ImplDX9_InvalidateDeviceObjects();
+		ImGui_ImplDX9_Shutdown();
+		ImGui_ImplWin32_Shutdown();
+		ImGui::DestroyContext();
+
+	}
+
 	a->remove(&(PVOID&)r::CL_ShutdownRenderer_f, r::CL_ShutdownRenderer);
 	a->remove(&(PVOID&)r::R_RecoverLostDevice_f, r::R_RecoverLostDevice);
 	a->remove(&(PVOID&)r::oWndProc, r::WndProc);
@@ -178,15 +196,6 @@ void cg::CG_RemoveHooks()
 
 	}
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, " done!\n");
-
-	if (ImGui::GetCurrentContext()) {
-		Com_Printf(CON_CHANNEL_CONSOLEONLY, "also removing imgui context\n");
-
-		ImGui_ImplDX9_Shutdown();
-		ImGui_ImplWin32_Shutdown();
-		ImGui::DestroyContext();
-
-	}
 
 	mglobs.initialized = false;
 

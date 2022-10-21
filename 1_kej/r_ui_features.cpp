@@ -130,7 +130,7 @@ void Visual_Features()
 			ImGui::BeginDisabled();
 
 		if (ImGui::Checkbox("use Z buffer", &v::mod_chams_z.evar->enabled))
-			v::mod_chams.SetValue(v::mod_chams_z.isEnabled());
+			v::mod_chams_z.SetValue(v::mod_chams_z.isEnabled());
 
 		ImGui::SameLine();
 		ImGui::ColorEdit3("##aaaab", v::mod_chams_zcol.evar->vecValue, ImGuiColorEditFlags_NoInputs);
@@ -558,6 +558,13 @@ void r::R_Features(bool& wantsEditor)
 	bool justPressed(false);
 
 	size_t indx(0);
+
+	static bool first_open(true);
+
+	if (first_open) {
+		ActiveIndex = UI_GetImageIndex("Automation");
+		first_open = false;
+	}
 
 	for (const auto& i : r::imagePairs) {
 

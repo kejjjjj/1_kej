@@ -21,7 +21,7 @@ namespace cg
 	float ProjectionX(float angle, float fov);
 	range_t AnglesToRange(float start, float end, float yaw, float fov);
 	//screencoordinates_t CG_RangeAnglesToSC(range_t range);
-	void CG_FillAngleYaw(float start, float end, float yaw, float y, float h, float fov, const vec4_t color);
+	void CG_FillAngleYaw(float start, float end, float yaw, float y, float h, float fov, const vec4_t color, bool useImGui = true);
 
 	void setYaw(float ref, float ang);
 	void setPitch(float ref, float ang);

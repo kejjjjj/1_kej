@@ -31,8 +31,17 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 			}
 			
 			//if (GetAsyncKeyState(VK_NUMPAD9) & 1) {
+			//	dmaterial_t* frstMat = nullptr;
+			//	
+			//	for (int i = 0; i < cm->numMaterials; i++) {
+			//		cm->materials[i].contentFlags = 0;
+			//		cm->materials[i].surfaceFlags = 0;
+			//		memcpy(cm->materials[i].material, cm->materials[0].material, 64);
 
-			
+
+
+			//	}
+			//
 
 			//}
 			Mod_DrawFPSHelpers();

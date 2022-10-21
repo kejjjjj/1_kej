@@ -309,8 +309,12 @@ int jAnalyzer::Segmenter_Prepare()
 		return -1;
 
 
-	if (segment_frame >= GetTotalFrames()+1)
+	if (segment_frame >= GetTotalFrames() + 1) {
+		Com_PrintError(CON_CHANNEL_CONSOLEONLY, "Segmenter_Prepare(): segment_frame >= GetTotalFrames() + 1");
+		Com_PrintError(CON_CHANNEL_OBITUARY, "Segmenter_Prepare(): segment_frame >= GetTotalFrames() + 1");
+
 		return -1;
+	}
 
 	if ((startTime + (DWORD)(v::mod_jumpv_segtime.GetFloat() * 1000)) < Sys_MilliSeconds()) {
 

@@ -15,10 +15,6 @@ void cg::CL_Disconnect(int localClientNum)
 		jbuilder.ClearData();
 
 		Mod_EditMemory(true);
-
-		for(auto &i : r::imagePairs)
-			i.second->Release();
-
 	}
 
 

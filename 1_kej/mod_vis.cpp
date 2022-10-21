@@ -671,7 +671,7 @@ void cg::Mod_DrawAngleHelper()
 
 	const float fov = (cg_fov->current.value * cg_fovscale->current.value) * v::mod_anglehelper.evar->arrayValue[3];
 
-	CG_FillAngleYaw(accel_angles[0], accel_angles[1], yaw, v::mod_anglehelper.evar->arrayValue[1], v::mod_anglehelper.evar->arrayValue[2], fov, vec4_t{255,0,0,0.7});
+	CG_FillAngleYaw(accel_angles[0], accel_angles[1], yaw, v::mod_anglehelper.evar->arrayValue[1], v::mod_anglehelper.evar->arrayValue[2], fov, vec4_t{255,0,0,0.7}, false);
 	r::R_DrawRect("white", 958, v::mod_anglehelper.evar->arrayValue[1] - 10, 4, v::mod_anglehelper.evar->arrayValue[2] + 20, vec4_t{ 255,255,255,255 });
 }
 void cg::Mod_DrawCurveSpeed()

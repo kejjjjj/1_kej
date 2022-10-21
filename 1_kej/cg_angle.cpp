@@ -39,7 +39,7 @@ float cg::ProjectionX(float angle, float fov)
 	return SCREEN_WIDTH / 2 * (1 - angle / half_fov_x);
 
 }
-void cg::CG_FillAngleYaw(float start, float end, float yaw, float y, float h, float fov, vec4_t const color)
+void cg::CG_FillAngleYaw(float start, float end, float yaw, float y, float h, float fov, vec4_t const color, bool useImGui)
 {
 
 	range_t const range = AnglesToRange(DEG2RAD(start), DEG2RAD(end), DEG2RAD(yaw), fov);
@@ -58,15 +58,20 @@ void cg::CG_FillAngleYaw(float start, float end, float yaw, float y, float h, fl
 
 	if (!range.split) {
 		//r::R_DrawRect("white", range.x1, y, range.x2 - range.x1, h, color);
-		ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(x1), r::Y(y)), ImVec2(r::X(ImClamp(range.x2, minX, maxX)), r::Y(y + h)), ImColor(color[0], color[1], color[2], color[3]));
+		if(useImGui)
+			ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(x1), r::Y(y)), ImVec2(r::X(ImClamp(range.x2, minX, maxX)), r::Y(y + h)), ImColor(color[0], color[1], color[2], color[3]));
+		else
+			r::R_DrawRect("white", range.x1, y, range.x2 - range.x1, h, color);
 	}
 	else {
-		//r::R_DrawRect("white", 0, y, range.x1, h, color);
-		//r::R_DrawRect("white", range.x2, y, 1920.f - range.x2, h, color);
-
-		ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(minX), r::Y(y)), ImVec2(r::X(x1), r::Y(y + h)), ImColor(color[0], color[1], color[2], color[3]));
-		ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(ImClamp(range.x2, minX, maxX)), r::Y(y)), ImVec2(r::X(ImClamp((float)cgs->refdef.width, minX, maxX)), r::Y(y + h)), ImColor(color[0], color[1], color[2], color[3]));
-
+		if (useImGui) {
+			ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(minX), r::Y(y)), ImVec2(r::X(x1), r::Y(y + h)), ImColor(color[0], color[1], color[2], color[3]));
+			ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(ImClamp(range.x2, minX, maxX)), r::Y(y)), ImVec2(r::X(ImClamp((float)cgs->refdef.width, minX, maxX)), r::Y(y + h)), ImColor(color[0], color[1], color[2], color[3]));
+		}
+		else {
+			r::R_DrawRect("white", 0, y, range.x1, h, color);
+			r::R_DrawRect("white", range.x2, y, 1920.f - range.x2, h, color);
+		}
 	}
 }
 void cg::setYaw(float ref, float ang)

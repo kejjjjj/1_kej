@@ -103,6 +103,9 @@ void* r::CL_ShutdownRenderer()
 	CL_ShutdownRenderer_f();
 	std::cout << "shutdown renderer!\n";
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, "shutting down renderer\n");
+	for (auto& i : r::imagePairs)
+		if(i.second)
+			i.second->Release();
 	if (ImGui::GetCurrentContext()) {
 		ImGui_ImplDX9_Shutdown();
 		ImGui_ImplWin32_Shutdown();
@@ -114,6 +117,8 @@ void* r::CL_ShutdownRenderer()
 char r::R_RecoverLostDevice()
 {
 	if (!r::device_needs_reset) {
+		for (auto& i : r::imagePairs)
+			i.second->Release();
 		if (analyzer.isPreviewing()) {
 			analyzer.setPreviewState(false);
 
