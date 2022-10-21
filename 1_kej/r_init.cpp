@@ -117,8 +117,6 @@ void* r::CL_ShutdownRenderer()
 char r::R_RecoverLostDevice()
 {
 	if (!r::device_needs_reset) {
-		for (auto& i : r::imagePairs)
-			i.second->Release();
 		if (analyzer.isPreviewing()) {
 			analyzer.setPreviewState(false);
 

@@ -10,7 +10,9 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 	r::device_needs_reset = false;
 
 	if (mglobs.isUsing) {
-		R_ImGui(pDevice);
+		if (!R_ImGui(pDevice)) {
+			fs::Log_Write(LOG_FATAL, "Unable to initialize imgui\n");
+		}
 		if (R_OpenMenu(pDevice)) {
 			//ImGui::GetBackgroundDrawList()->Addline
 			//CMod_HighlightSelected(); 
@@ -48,9 +50,9 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 
 			
 
-
+			R_EndRender();
 		}
-		R_EndRender();
+		
 	}
 
 	return pEndScene(pDevice);
