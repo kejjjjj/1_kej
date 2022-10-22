@@ -24,6 +24,7 @@ void cg::Mod_HitAnalyzer(pmove_t* pm, pml_t* pml)
 
 	}
 	if (pml->groundTrace.normal[2] > .3f && pml->groundTrace.normal[2] < .7f) {
+		jumpanalyzer.hugging_bounce = true;
 		if ((pm->ps->pm_flags & PMF_JUMPING) == 0 && NOT_GROUND && pm->ps->jumpTime > 500) {
 
 			if (!wait_ground) {
@@ -43,7 +44,8 @@ void cg::Mod_HitAnalyzer(pmove_t* pm, pml_t* pml)
 
 
 		}
-	}
+	}else
+		jumpanalyzer.hugging_bounce = false;
 
 }
 void cg::Mod_JumpAnalyzer(pmove_t* pm, pml_t* pml)

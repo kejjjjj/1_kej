@@ -67,7 +67,7 @@ void cg::PM_UFOMove(pmove_t* pmm, pml_t* pmll)
 
 	jumpanalyzer.commandTime = pm->ps->commandTime;
 	jumpanalyzer.serverTime = pm->cmd.serverTime;
-
+	jumpanalyzer.hugging_bounce = false;
 	//jbuilder.OnUpdatePosition();
 
 	return;

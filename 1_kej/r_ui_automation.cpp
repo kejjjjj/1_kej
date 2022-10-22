@@ -98,14 +98,37 @@ void r::R_Automation_Features()
 
 				ImGui::EndGroup();
 			}
-			ImGui::EndGroup();
-
-			ImGui::TextColored(ImVec4(255, 255, 0, 255), "\nnote: long 125fps should be disabled for jumps\nwhere you need to do a 125-333 flick in mid-air!"
-				"\nit is useful to recognize when you should use\nlong 125 and when you shouldn't");
-
-			if (v::mod_autoFPS_long125.isEnabled())
-				ImGui::TextColored(ImVec4(0, 255, 0, 255), "Long 125 tip: use spacebar 333fps whenever\nyou need to curve earlier in the 125fps zone");
 		}
+		ImGui::EndGroup();
+
+		ImGui::Text("500FPS");
+		r::UI_DrawGradientZone(ImVec2(300, 190));
+
+		ImGui::Text("\t");
+		ImGui::SameLine();
+
+		ImGui::BeginGroup();
+		{
+			const char* hugfps[3] = {"Disabled", "500", "1000"};
+			ImGui::PushItemWidth(100.f);
+			if (ImGui::Combo("Bounce FPS", &v::mod_autoFPS_hug500.evar->intValue, hugfps, 3)) {
+				v::mod_autoFPS_hug500.SetValue(v::mod_autoFPS_hug500.GetInt());
+			} ImGui::SameLine(); r::MetricsHelpMarker("Use this FPS whenever you are touching a bounce");
+
+			ImGui::PushItemWidth(100.f);  ImGui::DragFloat("X Bounds##01", &box500.bounds[0], 4.f, 0, 10000, "%.2f");
+			ImGui::PushItemWidth(100.f);  ImGui::DragFloat("Y Bounds##01", &box500.bounds[1], 4.f, 0, 10000, "%.2f");
+			ImGui::PushItemWidth(100.f);  ImGui::DragFloat("Z Bounds##01", &box500.bounds[2], 4.f, 0, 10000, "%.2f");
+
+		}
+		ImGui::EndGroup();
+
+		
+
+		ImGui::TextColored(ImVec4(255, 255, 0, 255), "\nnote: long 125fps should be disabled for jumps\nwhere you need to do a 125-333 flick in mid-air!"
+			"\nit is useful to recognize when you should use\nlong 125 and when you shouldn't");
+
+		if (v::mod_autoFPS_long125.isEnabled())
+			ImGui::TextColored(ImVec4(0, 255, 0, 255), "Long 125 tip: use spacebar 333fps whenever\nyou need to curve earlier in the 125fps zone");
 		ImGui::EndGroup();
 	}
 

@@ -34,28 +34,55 @@ void cg::Mod_A_Strafebot()
 }
 void cg::Mod_A_AutoFPS()
 {
-	if (!v::mod_autoFPS.isEnabled())
+
+	if (!v::mod_autoFPS.isEnabled() && !box500.boxExists && v::mod_autoFPS_hug500.GetInt() == 0)
 		return;
 	
 
 
 	if (jumpanalyzer.recommendedFPS != NULL && !analyzer.isPreviewing() && VID_ACTIVE && !jbuilder.isGeneratingMovement())
 	{
+		dvar_s* com_maxfps = Dvar_FindMalleableVar("com_maxfps");
+
+		bool const spaceHeld = (GetAsyncKeyState(VK_SPACE) < 0) == true;
+
 		int fps = jumpanalyzer.recommendedFPS;
 
-		dvar_s* com_maxfps = Dvar_FindMalleableVar("com_maxfps");
+		if (!v::mod_autoFPS.isEnabled())
+			fps = com_maxfps->current.integer;
+
+		if (v::mod_autoFPS_hug500.GetInt() > 0 && jumpanalyzer.hugging_bounce && !jumpanalyzer.walking && !spaceHeld) {
+			switch (v::mod_autoFPS_hug500.GetInt()) {
+			case 1:
+				fps = 500;
+				break;
+			case 2:
+				fps = 1000;
+				break;
+			default:
+				break;
+			}
+			return;
+		}
+
+		if (box500.use500) {
+			r::R_AddCmdDrawTextWithEffects((char*)"500fps", "fonts/objectivefont", r::X(300), r::Y(300), v::mod_velometer.GetArray(3), v::mod_velometer.GetArray(3), 0.f, vec4_t{ 255,0,255,255 }, 3, v::mod_velometer_glow.evar->vecValue, 0, 0, 0, 500, 1000, 2000);
+
+			fps = 500;
+		}
+		
 
 		if (v::mod_autoFPS_space333.isEnabled()) {
 			if (GROUND)
 				fps = 125;
-			else if (GetAsyncKeyState(VK_SPACE) < 0)
+			else if (spaceHeld)
 				fps = 333;
 
 			//if (mod_fps.DistanceToTransferZone > 45 && jumpanalyzer.recommendedFPS == 250)
 			//	fps = 200;
 
 		}
-
+		
 		if(com_maxfps)
 			com_maxfps->current.integer = fps;
 	}
@@ -128,6 +155,74 @@ void cg::Mod_A_AutoSliding(pmove_t* pmove, pml_t* pml)
 	}
 
 
+
+
+}
+void cg::Mod_A_OnCreate500FPS()
+{
+	trace_t trace;
+	vec3_t end;
+
+	AnglesToForward(clients->cgameViewangles, rg->viewOrg, 99999, end);
+
+	CG_TracePoint(vec3_t{ 1,1,1 }, &trace, rg->viewOrg, vec3_t{ -1,-1,-1 }, end, cgs->clientNum, MASK_PLAYERSOLID, 1, 1);
+
+	vec3_t endpos{};
+
+	box500.origin[0] = rg->viewOrg[0] + trace.fraction * (end[0] - rg->viewOrg[0]);
+	box500.origin[1] = rg->viewOrg[1] + trace.fraction * (end[1] - rg->viewOrg[1]);
+	box500.origin[2] = rg->viewOrg[2] + trace.fraction * (end[2] - rg->viewOrg[2]);
+
+	Com_Printf(CON_CHANNEL_OBITUARY, "^2Spawned at (%.3f, %.3f, %.3f)\n", box500.origin[0], box500.origin[1], box500.origin[2]);
+
+	box500.boxExists = true;
+
+}
+void cg::Mod_A_500FPS()
+{
+	if (!box500.boxExists)
+		return;
+
+	vec3_t mins, maxs, null{0,0,0};
+
+	VectorCopy(null, mins);
+	VectorCopy(null, maxs);
+
+	VectorSubtract(mins, box500.bounds, mins);
+	VectorSubtract(maxs, box500.bounds, maxs);
+
+
+	r::box_s box(box500.origin, mins, maxs);
+	box.R_DrawConstructedBox(vec4_t{ 255,0,0,55 });
+	box.R_DrawConstructedBoxEdges(vec4_t{ 255,0,0,255 });
+
+	const auto PlayerWithinBounds = [](vec3_t mins, vec3_t maxs) -> bool {
+
+
+		if (	clients->cgameOrigin[0] > mins[0] && clients->cgameOrigin[0] < maxs[0]
+			&&	clients->cgameOrigin[1] > mins[1] && clients->cgameOrigin[1] < maxs[1]
+			&&	clients->cgameOrigin[2] > mins[2] && clients->cgameOrigin[2] < maxs[2]) 
+
+			return true;
+
+			
+
+		
+		return false;
+
+	};
+
+	VectorCopy(null, mins);
+	VectorCopy(null, maxs);
+
+	VectorSubtract(mins, box500.bounds, mins);
+	VectorAdd(maxs, box500.bounds, maxs);
+
+	VectorAdd(maxs, box500.origin, maxs);
+	VectorAdd(mins, box500.origin, mins);
+
+
+	box500.use500 = PlayerWithinBounds(mins, maxs) && !jumpanalyzer.hasBounced;
 
 
 }

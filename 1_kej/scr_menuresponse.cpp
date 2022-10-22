@@ -43,6 +43,9 @@ void Script_OnMenuResponse(int serverId, int menu, const char* response)
         }
         else if (!strcmp(response, "segment"))
             analyzer.OnStartSegment();
+
+        else if (!strcmp(response, "500fps"))
+            Mod_A_OnCreate500FPS();
     }
 
     //printf("menu[" "%s" "], response[" "%s" "]\n", menu_name, response);

@@ -10,14 +10,16 @@ Report any bugs you find!
 Automation:\
 	- Strafebot\
 	- AutoFPS\
-	- RPG\
+	- RPG
+	- Auto500
+	- FPS on bounce
 \
 Jumping  \
 	- Fixed FPS (simulates a stable fps)\
 	- Bunnyhopping\
 	- Hit/Jump analyzers\
 	- Unlimited bouncing\
-	- Terrain bouncing\
+	- Terrain bouncing
 
 RPG\
 	- Show RPG timings/angles\
@@ -26,7 +28,7 @@ RPG\
 Game\
 	- Asset Manager (edit world materials and shaders)\
 	- Menu Browser (Browse all loaded .menu files)\
-\
+
 Visuals\
 	- Velometer\
 	- Coordinates\
@@ -39,17 +41,17 @@ Visuals\
 	- Change crosshair color based on your distance to a transfer zone\
 	- Velocity direction\
 	- World axes (optionally can also draw the optimal angle)\
-	- Draw curve speed\
+	- Draw curve speed
 
 Jump builder\
-	- Craft jumps in the menu (very epic)\
+	- Craft jumps in the menu (very epic)
 
 Jump Preview \
 	- Record jumps\
 	- Segment jumps\
 	- Save/load jumps\
-	- Playback jumps\
-\
+	- Playback jumps
+
 
 
 # Resources used: 

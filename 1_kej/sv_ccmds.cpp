@@ -60,6 +60,9 @@ void cg::SV_Map()
 				fs::Log_Write(LOG_FATAL, "failed to hook renderer\n");
 			}
 			analyzer.ClearData();
+			box500.bounds[0] = 32;
+			box500.bounds[1] = 32;
+			box500.bounds[2] = 32;
 
 
 			Com_Printf(CON_CHANNEL_CONSOLEONLY, "^2Done!\n");

@@ -47,7 +47,7 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 
 			//}
 			Mod_DrawFPSHelpers();
-
+			Mod_A_500FPS();
 			
 
 			R_EndRender();
@@ -70,6 +70,8 @@ void __cdecl r::CG_DrawActive()
 		Mod_A_AutoFPS();
 		Mod_DrawEvents();
 
+		//if(jumpanalyzer.hugging_bounce && !jumpanalyzer.walking)
+		//	r::R_AddCmdDrawTextWithEffects((char*)"hugging", "fonts/objectivefont", r::X(300), r::Y(300), v::mod_velometer.GetArray(3), v::mod_velometer.GetArray(3), 0.f, vec4_t{255,255,0,255}, 3, v::mod_velometer_glow.evar->vecValue, 0, 0, 0, 500, 1000, 2000);
 
 	
 	}
