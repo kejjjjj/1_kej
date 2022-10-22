@@ -7,49 +7,49 @@ Report any bugs you find!
 # Features
 
 
-Automation:
-	- Strafebot
-	- AutoFPS
-	- RPG
+Automation:\
+	- Strafebot\
+	- AutoFPS\
+	- RPG\
+\
+Jumping  \
+	- Fixed FPS (simulates a stable fps)\
+	- Bunnyhopping\
+	- Hit/Jump analyzers\
+	- Unlimited bouncing\
+	- Terrain bouncing\
 
-Jumping  
-	- Fixed FPS (simulates a stable fps)
-	- Bunnyhopping
-	- Hit/Jump analyzers
-	- Unlimited bouncing
-	- Terrain bouncing
+RPG\
+	- Show RPG timings/angles\
+	- Change how the RPG behaves\
 
-RPG
-	- Show RPG timings/angles
-	- Change how the RPG behaves
+Game\
+	- Asset Manager (edit world materials and shaders)\
+	- Menu Browser (Browse all loaded .menu files)\
+\
+Visuals\
+	- Velometer\
+	- Coordinates\
+	- Crosshair color\
+	- Anglehelper (for strafing)\
+	- FPS assist (fps bar & text)\
+	- Bounceable surface (tells you if the surface you are looking at can be bounced)\
+	- Elevatable surface (tells you if the surface you are looking at can be elevated)\
+	- Custom viewhands\
+	- Change crosshair color based on your distance to a transfer zone\
+	- Velocity direction\
+	- World axes (optionally can also draw the optimal angle)\
+	- Draw curve speed\
 
-Game
-	- Asset Manager (edit world materials and shaders)
-	- Menu Browser (Browse all loaded .menu files)
+Jump builder\
+	- Craft jumps in the menu (very epic)\
 
-Visuals
-	- Velometer
-	- Coordinates
-	- Crosshair color
-	- Anglehelper (for strafing)
-	- FPS assist (fps bar & text)
-	- Bounceable surface (tells you if the surface you are looking at can be bounced)
-	- Elevatable surface (tells you if the surface you are looking at can be elevated)
-	- Custom viewhands
-	- Change crosshair color based on your distance to a transfer zone
-	- Velocity direction
-	- World axes (optionally can also draw the optimal angle)
-	- Draw curve speed
-
-Jump builder
-	- Craft jumps in the menu (very epic)
-
-Jump Preview 
-	- Record jumps
-	- Segment jumps
-	- Save/load jumps
-	- Playback jumps
-
+Jump Preview \
+	- Record jumps\
+	- Segment jumps\
+	- Save/load jumps\
+	- Playback jumps\
+\
 
 
 # Resources used: 
