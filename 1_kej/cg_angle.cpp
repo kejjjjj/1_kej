@@ -187,6 +187,8 @@ float cg::getOptAngle(float& _opt)
 
 	float accel = FPS / g_speed;
 
+	//float accel = g_speed * jumpanalyzer.frametime;
+
 	if (jumpanalyzer.recommendedFPS == 125)
 		accel = g_speed / FPS;
 

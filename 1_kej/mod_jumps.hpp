@@ -21,6 +21,8 @@ namespace cg {
 		int32_t serverTime; //write from PM_ModCode
 		int recommendedFPS;
 		bool walking; //pml->walking
+		float frametime;
+		int msec;
 
 	};
 	inline jumpanalyzer_s jumpanalyzer; 	//actively updating jump data

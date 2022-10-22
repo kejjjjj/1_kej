@@ -259,6 +259,8 @@ void jump_builder_s::OnUpdatePosition(const bool erase)
 		if(!pml->walking)
 			jData.FPS = cg::Mod_RecommendedFPS(pm->ps->viewangles[YAW], pm->cmd.forwardmove, pm->cmd.rightmove);
 
+		if (jData.FPS == NULL)
+			jData.FPS = 125; 
 
 		pml->msec = 1000 / jData.FPS;
 		pml->frametime = (float)pml->msec / 1000.f;

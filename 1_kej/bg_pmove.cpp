@@ -12,10 +12,15 @@ void cg::PM_WalkMove(pmove_t* pm, pml_t* pml)
 {
 	Mod_DetermineFPS(pm, pml);
 
+	jumpanalyzer.frametime = pml->frametime;
+	jumpanalyzer.msec = pml->msec;
+
 	PM_WalkMove_f(pm, pml);
 	jumpanalyzer.walking = pml->walking;
 
 	Mod_A_AdjustRPG(pm, pml);
+
+
 
 	if (jbuilder.get_playerState) {
 		memcpy_s(&h_pm, sizeof(pmove_t), pm, sizeof(pmove_t));
@@ -29,12 +34,16 @@ void cg::PM_AirMove(pmove_t* pm, pml_t* pml)
 {
 	Mod_DetermineFPS(pm, pml);
 
+	jumpanalyzer.frametime = pml->frametime;
+	jumpanalyzer.msec = pml->msec;
+
 	PM_AirMove_f(pm, pml);
 	jumpanalyzer.walking = pml->walking;
 
 	Mod_HitAnalyzer(pm, pml);
 	Mod_JumpAnalyzer(pm, pml);
 	Mod_A_AdjustRPG(pm, pml);
+
 
 
 	if (jbuilder.get_playerState) {
