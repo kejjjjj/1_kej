@@ -1,14 +1,54 @@
 # 1_kej
-expands the capabilities of the standard 1_kej mod by having external assist to help with otherwise impossible features!
+A CoD4 CodJumper tool made for advanced players who want to learn the gamemode more thoroughly and faster - or for those people who just want to experiment with the automation tools.
+
+If you want to try an alpha version of the tool, see the early_version folder.
+Report any bugs you find!
+
+# Features
 
 
-still very WIP, but if you want to take a look at it, make sure you change the linker output file directory
-NOTE: requires a custom 1_kej_v2 cod4 mod, which will be included at some point.. 
+Automation:
+	- Strafebot
+	- AutoFPS
+	- RPG
 
+Jumping  
+	- Fixed FPS (simulates a stable fps)
+	- Bunnyhopping
+	- Hit/Jump analyzers
+	- Unlimited bouncing
+	- Terrain bouncing
 
+RPG
+	- Show RPG timings/angles
+	- Change how the RPG behaves
 
+Game
+	- Asset Manager (edit world materials and shaders)
+	- Menu Browser (Browse all loaded .menu files)
 
+Visuals
+	- Velometer
+	- Coordinates
+	- Crosshair color
+	- Anglehelper (for strafing)
+	- FPS assist (fps bar & text)
+	- Bounceable surface (tells you if the surface you are looking at can be bounced)
+	- Elevatable surface (tells you if the surface you are looking at can be elevated)
+	- Custom viewhands
+	- Change crosshair color based on your distance to a transfer zone
+	- Velocity direction
+	- World axes (optionally can also draw the optimal angle)
+	- Draw curve speed
 
+Jump builder
+	- Craft jumps in the menu (very epic)
+
+Jump Preview 
+	- Record jumps
+	- Segment jumps
+	- Save/load jumps
+	- Playback jumps
 
 
 
