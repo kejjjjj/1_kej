@@ -204,8 +204,10 @@ void r::R_JumpBuilder_Builder()
 
 			size_t indx(0);
 			for (const auto& i : jbuilder.segments) {
-				if (i.end > jbuilder.preview_frame && i.begin < jbuilder.preview_frame)
+				if (i.end > jbuilder.preview_frame && i.begin < jbuilder.preview_frame) {
 					jbuilder.current_segment = indx;
+					jbuilder.OnUpdateOffsets();
+				}
 				indx++;
 			}
 		}
@@ -223,6 +225,8 @@ void r::R_JumpBuilder_Builder()
 
 			jbuilder.OnUpdateOffsets();
 			jbuilder.OnUpdateAllPositions();
+
+			menu_frame = ImClamp<int>(menu_frame, 0, jbuilder.GetTotalFrames());
 
 		}
 

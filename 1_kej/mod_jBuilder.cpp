@@ -113,7 +113,12 @@ size_t jump_builder_s::GetTotalFrames()
 	if (this->segments.size() < 1)
 		return 0;
 
-	return this->segments[this->segments.size()-1].end;
+	for (const auto& i : this->segments)
+		total += i.jData.size();
+
+	return total;
+
+	//return this->segments[this->segments.size()-1].end;
 
 }
 void jump_builder_s::OnGetSegmentData()
@@ -428,11 +433,11 @@ void jump_builder_s::OnUpdateOffsets()
 
 		if (dist > 1) {
 			if (!shiftForward) {
-				Com_Printf(CON_CHANNEL_OBITUARY, "[%i] was shifted ^2%i ^7frames ^1back\n", indx, dist);
+				//Com_Printf(CON_CHANNEL_OBITUARY, "[%i] was shifted ^2%i ^7frames ^1back\n", indx, dist);
 				nextSeg.begin -= dist;
 				nextSeg.end -= dist;
 			}else {
-				Com_Printf(CON_CHANNEL_OBITUARY, "[%i] was shifted ^2%i ^7frames ^2forward\n", indx, dist);
+				//Com_Printf(CON_CHANNEL_OBITUARY, "[%i] was shifted ^2%i ^7frames ^2forward\n", indx, dist);
 				nextSeg.begin += dist;
 				nextSeg.end += dist;
 			}

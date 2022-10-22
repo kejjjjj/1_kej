@@ -32,9 +32,14 @@ void cg::Mod_DrawVelocity()
 
 	int32_t velocity;
 
-	if (analyzer.isPreviewing() && (analyzer.RecordingExists() || analyzer.Segmenter_RecordingExists())) {
-		jump_data* jData = analyzer.FetchFrameData(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, analyzer.preview_frame);
+	if (analyzer.isPreviewing() && (analyzer.RecordingExists() || analyzer.Segmenter_RecordingExists()) || jbuilder.isEditing()) {
+		jump_data* jData;
 		
+		if(analyzer.isPreviewing() && (analyzer.RecordingExists() || analyzer.Segmenter_RecordingExists()))
+			jData = analyzer.FetchFrameData(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, analyzer.preview_frame);
+		else
+			jData = jbuilder.FetchFrameData(jbuilder.preview_frame);
+
 		float x{}, y{};
 
 		if (jData) {

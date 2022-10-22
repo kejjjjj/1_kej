@@ -310,8 +310,8 @@ int jAnalyzer::Segmenter_Prepare()
 
 
 	if (segment_frame >= GetTotalFrames() + 1) {
-		Com_PrintError(CON_CHANNEL_CONSOLEONLY, "Segmenter_Prepare(): segment_frame >= GetTotalFrames() + 1");
-		Com_PrintError(CON_CHANNEL_OBITUARY, "Segmenter_Prepare(): segment_frame >= GetTotalFrames() + 1");
+		Com_PrintError(CON_CHANNEL_CONSOLEONLY, "Segmenter_Prepare(): segment_frame (%i) >= GetTotalFrames() + 1 (%i)\n", segment_frame, GetTotalFrames() + 1);
+		Com_PrintError(CON_CHANNEL_OBITUARY, "Segmenter_Prepare(): segment_frame (%i) >= GetTotalFrames() + 1 (%i)\n", segment_frame, GetTotalFrames() + 1);
 
 		return -1;
 	}
