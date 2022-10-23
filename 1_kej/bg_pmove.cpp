@@ -484,5 +484,18 @@ __declspec(naked) void cg::PM_OverBounce_stub()
 }
 bool cg::CM_IsEdgeWalkable(int edgeIndex, int triIndex)
 {
-	return v::mod_terrain_bounces.isEnabled() == false ? (cm->triEdgeIsWalkable[(triIndex + edgeIndex + 2 * triIndex) >> 3] & (1 << ((triIndex + edgeIndex + 2 * triIndex) & 7))) != 0 : 0;
+	//v::mod_terrain_bounces.evar->enabled
+	char isEnabled = v::mod_terrain_bounces.evar->enabled;
+	
+	if (isEnabled) {
+		__asm {
+			mov al, 0;
+			retn;
+		}
+	}
+	__asm {
+		mov al, dl;
+		retn;
+	}
+	
 }

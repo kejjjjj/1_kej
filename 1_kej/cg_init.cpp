@@ -78,7 +78,7 @@ void cg::CG_PrepareHooks()
 
 	r::Material_Register_FastFile_f	= (XAssetHeader(*)(const char* name))														(0x5F2A80);
 
-	CM_IsEdgeWalkable_f				= (void(*)(int edgeIndex, int triIndex))													(0x4EFCB0);
+	CM_IsEdgeWalkable_f				= (bool(*)(int edgeIndex, int triIndex))													(0x4EFCD5);
 }
 void cg::CG_InitForeverHooks()
 {
