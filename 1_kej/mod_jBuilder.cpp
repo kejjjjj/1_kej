@@ -246,7 +246,8 @@ void jump_builder_s::OnUpdatePosition(const bool erase)
 		
 
 		if (pml->walking) {
-			pm->cmd.buttons |= 8194;
+			if(v::mod_jbuild_sprint.isEnabled())
+				pm->cmd.buttons |= 8194;
 			jData.FPS = 125;
 		}
 
@@ -275,7 +276,7 @@ void jump_builder_s::OnUpdatePosition(const bool erase)
 		if (pml->walking) {
 			
 
-			if (glm::length(glm::vec2(pm->ps->velocity[0], pm->ps->velocity[1])) >= 360.f) {
+			if (glm::length(glm::vec2(pm->ps->velocity[0], pm->ps->velocity[1])) >= v::mod_jbuild_jvel.GetFloat()) {
 				pm->cmd.buttons |= 1024;
 			}
 

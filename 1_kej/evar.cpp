@@ -319,6 +319,9 @@ void Evar_Setup()
 	v::mod_jbuild_hitbox.Register	("1_kej_jbuild_hitbox",				evartype_t::EVAR_BOOL,		(float)1,				true);
 	v::mod_jbuild_wasd.Register		("1_kej_jbuild_wasd",				evartype_t::EVAR_BOOL,		(float)1,				true);
 	v::mod_jbuild_forcepos.Register	("1_kej_jbuild_forcepos",			evartype_t::EVAR_BOOL,		(float)0,				false);
+	v::mod_jbuild_jvel.Register		("1_kej_jbuild_jvel",				evartype_t::EVAR_FLOAT,		(float)360,				false);
+	v::mod_jbuild_sprint.Register	("1_kej_jbuild_sprint",				evartype_t::EVAR_BOOL,		(float)1,				false);
+
 
 	v::mod_chams.Register			("1_kej_chams",						evartype_t::EVAR_BOOL,		(float)0,				true);
 	v::mod_chams_z.Register			("1_kej_chams_z",					evartype_t::EVAR_BOOL,		(float)0,				true);

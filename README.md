@@ -10,8 +10,8 @@ Report any bugs you find!
 Automation:\
 	- Strafebot\
 	- AutoFPS\
-	- RPG
-	- Auto500
+	- RPG\
+	- Auto500\
 	- FPS on bounce
 \
 Jumping  \
@@ -23,11 +23,11 @@ Jumping  \
 
 RPG\
 	- Show RPG timings/angles\
-	- Change how the RPG behaves\
+	- Change how the RPG behaves
 
 Game\
 	- Asset Manager (edit world materials and shaders)\
-	- Menu Browser (Browse all loaded .menu files)\
+	- Menu Browser (Browse all loaded .menu files)
 
 Visuals\
 	- Velometer\

@@ -52,6 +52,7 @@ void cg::Mod_A_AutoFPS()
 			fps = com_maxfps->current.integer;
 
 		if (v::mod_autoFPS_hug500.GetInt() > 0 && jumpanalyzer.hugging_bounce && !jumpanalyzer.walking && !spaceHeld) {
+
 			switch (v::mod_autoFPS_hug500.GetInt()) {
 			case 1:
 				fps = 500;
@@ -62,11 +63,10 @@ void cg::Mod_A_AutoFPS()
 			default:
 				break;
 			}
-			return;
 		}
 
 		if (box500.use500) {
-			r::R_AddCmdDrawTextWithEffects((char*)"500fps", "fonts/objectivefont", r::X(300), r::Y(300), v::mod_velometer.GetArray(3), v::mod_velometer.GetArray(3), 0.f, vec4_t{ 255,0,255,255 }, 3, v::mod_velometer_glow.evar->vecValue, 0, 0, 0, 500, 1000, 2000);
+			//r::R_AddCmdDrawTextWithEffects((char*)"500fps", "fonts/objectivefont", r::X(300), r::Y(300), v::mod_velometer.GetArray(3), v::mod_velometer.GetArray(3), 0.f, vec4_t{ 255,0,255,255 }, 3, v::mod_velometer_glow.evar->vecValue, 0, 0, 0, 500, 1000, 2000);
 
 			fps = 500;
 		}
@@ -183,6 +183,8 @@ void cg::Mod_A_500FPS()
 	if (!box500.boxExists)
 		return;
 
+	static bool isInside(false);
+
 	vec3_t mins, maxs, null{0,0,0};
 
 	VectorCopy(null, mins);
@@ -191,11 +193,11 @@ void cg::Mod_A_500FPS()
 	VectorSubtract(mins, box500.bounds, mins);
 	VectorSubtract(maxs, box500.bounds, maxs);
 
-
-	r::box_s box(box500.origin, mins, maxs);
-	box.R_DrawConstructedBox(vec4_t{ 255,0,0,55 });
-	box.R_DrawConstructedBoxEdges(vec4_t{ 255,0,0,255 });
-
+	if (!isInside) { // don't draw the box when we are inside of it
+		r::box_s box(box500.origin, mins, maxs);
+		box.R_DrawConstructedBox(vec4_t{ 255,0,0,55 });
+		box.R_DrawConstructedBoxEdges(vec4_t{ 255,0,0,255 });
+	}
 	const auto PlayerWithinBounds = [](vec3_t mins, vec3_t maxs) -> bool {
 
 
@@ -221,8 +223,8 @@ void cg::Mod_A_500FPS()
 	VectorAdd(maxs, box500.origin, maxs);
 	VectorAdd(mins, box500.origin, mins);
 
-
-	box500.use500 = PlayerWithinBounds(mins, maxs) && !jumpanalyzer.hasBounced;
+	isInside = PlayerWithinBounds(mins, maxs);
+	box500.use500 = isInside && !jumpanalyzer.hasBounced;
 
 
 }

@@ -61,7 +61,7 @@ void r::R_Automation_Features()
 	ImGui::BeginGroup(); {
 
 		ImGui::Text("FPS");
-		r::UI_DrawGradientZone(ImVec2(300, 140));
+		r::UI_DrawGradientZone(ImVec2(330, 180));
 		
 		ImGui::Text("\t");
 		ImGui::SameLine();
@@ -99,26 +99,38 @@ void r::R_Automation_Features()
 				ImGui::EndGroup();
 			}
 		}
+		const char* hugfps[3] = { "Disabled", "500", "1000" };
+		ImGui::PushItemWidth(120.f);
+		if (ImGui::Combo("Bounce FPS", &v::mod_autoFPS_hug500.evar->intValue, hugfps, 3)) {
+			v::mod_autoFPS_hug500.SetValue(v::mod_autoFPS_hug500.GetInt());
+		} ImGui::SameLine(); r::MetricsHelpMarker("Use this FPS whenever you are touching a bounce");
 		ImGui::EndGroup();
 
-		ImGui::Text("500FPS");
-		r::UI_DrawGradientZone(ImVec2(300, 190));
+		ImGui::Text("\n500FPS");
+		r::UI_DrawGradientZone(ImVec2(330, 200));
 
 		ImGui::Text("\t");
 		ImGui::SameLine();
 
 		ImGui::BeginGroup();
 		{
-			const char* hugfps[3] = {"Disabled", "500", "1000"};
-			ImGui::PushItemWidth(100.f);
-			if (ImGui::Combo("Bounce FPS", &v::mod_autoFPS_hug500.evar->intValue, hugfps, 3)) {
-				v::mod_autoFPS_hug500.SetValue(v::mod_autoFPS_hug500.GetInt());
-			} ImGui::SameLine(); r::MetricsHelpMarker("Use this FPS whenever you are touching a bounce");
 
+			if (!box500.boxExists) {
+				ImGui::TextColored(ImVec4(255, 255, 0, 255), "Spawn an area with the keybind");
+				ImGui::BeginDisabled();
+			}
 			ImGui::PushItemWidth(100.f);  ImGui::DragFloat("X Bounds##01", &box500.bounds[0], 4.f, 0, 10000, "%.2f");
 			ImGui::PushItemWidth(100.f);  ImGui::DragFloat("Y Bounds##01", &box500.bounds[1], 4.f, 0, 10000, "%.2f");
 			ImGui::PushItemWidth(100.f);  ImGui::DragFloat("Z Bounds##01", &box500.bounds[2], 4.f, 0, 10000, "%.2f");
 
+			if (ImGui::Button("Delete Area")) {
+				memset(&box500, 0, sizeof(area500_s));
+				box500.bounds[0] = 32;
+				box500.bounds[1] = 32;
+				box500.bounds[2] = 32;
+			}
+			if (!box500.boxExists)
+				ImGui::EndDisabled();
 		}
 		ImGui::EndGroup();
 

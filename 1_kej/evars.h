@@ -53,6 +53,8 @@ namespace v
 		mod_jbuild_hitbox,
 		mod_jbuild_wasd,
 		mod_jbuild_forcepos,
+		mod_jbuild_jvel,
+		mod_jbuild_sprint,
 		mod_chams,
 		mod_chams_z,
 		mod_chams_col,

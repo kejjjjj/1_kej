@@ -60,6 +60,22 @@ void r::R_JumpBuilder_Preferences()
 	if (ImGui::Checkbox("Draw WASD##01", &v::mod_jbuild_wasd.evar->enabled))
 		v::mod_jbuild_wasd.SetValue(v::mod_jbuild_wasd.isEnabled());
 
+	ImGui::NewLine();
+	ImGui::Text("Movement");
+	ImGui::Separator();
+
+	if (ImGui::Checkbox("Use Sprint", &v::mod_jbuild_sprint.evar->enabled)) {
+		v::mod_jbuild_sprint.SetValue(v::mod_jbuild_sprint.isEnabled());
+		jbuilder.OnUpdateOffsets();
+		jbuilder.OnUpdateAllPositions();
+	}
+
+	ImGui::PushItemWidth(100);
+	if (ImGui::DragFloat("Jump Velocity", &v::mod_jbuild_jvel.evar->floatValue, 1.f, 0, 362)) {
+		jbuilder.OnUpdateOffsets();
+		jbuilder.OnUpdateAllPositions();
+	}
+
 	ImGui::EndGroup();
 }
 
