@@ -17,7 +17,6 @@ void jump_builder_s::OnCreateNew()
 	//bData.pml = reinterpret_cast<pml_t*>(&cg::h_pml);
 	//bData.pm->ps = reinterpret_cast<playerState_s*>(&cg::h_ps; //redirect the playerstate pointer elsewhere so that it doesn't do stuff with the actual client
 
-
 	memcpy_s(&pm_copy, sizeof(pmove_t), &cg::h_pm, sizeof(pmove_t));
 	memcpy_s(&pml_copy, sizeof(pml_t), &cg::h_pml, sizeof(pml_t));
 	memcpy_s(&ps_copy, sizeof(playerState_s), &cg::h_ps, sizeof(playerState_s));
@@ -36,8 +35,8 @@ void jump_builder_s::OnCreateNew()
 	VectorCopy(pm_copy.ps->viewangles, this->new_start_angles);
 	VectorCopy(pm_copy.ps->origin, this->new_start_origin);
 
-	//jbuilder.preview_frame = 1;
-
+	this->OnUpdateOffsets();
+	this->OnUpdateAllPositions();
 	//bData.pm->ps->velocity[0] = 3000;
 }
 void jump_builder_s::OnDeleteProject()
@@ -82,6 +81,8 @@ void jump_builder_s::ClearData()
 	this->current_segment = NULL;
 	this->total_frames = NULL;
 	this->preview_frame = NULL;
+
+	jbuilder.segment_frameCount = 0;
 }
 void jump_builder_s::OnFrameUpdate()
 {
@@ -313,10 +314,8 @@ void jump_builder_s::OnUpdatePosition(const bool erase)
 			this->SaveFrameData(segment.jData, jData);
 			this->OnFrameUpdate();
 		}
-		else {
-			std::cout << "EPIC PMOVE FAILURe\n";
-		}
 	}
+	Com_Printf(CON_CHANNEL_OBITUARY, "orgZ: %.3f\n", segment.jData[segment.jData.size()-1].origin[2]);
 	memcpy_s(&segment.end_pm, sizeof(pmove_t), pm, sizeof(pmove_t));
 	memcpy_s(&segment.end_pml, sizeof(pml_t), pml, sizeof(pml_t));
 	memcpy_s(&segment.end_ps, sizeof(playerState_s), pm->ps, sizeof(playerState_s));
@@ -355,7 +354,7 @@ void jump_builder_s::OnAddSegment()
 	seg.framecount = 100;
 
 	if (this->segments.size() > 0) {
-		seg.begin = this->segments[this->segments.size() - 1].end + 1;
+		seg.begin = this->segments[this->segments.size() - 1].end+1;
 		seg.end = seg.begin + seg.framecount;
 	}else {
 		seg.begin = 0;
@@ -368,13 +367,15 @@ void jump_builder_s::OnDeleteSegment()
 {
 	if (this->segments.size() == 1) {
 		this->OnDeleteProject();
-		this->OnCreateNew();
+		//this->OnCreateNew();
 		return;
 	}
 
 	this->segments.erase(this->segments.begin() + this->current_segment);
 	this->OnUpdateOffsets();
 	this->OnUpdateAllPositions();
+	if(this->segments.size() > 1)
+		this->current_segment -= 1;
 
 	Com_Printf(CON_CHANNEL_OBITUARY, "^1Segment deleted!\n");
 }

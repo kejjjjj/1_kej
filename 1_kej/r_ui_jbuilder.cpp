@@ -163,8 +163,7 @@ void r::R_JumpBuilder_Builder()
 
 			old_segment = jbuilder.current_segment;
 		}
-		const size_t total_frames = jbuilder.GetTotalFrames()-1;
-
+		int total_frames = ImClamp<int>(jbuilder.GetTotalFrames(), 1, INT_MAX);
 
 		if (ImGui::Button("Add"))
 			jbuilder.OnAddSegment();
