@@ -28,7 +28,7 @@ Jumping  \
 	- Bunnyhopping\
 	- Hit/Jump analyzers\
 	- Unlimited bouncing\
-	- Terrain bouncing\n
+	- Terrain bouncing\
 	- Custom Weapon Animations
 
 RPG\
