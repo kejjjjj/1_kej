@@ -61,7 +61,9 @@ namespace v
 		mod_chams_zcol,
 		mod_chams_wireframe,
 		mod_terrain_bounces,
-		mod_unlim_bounces;
+		mod_unlim_bounces,
+		mod_use_jump_anim,
+		mod_jump_anim;
 		
 
 

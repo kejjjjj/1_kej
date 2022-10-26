@@ -445,7 +445,35 @@ void Jump_Features()
 		if (!v::mod_bhop.isEnabled())
 			ImGui::EndDisabled();
 
+
 		ImGui::EndGroup();
+	}
+	ImGui::Text("Animations\t");
+	{
+
+
+		r::UI_DrawGradientZone(ImVec2(220, 140));
+
+		ImGui::Text("\t");
+		ImGui::SameLine();
+		ImGui::BeginGroup();
+
+		if (ImGui::Checkbox("Use Animations", &v::mod_use_jump_anim.evar->enabled)) {
+			v::mod_use_jump_anim.SetValue(v::mod_use_jump_anim.evar->enabled);
+			r::MetricsHelpMarker("Use custom weapon animations after jumping (requires sprinting)");
+		}
+
+		if (!v::mod_use_jump_anim.isEnabled())
+			ImGui::BeginDisabled();
+
+		ImGui::Text("\t");
+		ImGui::SameLine(); ImGui::PushItemWidth(100);
+		ImGui::Combo("Anim", &v::mod_jump_anim.evar->intValue, WEAPON_ANIMS, 30);
+
+		if (!v::mod_use_jump_anim.isEnabled())
+			ImGui::EndDisabled();
+		ImGui::EndGroup();
+
 	}
 	ImGui::EndGroup();
 
@@ -548,7 +576,14 @@ void r::R_DrawMenuByName(const char* category, bool justPressed, bool& wantsEdit
 }
 void r::R_Features(bool& wantsEditor)
 {
-	static ImVec2 childSize = ImVec2(250, ImGui::GetWindowSize().y - 30);
+	const float x = ImGui::GetWindowSize().x;
+	const float y = ImGui::GetWindowSize().y;
+	static ImVec2 childSize = ImVec2(250, y < 10 ? 400 : y - 30);
+
+	if (y < 10)
+		childSize.y = 400;
+	if (x < 100)
+		childSize.x = 400;
 
 	ImGui::BeginGroup();
 	ImGui::BeginChild("child##034", childSize, true, ImGuiWindowFlags_NoScrollbar);
@@ -636,68 +671,6 @@ void r::R_Features(bool& wantsEditor)
 	childSize.x = rect.x + 10;
 	childSize.y = rect.y + 10;
 
-
-	//ImGui::SetWindowSize(ImVec2(600, childSize.y));
-
-
-
-	static bool jumping_tab;
-	/*if (ImGui::BeginTabBar("##tabs", ImGuiTabBarFlags_None)) {
-		if (ImGui::BeginTabItem("Visual")) {
-			jumping_tab = false;
-			Visual_Features();
-			ImGui::EndTabItem();
-
-		}if (ImGui::BeginTabItem("Demo##06")) {
-			jumping_tab = false;
-			ImGui::ShowDemoWindow();
-			ImGui::EndTabItem();
-
-		}if (ImGui::BeginTabItem("RPG")) {
-			jumping_tab = false;
-			RPG_Features();
-			ImGui::EndTabItem();
-
-		}if (ImGui::BeginTabItem("Automation")) {
-			jumping_tab = false;
-			R_Automation_Features();
-			ImGui::EndTabItem();
-
-		}if (ImGui::BeginTabItem("Game")) {
-			jumping_tab = false;
-			R_OtherTab();
-			ImGui::EndTabItem();
-
-		}if (ImGui::BeginTabItem("Jumping")) {
-
-
-			if (!jumping_tab)
-				jumping_tab = true;
-			ImGui::EndTabItem();
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Jump Preview")) {
-			analyzer.is_playback = false;
-			analyzer.SetFreeMode(false);
-			v::mod_jumpv_forcepos.evar->enabled = true;
-
-			if (clients->snap.ps.pm_type != PM_UFO)
-				Cbuf_AddText("ufo\n", 0);
-			jumping_tab = false;
-			dvar_s* g_gravity = Dvar_FindMalleableVar("g_gravity");
-
-			if (g_gravity) {
-				g_gravity->current.value = 0;
-			}
-			wantsEditor = !wantsEditor;
-		}
-		if(jumping_tab)
-			Jump_Features();
-
-
-	}
-	ImGui::EndTabBar();*/
-	
 
 }
 

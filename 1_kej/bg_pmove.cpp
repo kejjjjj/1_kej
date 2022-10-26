@@ -1,5 +1,7 @@
 #include "pch.h"
 
+bool anim_can_use; // true after touching ground to avoid spam mid-air
+
 BOOL cg::PM_SlideMove(pmove_t* pm, pml_t* pml, int gravity)
 {
 	BOOL clipped = PM_SlideMove_f(pm, pml, gravity);
@@ -29,6 +31,9 @@ void cg::PM_WalkMove(pmove_t* pm, pml_t* pml)
 		jbuilder.OnCreateNew();
 		jbuilder.get_playerState = false;
 	}
+	if((pm->cmd.buttons & 8194) != 0 || (pm->oldcmd.buttons & 8194) != 0)
+		anim_can_use = true;
+
 }
 void cg::PM_AirMove(pmove_t* pm, pml_t* pml)
 {
@@ -52,6 +57,21 @@ void cg::PM_AirMove(pmove_t* pm, pml_t* pml)
 		memcpy_s(&h_ps, sizeof(playerState_s), pm->ps, sizeof(playerState_s));
 		jbuilder.OnCreateNew();
 		jbuilder.get_playerState = false;
+	}
+
+	//animations
+	static DWORD ms = Sys_MilliSeconds();
+	static bool activeAnim;
+	if (v::mod_use_jump_anim.isEnabled() && !activeAnim/* && pm->ps->weapAnim == 0*/ /*&& pm->ps->weapAnim != (WEAP_SPRINT_LOOP | ~pm->ps->weapAnim & 0x200)*/ && anim_can_use) {
+		pm->ps->weapAnim = 0;
+		pm->ps->weapAnim = v::mod_jump_anim.GetInt() | ~pm->ps->weapAnim & 0x200;
+		ms = Sys_MilliSeconds();
+		activeAnim = true;
+		anim_can_use = false;
+	}else if (activeAnim && ms + 20 < Sys_MilliSeconds()) {
+		pm->ps->weapAnim = 0;
+		activeAnim = false;
+		
 	}
 
 
@@ -498,4 +518,10 @@ bool cg::CM_IsEdgeWalkable(int edgeIndex, int triIndex)
 		retn;
 	}
 	
+}
+void cg::BG_AddPredictableEventToPlayerstate(playerState_s* ps, unsigned __int8 newEvent, unsigned int eventParm)
+{
+	ps->events[ps->eventSequence & 3] = newEvent;
+	ps->eventParms[ps->eventSequence & 3] = eventParm;
+	ps->eventSequence = (ps->eventSequence + 1);
 }

@@ -99,9 +99,9 @@ void r::R_Automation_Features()
 				ImGui::EndGroup();
 			}
 		}
-		const char* hugfps[3] = { "Disabled", "500", "1000" };
+		const char* hugfps[4] = { "Disabled", "333", "500", "1000" };
 		ImGui::PushItemWidth(120.f);
-		if (ImGui::Combo("Bounce FPS", &v::mod_autoFPS_hug500.evar->intValue, hugfps, 3)) {
+		if (ImGui::Combo("Bounce FPS", &v::mod_autoFPS_hug500.evar->intValue, hugfps, 4)) {
 			v::mod_autoFPS_hug500.SetValue(v::mod_autoFPS_hug500.GetInt());
 		} ImGui::SameLine(); r::MetricsHelpMarker("Use this FPS whenever you are touching a bounce");
 		ImGui::EndGroup();

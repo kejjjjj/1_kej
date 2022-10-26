@@ -55,9 +55,12 @@ void cg::Mod_A_AutoFPS()
 
 			switch (v::mod_autoFPS_hug500.GetInt()) {
 			case 1:
-				fps = 500;
+				fps = 333;
 				break;
 			case 2:
+				fps = 500;
+				break;
+			case 3:
 				fps = 1000;
 				break;
 			default:
@@ -72,7 +75,7 @@ void cg::Mod_A_AutoFPS()
 		}
 		
 
-		if (v::mod_autoFPS_space333.isEnabled()) {
+		if (v::mod_autoFPS_space333.isEnabled() && v::mod_autoFPS.isEnabled()) {
 			if (GROUND)
 				fps = 125;
 			else if (spaceHeld)

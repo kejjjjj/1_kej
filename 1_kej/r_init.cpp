@@ -49,7 +49,7 @@ bool r::R_ImGui(IDirect3DDevice9* pDevice)
 	r::imagePairs = fs::FS_CreatePairsForTextures();
 
 	if (r::imagePairs.size() < 1) {
-		fs::Log_Write(LOG_FATAL, "Failed to create image pairs\n");
+		fs::Log_Write(LOG_FATAL, "Failed to create image pairs (no images found in cod4\\1_kej\\images)\n");
 		return false;
 	}
 
@@ -152,7 +152,7 @@ bool r::CreateTextures(std::vector<std::pair<std::string, LPDIRECT3DTEXTURE9>>& 
 
 
 	if (pair.size() < 1) {
-		fs::Log_Write(LOG_ERROR, "no textures can be loaded due to no pairs\n");
+		fs::Log_Write(LOG_ERROR, "Failed to create image pairs (no images found in cod4\\1_kej\\images)\n");
 
 		std::cout << "no textures can be loaded due to no pairs\n";
 		return false;

@@ -39,6 +39,8 @@ namespace cg
 	void PM_OverBounce(pmove_t* pm, pml_t* pml);
 	void PM_OverBounce_stub();
 
+	void BG_AddPredictableEventToPlayerstate(playerState_s* ps, unsigned __int8 newEvent, unsigned int eventParm);
+
 	inline pmove_t h_pm;
 	inline pml_t h_pml;
 	inline playerState_s h_ps;

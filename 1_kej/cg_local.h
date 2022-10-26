@@ -1172,6 +1172,76 @@ struct $15067B6A14D88D7E1E730369692C3A81
 	hudelem_s current[31];
 	hudelem_s archival[31];
 };
+enum weapAnimNumber_t
+{
+	WEAP_IDLE = 0x0,
+	WEAP_FORCE_IDLE = 0x1,
+	WEAP_ATTACK = 0x2,
+	WEAP_ATTACK_LASTSHOT = 0x3,
+	WEAP_RECHAMBER = 0x4,
+	WEAP_ADS_ATTACK = 0x5,
+	WEAP_ADS_ATTACK_LASTSHOT = 0x6,
+	WEAP_ADS_RECHAMBER = 0x7,
+	WEAP_MELEE_ATTACK = 0x8,
+	WEAP_MELEE_CHARGE = 0x9,
+	WEAP_DROP = 0xA,
+	WEAP_RAISE = 0xB,
+	WEAP_FIRST_RAISE = 0xC,
+	WEAP_RELOAD = 0xD,
+	WEAP_RELOAD_EMPTY = 0xE,
+	WEAP_RELOAD_START = 0xF,
+	WEAP_RELOAD_END = 0x10,
+	WEAP_ALTSWITCHFROM = 0x11,
+	WEAP_ALTSWITCHTO = 0x12,
+	WEAP_QUICK_DROP = 0x13,
+	WEAP_QUICK_RAISE = 0x14,
+	WEAP_EMPTY_DROP = 0x15,
+	WEAP_EMPTY_RAISE = 0x16,
+	WEAP_SPRINT_IN = 0x17,
+	WEAP_SPRINT_LOOP = 0x18,
+	WEAP_SPRINT_OUT = 0x19,
+	WEAP_HOLD_FIRE = 0x1A,
+	WEAP_DETONATE = 0x1B,
+	WEAP_NIGHTVISION_WEAR = 0x1C,
+	WEAP_NIGHTVISION_REMOVE = 0x1D,
+	MAX_WP_ANIMATIONS = 0x1E,
+};
+inline const char* WEAPON_ANIMS[30] {
+
+	"WEAP_IDLE",
+	"WEAP_FORCE_IDLE",
+	"WEAP_ATTACK",
+	"WEAP_ATTACK_LASTSHOT",
+	"WEAP_RECHAMBER",
+	"WEAP_ADS_ATTACK",
+	"WEAP_ADS_ATTACK_LASTSHOT",
+	"WEAP_ADS_RECHAMBER",
+	"WEAP_MELEE_ATTACK",
+	"WEAP_MELEE_CHARGE",
+	"WEAP_DROP",
+	"WEAP_RAISE",
+	"WEAP_FIRST_RAISE",
+	"WEAP_RELOAD",
+	"WEAP_RELOAD_EMPTY",
+	"WEAP_RELOAD_START",
+	"WEAP_RELOAD_END",
+	"WEAP_ALTSWITCHFROM",
+	"WEAP_ALTSWITCHTO",
+	"WEAP_QUICK_DROP",
+	"WEAP_QUICK_RAISE",
+	"WEAP_EMPTY_DROP",
+	"WEAP_EMPTY_RAISE",
+	"WEAP_SPRINT_IN",
+	"WEAP_SPRINT_LOOP",
+	"WEAP_SPRINT_OUT",
+	"WEAP_HOLD_FIRE",
+	"WEAP_DETONATE",
+	"WEAP_NIGHTVISION_WEAR",
+	"WEAP_NIGHTVISION_REMOVE"
+	//"MAX_WP_ANIMATIONS",
+
+};
+
 // playerState_t is the information needed by both the client and server
 // to predict player motion and actions
 // nothing outside of pmove should modify these, or some degree of prediction error
@@ -6371,6 +6441,7 @@ struct __declspec(align(8)) animScriptData_t
 	snd_alias_list_t* (__cdecl* soundAlias)(const char*);
 	int(__cdecl* playSoundAlias)(int, snd_alias_list_t*);
 };
+
 enum entity_event_t
 {
 	EV_NONE = 0x0,

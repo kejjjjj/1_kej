@@ -3,6 +3,7 @@
 
 void cg::cod4x()
 {
+	
 	if (!(DWORD)GetModuleHandleA("cod4x_021.dll")) {
 		Com_Printf(CON_CHANNEL_CONSOLEONLY, "cod4x not 21.1 detected\n");
 		r::WndProcAddr = 0x57BB20;

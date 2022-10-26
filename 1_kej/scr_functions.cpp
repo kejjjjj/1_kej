@@ -132,9 +132,11 @@ void GScr_WorldToScreen(scr_entref_t arg)
 }
 void GScr_WeaponExists()
 {
-	if (Scr_GetNumParam() != 1)
+	if (Scr_GetNumParam() != 1) {
 		Scr_ObjectError("Usage: weaponExists( string )");
-
+		Scr_AddInt(0);
+		return;
+	}
 	char* weap = Scr_GetString(0);
 
 	if (!weap) {
@@ -149,9 +151,11 @@ void GScr_WeaponExists()
 }
 void GScr_GetEvarInt()
 {
-	if (Scr_GetNumParam() != 1)
+	if (Scr_GetNumParam() != 1) {
 		Scr_ObjectError("Usage: GetEvarInt( string )");
-
+		Scr_AddInt(0);
+		return;
+	}
 	char* _evar = Scr_GetString(0);
 
 	evar_o* evar = Evar_FindByName(_evar);
@@ -164,9 +168,11 @@ void GScr_GetEvarInt()
 }
 void GScr_GetEvarFloat()
 {
-	if (Scr_GetNumParam() != 1)
+	if (Scr_GetNumParam() != 1) {
 		Scr_ObjectError("Usage: GetEvarFloat( string )");
-
+		Scr_AddFloat(0);
+		return;
+	}
 	char* _evar = Scr_GetString(0);
 
 
@@ -316,12 +322,6 @@ void Gscr_GetAddressInt()
 		return;
 	}
 
-	if (&destination == nullptr) {
-		Scr_ObjectError("attempted to read null memory");
-		Scr_AddInt(0);
-		return;
-	}
-
 	Scr_AddInt(*(int*)destination);
 
 }
@@ -342,12 +342,6 @@ void Gscr_GetAddressFloat()
 
 	if (!destination) {
 		Scr_ObjectError("invalid address");
-		Scr_AddFloat(0);
-		return;
-	}
-
-	if (&destination == nullptr) {
-		Scr_ObjectError("attempted to read null memory");
 		Scr_AddFloat(0);
 		return;
 	}
