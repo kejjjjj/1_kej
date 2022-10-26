@@ -1,13 +1,17 @@
 # 1_kej
 A CoD4 CodJumper tool made for advanced players who want to learn the gamemode more thoroughly and faster - or for those people who just want to experiment with the automation tools. 
 
+If you want to try an alpha version of the tool, see the early_version folder.
+Report any bugs you find!
+
+#Supported Versions
+
+
 This project is compatible with the following versions of CoD4:\
 1.7\
 IW3xo\
 CoD4x 21.1
 
-If you want to try an alpha version of the tool, see the early_version folder.
-Report any bugs you find!
 
 # Features
 
@@ -24,7 +28,8 @@ Jumping  \
 	- Bunnyhopping\
 	- Hit/Jump analyzers\
 	- Unlimited bouncing\
-	- Terrain bouncing
+	- Terrain bouncing\n
+	- Custom Weapon Animations
 
 RPG\
 	- Show RPG timings/angles\
@@ -63,7 +68,7 @@ Jump Preview \
 
 <a href="https://github.com/ocornut/imgui" title="imgui">Dear ImGui</a>\
 <a href="https://github.com/g-truc/glm" title="glm">OpenGL Mathematics</a>\
-<a href="https://github.com/microsoft/Detours" title="detours">Microsoft Detours</a>\
+<a href="https://github.com/microsoft/Detours" title="detours">Microsoft Detours</a>
 
 
 <a href="https://www.flaticon.com/free-icons/eye" title="eye icons">Eye icons created by Freepik - Flaticon</a>\
