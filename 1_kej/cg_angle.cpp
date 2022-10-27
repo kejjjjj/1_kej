@@ -121,9 +121,9 @@ float cg::R_getOptAngle(const bool rightmove, float& diff)
 	if (_speed < 1)
 		return -400.0;
 
-	float yaw = clients->cgameViewangles[YAW];
+	float yaw = ps_loc->viewangles[YAW];
 	float g_speed = (float)cgs->snap->ps.speed;
-	const float FPS = 1000.f / (cgs->frametime == NULL ? 1 : cgs->frametime);
+	const float FPS = (float)Dvar_FindMalleableVar("com_maxfps")->current.integer;
 
 	float accel = FPS / g_speed;
 
@@ -181,7 +181,7 @@ float cg::getOptAngle(float& _opt)
 	else forwardmove = 127;
 
 
-	float yaw = clients->cgameViewangles[YAW];
+	float yaw = ps_loc->viewangles[YAW];
 	float g_speed = (float)clients->snap.ps.speed;
 	const float FPS = (float)Dvar_FindMalleableVar("com_maxfps")->current.integer;
 

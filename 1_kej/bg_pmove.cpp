@@ -68,7 +68,7 @@ void cg::PM_AirMove(pmove_t* pm, pml_t* pml)
 		ms = Sys_MilliSeconds();
 		activeAnim = true;
 		anim_can_use = false;
-	}else if (activeAnim && ms + 20 < Sys_MilliSeconds()) {
+	}else if (activeAnim && ms + 2 < Sys_MilliSeconds()) {
 		pm->ps->weapAnim = 0;
 		activeAnim = false;
 		

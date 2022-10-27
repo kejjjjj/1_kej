@@ -4,7 +4,7 @@ A CoD4 CodJumper tool made for advanced players who want to learn the gamemode m
 If you want to try an alpha version of the tool, see the early_version folder.
 Report any bugs you find!
 
-#Supported Versions
+# Supported Versions
 
 
 This project is compatible with the following versions of CoD4:\
@@ -28,7 +28,7 @@ Jumping  \
 	- Bunnyhopping\
 	- Hit/Jump analyzers\
 	- Unlimited bouncing\
-	- Terrain bouncing\n
+	- Terrain bouncing\
 	- Custom Weapon Animations
 
 RPG\

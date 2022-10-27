@@ -162,6 +162,8 @@ void r::R_JumpBuilder_Builder()
 				jbuilder.OnUpdateAllPositions();
 
 			old_segment = jbuilder.current_segment;
+
+			jbuilder.preview_frame = jbuilder.segments[jbuilder.current_segment].begin;
 		}
 		int total_frames = ImClamp<int>(jbuilder.GetTotalFrames(), 1, INT_MAX);
 
@@ -215,7 +217,7 @@ void r::R_JumpBuilder_Builder()
 
 		ImGui::BeginGroup();
 
-		if (ImGui::SliderInt("Frame", &jbuilder.preview_frame, 1, total_frames, "%d", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput)) {
+		if (ImGui::SliderInt("Frame", &jbuilder.preview_frame, 1, total_frames-1, "%d", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput)) {
 
 			size_t indx(0);
 			for (const auto& i : jbuilder.segments) {

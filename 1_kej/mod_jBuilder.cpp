@@ -410,8 +410,8 @@ void jump_builder_s::OnUpdateOffsets()
 	
 		const float difference = fabs(seg.end - seg.begin);
 
-		if (difference != seg.framecount) {
-			seg.end = seg.begin + seg.framecount;
+		if (difference != seg.framecount-1) {
+			seg.end = seg.begin + seg.framecount-1;
 		}
 
 
@@ -432,7 +432,7 @@ void jump_builder_s::OnUpdateOffsets()
 		segment_data_s& nextSeg = this->segments[indx + 1];
 		const size_t dist = (size_t)fabs(nextSeg.begin - i.end);
 
-		shiftForward = i.end > nextSeg.end;
+		shiftForward = (i.end > nextSeg.end);
 
 
 		if (dist > 1) {
