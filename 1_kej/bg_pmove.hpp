@@ -41,9 +41,11 @@ namespace cg
 
 	void BG_AddPredictableEventToPlayerstate(playerState_s* ps, unsigned __int8 newEvent, unsigned int eventParm);
 
-	inline pmove_t h_pm;
-	inline pml_t h_pml;
+	inline pmove_t h_pm, *glob_pm;
+	inline pml_t h_pml, *glob_pml;
 	inline playerState_s h_ps;
+
+
 
 	struct fps_zones_s
 	{

@@ -34,6 +34,11 @@ void cg::PM_WalkMove(pmove_t* pm, pml_t* pml)
 	if((pm->cmd.buttons & 8194) != 0 || (pm->oldcmd.buttons & 8194) != 0)
 		anim_can_use = true;
 
+	glob_pm = reinterpret_cast<pmove_t*>(pm);
+	glob_pml = reinterpret_cast<pml_t*>(pml);
+
+
+
 }
 void cg::PM_AirMove(pmove_t* pm, pml_t* pml)
 {
@@ -74,6 +79,8 @@ void cg::PM_AirMove(pmove_t* pm, pml_t* pml)
 		
 	}
 
+	glob_pm = reinterpret_cast<pmove_t*>(pm);
+	glob_pml = reinterpret_cast<pml_t*>(pml);
 
 }
 void cg::PM_UFOMove(pmove_t* pmm, pml_t* pmll)

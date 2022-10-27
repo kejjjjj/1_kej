@@ -127,9 +127,6 @@ float cg::R_getOptAngle(const bool rightmove, float& diff)
 
 	float accel = FPS / g_speed;
 
-	if (jumpanalyzer.recommendedFPS == 125)
-		accel = g_speed / FPS;
-
 	if (_speed < 190)
 		g_speed = 190.f - (190.f - _speed);
 	else if (GROUND)
@@ -161,6 +158,11 @@ float cg::R_getOptAngle(const bool rightmove, float& diff)
 }
 float cg::getOptAngle(float& _opt)
 {
+	if (!glob_pm || !glob_pml)
+		return -400.0;
+
+	if (!glob_pm->ps)
+		return -400.0;
 
 	usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
 
@@ -169,9 +171,9 @@ float cg::getOptAngle(float& _opt)
 
 	const bool all_techs = v::mod_strafebot_all.isEnabled();
 
-	float _speed = glm::length(glm::vec2(clients->cgameVelocity[0], clients->cgameVelocity[1]));
+	float _speed = glm::length(glm::vec2(glob_pm->ps->velocity[1], glob_pm->ps->velocity[0]));
 
-	if (_speed < 1 || !all_techs && forwardmove != 127 && rightmove != 0 || analyzer.isSegmenting() && !analyzer.segmenterData.isReady)
+	if (_speed < 1 || !all_techs && forwardmove != 127 && rightmove != 0 || analyzer.isSegmenting() && !analyzer.segmenterData.isReady) 
 		return -400.0;
 
 	
@@ -181,7 +183,7 @@ float cg::getOptAngle(float& _opt)
 	else forwardmove = 127;
 
 
-	float yaw = ps_loc->viewangles[YAW];
+	float yaw = glob_pm->ps->viewangles[YAW];
 	float g_speed = (float)clients->snap.ps.speed;
 	const float FPS = (float)Dvar_FindMalleableVar("com_maxfps")->current.integer;
 
@@ -199,7 +201,7 @@ float cg::getOptAngle(float& _opt)
 	else if (GROUND)
 		g_speed = 224.f;
 
-	const double velocitydirection = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180.f / PI;
+	const double velocitydirection = atan2(glob_pm->ps->velocity[1], glob_pm->ps->velocity[0]) * 180.f / PI;
 	const double accelerationAng = atan2(-rightmove, forwardmove) * 180.f / PI;
 	double diff = acos((g_speed - accel) / _speed) * 180.f / PI;
 	//const float minAngle = acos(g_speed / _speed) * 180.f / PI;

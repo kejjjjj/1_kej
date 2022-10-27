@@ -15,6 +15,9 @@ void cg::CL_Disconnect(int localClientNum)
 		jbuilder.ClearData();
 
 		Mod_EditMemory(true);
+
+		glob_pm = nullptr;
+		glob_pml = nullptr;
 	}
 
 
