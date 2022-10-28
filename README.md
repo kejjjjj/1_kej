@@ -29,7 +29,9 @@ Jumping  \
 	- Hit/Jump analyzers\
 	- Unlimited bouncing\
 	- Terrain bouncing\
-	- Custom Weapon Animations
+	- Adjust bounce height\
+	- Always bounce (bounce from any surface with ease)\
+	- Custom weapon animations
 
 RPG\
 	- Show RPG timings/angles\
