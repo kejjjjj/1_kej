@@ -440,7 +440,7 @@ __declspec(naked) void cg::PmoveSingle_stub()
 
 	}
 }
-//not exactly overbouncing, but the bug is similar
+//MISLEADING FUNCTION NAME!!!!!
 void cg::PM_OverBounce(pmove_t* pm, pml_t* pml)
 {
 
@@ -519,6 +519,7 @@ bool cg::CM_IsEdgeWalkable(int edgeIndex, int triIndex)
 			mov al, 0;
 			retn;
 		}
+		return; //ok
 	}
 	__asm {
 		mov al, dl;
@@ -531,4 +532,93 @@ void cg::BG_AddPredictableEventToPlayerstate(playerState_s* ps, unsigned __int8 
 	ps->events[ps->eventSequence & 3] = newEvent;
 	ps->eventParms[ps->eventSequence & 3] = eventParm;
 	ps->eventSequence = (ps->eventSequence + 1);
+}
+
+void cg::PM_ProjectVelocity(float* _velOut, float* _velIn, float* _normal)
+{
+
+	double _lengthSq2D; // st7
+	double newVelLength; // st6
+	double velLength; // st7
+	double _lengthScale; // st7
+	float lengthSq2D; // [esp+8h] [ebp-14h]
+	float newZ; // [esp+8h] [ebp-14h]
+	float _newZ; // [esp+8h] [ebp-14h]
+	float VelocityLength; // [esp+Ch] [ebp-10h]
+	float _newVelLength; // [esp+Ch] [ebp-10h]
+	float division; // [esp+Ch] [ebp-10h]
+	float lengthScale; // [esp+Ch] [ebp-10h]
+	float velX; // [esp+10h] [ebp-Ch]
+	float velY; // [esp+14h] [ebp-8h]
+
+	float *normal = 0, *velOut, *velIn;
+
+	__asm mov normal, edi;
+	__asm mov velIn, esi;
+	__asm mov velOut, esi;
+
+	lengthSq2D = velIn[1] * velIn[1] + *velIn * *velIn;
+	_lengthSq2D = lengthSq2D;
+
+	if (lengthSq2D == 0.0 || normal[2] < 0.001f)
+	{
+		*velOut = *velIn;
+		velOut[1] = velIn[1];
+		velOut[2] = velIn[2];
+		return;
+	}
+
+	newZ = normal[1] * velIn[1] + *velIn * *normal;
+	_newZ = -newZ / normal[2];             
+	velX = *velIn;
+	velY = velIn[1];
+	VelocityLength = velIn[2] * velIn[2] + _lengthSq2D;
+	newVelLength = _lengthSq2D + _newZ * _newZ;
+	velLength = VelocityLength;
+	_newVelLength = newVelLength;
+	division = velLength / _newVelLength;   
+	lengthScale = sqrtf(division);
+	_lengthScale = lengthScale;
+
+	if (lengthScale < ((v::mod_ez_bounces.isEnabled() == true) ? 100000 : 1) || _newZ < 0.0 || velIn[2] > 0.0)
+	{
+		velOut[2] = _lengthScale * _newZ;
+
+		if (lengthScale < 1.0) {
+			*velOut = velX * _lengthScale;
+			velOut[1] = velY * _lengthScale;
+		}
+
+	}
+
+	return;
+
+}
+void scaler(float* val)
+{
+	//constexpr int ah = sizeof("aaa");
+	*val = v::mod_bounce_height.evar->floatValue;
+}
+__declspec(naked) void cg::PM_BounceHeight()
+{
+	static const DWORD _jmp_og = 0x41586A;
+	static float _scale(1.f);
+	static float huh(0);
+	__asm {
+
+		//mov esi, offset[v::mod_bounce_height];
+		//mov eax, dword ptr[esi + 0xC];
+		lea ecx, _scale;
+		push ecx;
+		call scaler;
+		add esp, 0x4;
+		fld dword ptr[esp + 78h];
+		fmul _scale;
+		fstp dword ptr[ebp + 08h];
+		//fld dword ptr[ebp + 08h];
+		//fstp velZ;
+		jmp _jmp_og;
+
+	}
+	//return;
 }

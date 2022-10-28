@@ -386,7 +386,7 @@ void Jump_Features()
 
 	}
 	ImGui::Text("Bounces\t"); {
-		r::UI_DrawGradientZone(ImVec2(295, 100));
+		r::UI_DrawGradientZone(ImVec2(295, 170));
 
 		ImGui::Text("\t");
 		ImGui::SameLine();
@@ -400,6 +400,14 @@ void Jump_Features()
 		if (ImGui::Checkbox("Unlimited Bouncing", &v::mod_unlim_bounces.evar->enabled)) {
 			v::mod_unlim_bounces.SetValue(v::mod_unlim_bounces.evar->enabled);
 		} ImGui::SameLine(); r::MetricsHelpMarker("Bounce flags do not reset when you bounce");
+
+		ImGui::PushItemWidth(100);
+		ImGui::DragFloat("Height Scale", &v::mod_bounce_height.evar->floatValue, 0.05f, 0.001f, 100.f);
+		ImGui::SameLine(); r::MetricsHelpMarker("Bounce height multiplier (increasing this makes bouncing more difficult)");
+
+		if (ImGui::Checkbox("Always Bounce", &v::mod_ez_bounces.evar->enabled)) {
+			v::mod_ez_bounces.SetValue(v::mod_ez_bounces.evar->enabled);
+		} ImGui::SameLine(); r::MetricsHelpMarker("Bounce from any surface with ease");
 
 		ImGui::EndGroup();
 
@@ -415,7 +423,7 @@ void Jump_Features()
 	{
 
 
-		r::UI_DrawGradientZone(ImVec2(220, 140));
+		r::UI_DrawGradientZone(ImVec2(250, 140));
 
 		ImGui::Text("\t");
 		ImGui::SameLine();
@@ -452,7 +460,7 @@ void Jump_Features()
 	{
 
 
-		r::UI_DrawGradientZone(ImVec2(220, 140));
+		r::UI_DrawGradientZone(ImVec2(250, 100));
 
 		ImGui::Text("\t");
 		ImGui::SameLine();
@@ -460,15 +468,14 @@ void Jump_Features()
 
 		if (ImGui::Checkbox("Use Animations", &v::mod_use_jump_anim.evar->enabled)) {
 			v::mod_use_jump_anim.SetValue(v::mod_use_jump_anim.evar->enabled);
-			r::MetricsHelpMarker("Use custom weapon animations after jumping (requires sprinting)");
-		}
+		} ImGui::SameLine(); 			r::MetricsHelpMarker("Use custom weapon animations after jumping (requires sprinting)");
 
 		if (!v::mod_use_jump_anim.isEnabled())
 			ImGui::BeginDisabled();
 
 		ImGui::Text("\t");
 		ImGui::SameLine(); ImGui::PushItemWidth(100);
-		ImGui::Combo("Anim", &v::mod_jump_anim.evar->intValue, WEAPON_ANIMS, 30);
+		ImGui::Combo("Anim\t\t", &v::mod_jump_anim.evar->intValue, WEAPON_ANIMS, 30);
 
 		if (!v::mod_use_jump_anim.isEnabled())
 			ImGui::EndDisabled();
@@ -671,6 +678,8 @@ void r::R_Features(bool& wantsEditor)
 	childSize.x = rect.x + 10;
 	childSize.y = rect.y + 10;
 
+	if (ImGui::GetWindowSize().x < 10 || ImGui::GetWindowSize().y < 10)
+		ImGui::Text("I guess it's kinda bugged atm so restart your game and let the developer know if this happens :-)");
 
 }
 

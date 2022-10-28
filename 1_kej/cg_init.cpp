@@ -80,6 +80,9 @@ void cg::CG_PrepareHooks()
 	r::Material_Register_FastFile_f	= (XAssetHeader(*)(const char* name))														(0x5F2A80);
 
 	CM_IsEdgeWalkable_f				= (bool(*)(int edgeIndex, int triIndex))													(0x4EFCD5);
+
+	PM_ProjectVelocity_f			= (void(*)(vec3_t normal, vec3_t velIn, vec3_t velOut))										(0x40E330);
+	PM_BounceHeight_f				= (void(*)())																				(0x415863);
 }
 void cg::CG_InitForeverHooks()
 {
@@ -132,7 +135,8 @@ void cg::CG_InitHooks()
 	a->install(&(PVOID&)UI_AddMenuList_f, UI_AddMenuList);
 	a->install(&(PVOID&)r::R_DrawXModelSkinnedCached_h, r::R_DrawXModelSkinnedCached);
 	a->install(&(PVOID&)CM_IsEdgeWalkable_f, CM_IsEdgeWalkable);
-
+	a->install(&(PVOID&)PM_ProjectVelocity_f, PM_ProjectVelocity);
+	a->install(&(PVOID&)PM_BounceHeight_f, PM_BounceHeight);
 	//a->install(&(PVOID&)r::Material_Register_FastFile_f, r::Material_Register_FastFile);
 
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, " done!\n");
@@ -190,6 +194,8 @@ void cg::CG_RemoveHooks()
 	a->remove(&(PVOID&)UI_AddMenuList_f, UI_AddMenuList);
 	a->remove(&(PVOID&)r::R_DrawXModelSkinnedCached_h, r::R_DrawXModelSkinnedCached);
 	a->remove(&(PVOID&)CM_IsEdgeWalkable_f, CM_IsEdgeWalkable);
+	a->remove(&(PVOID&)PM_ProjectVelocity_f, PM_ProjectVelocity);
+	a->remove(&(PVOID&)PM_BounceHeight_f, PM_BounceHeight);
 
 
 	if (r::pEndScene) {
