@@ -333,6 +333,7 @@ void Evar_Setup()
 	v::mod_terrain_bounces.Register	("1_kej_terrain_bounces",			evartype_t::EVAR_BOOL,		(float)0,				true);
 	v::mod_bounce_height.Register	("1_kej_bounce_height",				evartype_t::EVAR_FLOAT,		(float)1,				true);
 	v::mod_ez_bounces.Register		("1_kej_ez_bounces",				evartype_t::EVAR_BOOL,		(float)1,				true);
+	v::mod_bounce_angle.Register	("1_kej_bounce_angle",				evartype_t::EVAR_BOOL,		(float)1,				true);
 
 	v::mod_use_jump_anim.Register	("1_kej_use_jump_anim",				evartype_t::EVAR_BOOL,		(float)0,				true);
 

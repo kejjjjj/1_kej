@@ -353,11 +353,11 @@ void RPG_Features()
 
 	if (ImGui::Checkbox("RPG timing", &v::mod_rpg_timing.evar->enabled)) {
 		v::mod_rpg_timing.SetValue(v::mod_rpg_timing.isEnabled());
-	} ImGui::SameLine(); r::MetricsHelpMarker("prints the rpg timing (calculated in command time)");
+	} ImGui::SameLine(); r::MetricsHelpMarker("prints the rpg timing (timing measured in snapshots)");
 
 	if (ImGui::Checkbox("RPG angle", &v::mod_rpg_angle.evar->enabled)) {
 		v::mod_rpg_angle.SetValue(v::mod_rpg_angle.isEnabled());
-	} ImGui::SameLine(); r::MetricsHelpMarker("prints the player's pitch angle when they shoot the rpg (and they also bounce)");
+	} ImGui::SameLine(); r::MetricsHelpMarker("prints the player's pitch angle when they shoot the rpg and bounce");
 
 	ImGui::EndGroup();
 
@@ -386,7 +386,7 @@ void Jump_Features()
 
 	}
 	ImGui::Text("Bounces\t"); {
-		r::UI_DrawGradientZone(ImVec2(295, 170));
+		r::UI_DrawGradientZone(ImVec2(295, 210));
 
 		ImGui::Text("\t");
 		ImGui::SameLine();
@@ -408,6 +408,10 @@ void Jump_Features()
 		if (ImGui::Checkbox("Always Bounce", &v::mod_ez_bounces.evar->enabled)) {
 			v::mod_ez_bounces.SetValue(v::mod_ez_bounces.evar->enabled);
 		} ImGui::SameLine(); r::MetricsHelpMarker("Bounce from any surface with ease");
+
+		if (ImGui::Checkbox("Steeper Bounces", &v::mod_bounce_angle.evar->enabled)) {
+			v::mod_bounce_angle.SetValue(v::mod_bounce_angle.evar->enabled);
+		} ImGui::SameLine(); r::MetricsHelpMarker("Bounce from steeper angles");
 
 		ImGui::EndGroup();
 
@@ -678,7 +682,7 @@ void r::R_Features(bool& wantsEditor)
 	childSize.x = rect.x + 10;
 	childSize.y = rect.y + 10;
 
-	if (ImGui::GetWindowSize().x < 10 || ImGui::GetWindowSize().y < 10)
+	if (ImGui::GetWindowSize().x < 100 || ImGui::GetWindowSize().y < 100)
 		ImGui::Text("I guess it's kinda bugged atm so restart your game and let the developer know if this happens :-)");
 
 }

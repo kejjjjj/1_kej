@@ -622,3 +622,32 @@ __declspec(naked) void cg::PM_BounceHeight()
 	}
 	//return;
 }
+__declspec(naked) void cg::PM_BounceSteepness()
+{
+	static const DWORD _jmp = 0x41593D;
+	static const float min_angle(0.05f);
+	__asm
+	{
+
+		mov ecx, offset[v::mod_bounce_angle];
+		mov eax, dword ptr[ecx];
+		//cmp dword ptr[eax + 8h], 1;
+		mov ecx, dword ptr[eax + 8h];
+		cmp ecx, 1;
+		jz _isEnabled;
+
+		fld ds:[6D8D84h];
+		fcomp dword ptr[esp + 00000090h];
+		jmp _jmp;
+		//fnstsw ax;
+		//test ah, 41h;
+		//jne short _jnz;
+		//fstp st(0);
+
+	_isEnabled:
+		fld ds : [min_angle] ;
+		fcomp dword ptr[esp + 00000090h];
+
+		jmp _jmp;
+	}
+}

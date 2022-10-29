@@ -51,9 +51,6 @@ HRESULT r::R_DrawXModelSkinnedCached(GfxCmdBufSourceState* src, GfxCmdBufState* 
 		memcpy_s(buffer, 60, &col, 60);
 	};
 
-	static LPDIRECT3DTEXTURE9 tex_noZ;
-	static LPDIRECT3DTEXTURE9 tex_Z;
-
 	static bool create = false;
 
 
@@ -63,7 +60,13 @@ HRESULT r::R_DrawXModelSkinnedCached(GfxCmdBufSourceState* src, GfxCmdBufState* 
 	const bool colChanged = (old_col[0]  != v::mod_chams_col.GetVector(0)  || old_col[1] != v::mod_chams_col.GetVector(1)   || old_col[2] != v::mod_chams_col.GetVector(2)) ||
 							(old_zcol[0] != v::mod_chams_zcol.GetVector(0) || old_zcol[1] != v::mod_chams_zcol.GetVector(1) || old_zcol[2] != v::mod_chams_zcol.GetVector(2));
 
-	if (!create || colChanged) {
+	if (!create || colChanged || !tex_Z && !tex_noZ) {
+
+		if (tex_Z)
+			tex_Z->Release();
+		if (tex_noZ)
+			tex_noZ->Release();
+
 		VectorCopy(v::mod_chams_col.evar->vecValue, old_col);
 		VectorCopy(v::mod_chams_zcol.evar->vecValue, old_zcol);
 

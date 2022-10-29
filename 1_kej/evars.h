@@ -64,6 +64,7 @@ namespace v
 		mod_unlim_bounces,
 		mod_bounce_height,
 		mod_ez_bounces,
+		mod_bounce_angle,
 		mod_use_jump_anim,
 		mod_jump_anim;
 		

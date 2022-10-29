@@ -58,8 +58,6 @@ void cg::CG_PrepareHooks()
 	stub							= (void(*)())																				(0x54DE59); //scriptmenusresponse
 	stub2							= (void(*)())																				(0x46D4CF); //openscriptmenu
 	r::CG_DrawActive_f				= (void(__cdecl*)())																		(r::CG_DrawActive_fnc);
-	r::CL_ShutdownRenderer_f		= (void*(__stdcall*)())																		(0x46CA40);
-	r::R_RecoverLostDevice_f		= (char(__stdcall*)())																		(0x5F5360);
 	r::oWndProc						= (LRESULT(__stdcall*)(HWND, UINT, WPARAM, LPARAM))											(r::WndProcAddr);
 	PM_WalkMove_f					= (void(__cdecl*)(pmove_t*, pml_t*))														(0x40F7A0);
 	PM_AirMove_f					= (void(__cdecl*)(pmove_t*, pml_t*))														(0x40F680);
@@ -83,6 +81,8 @@ void cg::CG_PrepareHooks()
 
 	PM_ProjectVelocity_f			= (void(*)(vec3_t normal, vec3_t velIn, vec3_t velOut))										(0x40E330);
 	PM_BounceHeight_f				= (void(*)())																				(0x415863);
+	PM_BounceSteepness_f			= (void(*)())																				(0x415930);
+
 }
 void cg::CG_InitForeverHooks()
 {
@@ -91,13 +91,16 @@ void cg::CG_InitForeverHooks()
 	CG_PrepareHooks();
 	CL_Disconnect_f				= (void(*)(int))				(0x4696B0);
 	SV_Map_f					= (void(*)())					(0x527670);
-
+	r::CL_ShutdownRenderer_f	= (void*(__stdcall*)())			(0x46CA40);
+	r::R_RecoverLostDevice_f	= (char(__stdcall*)())			(0x5F5360);
 	hook* a = nullptr;
 
 	a->nop(0x4D76DA); //setstat: developer_script must be false.
 
 	a->install(&(PVOID&)CL_Disconnect_f, CL_Disconnect);
 	a->install(&(PVOID&)SV_Map_f, SV_Map);
+	a->install(&(PVOID&)r::CL_ShutdownRenderer_f, r::CL_ShutdownRenderer);
+	a->install(&(PVOID&)r::R_RecoverLostDevice_f, r::R_RecoverLostDevice);
 }
 void cg::CG_InitHooks()
 {
@@ -115,8 +118,8 @@ void cg::CG_InitHooks()
 		return;
 	}
 
-	a->install(&(PVOID&)r::CL_ShutdownRenderer_f, r::CL_ShutdownRenderer);
-	a->install(&(PVOID&)r::R_RecoverLostDevice_f, r::R_RecoverLostDevice);
+	//a->install(&(PVOID&)r::CL_ShutdownRenderer_f, r::CL_ShutdownRenderer);
+	//a->install(&(PVOID&)r::R_RecoverLostDevice_f, r::R_RecoverLostDevice);
 	a->install(&(PVOID&)r::oWndProc, r::WndProc);
 	a->install(&(PVOID&)PM_AirMove_f, PM_AirMove);
 	a->install(&(PVOID&)PM_WalkMove_f, PM_WalkMove);
@@ -137,6 +140,7 @@ void cg::CG_InitHooks()
 	a->install(&(PVOID&)CM_IsEdgeWalkable_f, CM_IsEdgeWalkable);
 	a->install(&(PVOID&)PM_ProjectVelocity_f, PM_ProjectVelocity);
 	a->install(&(PVOID&)PM_BounceHeight_f, PM_BounceHeight);
+	a->install(&(PVOID&)PM_BounceSteepness_f, PM_BounceSteepness);
 	//a->install(&(PVOID&)r::Material_Register_FastFile_f, r::Material_Register_FastFile);
 
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, " done!\n");
@@ -156,26 +160,13 @@ void cg::CG_RemoveHooks()
 
 	r::R_RemoveInput(false);
 
-	for (auto& i : r::imagePairs) {
-		i.second->Release();
-		delete i.second;
-	}
-
-	r::imagePairs.erase(r::imagePairs.begin(), r::imagePairs.end());
-	r::imagePairs.clear();
-	r::imagePairs.resize(0);
-
-	if (ImGui::GetCurrentContext()) {
-		Com_Printf(CON_CHANNEL_CONSOLEONLY, "also removing imgui context\n");
-		//ImGui_ImplDX9_InvalidateDeviceObjects();
-		ImGui_ImplDX9_Shutdown();
-		ImGui_ImplWin32_Shutdown();
-		ImGui::DestroyContext();
+	if (r::pEndScene) {
+		a->remove(&(PVOID&)r::pEndScene, r::draw_func);
 
 	}
 
-	a->remove(&(PVOID&)r::CL_ShutdownRenderer_f, r::CL_ShutdownRenderer);
-	a->remove(&(PVOID&)r::R_RecoverLostDevice_f, r::R_RecoverLostDevice);
+	//a->remove(&(PVOID&)r::CL_ShutdownRenderer_f, r::CL_ShutdownRenderer);
+	//a->remove(&(PVOID&)r::R_RecoverLostDevice_f, r::R_RecoverLostDevice);
 	a->remove(&(PVOID&)r::oWndProc, r::WndProc);
 	a->remove(&(PVOID&)PM_WalkMove_f, PM_WalkMove);
 	a->remove(&(PVOID&)PM_AirMove_f, PM_AirMove);
@@ -196,12 +187,8 @@ void cg::CG_RemoveHooks()
 	a->remove(&(PVOID&)CM_IsEdgeWalkable_f, CM_IsEdgeWalkable);
 	a->remove(&(PVOID&)PM_ProjectVelocity_f, PM_ProjectVelocity);
 	a->remove(&(PVOID&)PM_BounceHeight_f, PM_BounceHeight);
+	a->remove(&(PVOID&)PM_BounceSteepness_f, PM_BounceSteepness);
 
-
-	if (r::pEndScene) {
-		a->remove(&(PVOID&)r::pEndScene, r::draw_func);
-
-	}
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, " done!\n");
 
 	mglobs.initialized = false;

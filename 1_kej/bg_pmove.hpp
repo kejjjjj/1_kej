@@ -18,6 +18,7 @@ namespace cg
 	inline bool(*CM_IsEdgeWalkable_f)(int edgeIndex, int triIndex);
 	inline void (*PM_ProjectVelocity_f)(float* normal, float* velIn, float* velOut);
 	inline void (*PM_BounceHeight_f)();
+	inline void (*PM_BounceSteepness_f)();
 
 	inline BOOL(*PM_SlideMove_f)(pmove_t* pm, pml_t* pml, int gravity);
 
@@ -34,6 +35,7 @@ namespace cg
 
 	void PM_ProjectVelocity(float* normal, float* velIn, float* velOut);
 	void PM_BounceHeight();
+	void PM_BounceSteepness();
 
 
 	void Pmove(pmove_t* pmove);

@@ -100,23 +100,50 @@ LRESULT CALLBACK r::WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 void* r::CL_ShutdownRenderer()
 {
 	r::should_draw_menu = false;
-	CL_ShutdownRenderer_f();
 	std::cout << "shutdown renderer!\n";
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, "shutting down renderer\n");
-	for (auto& i : r::imagePairs)
-		if(i.second)
-			i.second->Release();
+
 	if (ImGui::GetCurrentContext()) {
+
+		if (tex_Z) {
+			Com_Printf(CON_CHANNEL_CONSOLEONLY, "Releasing texture '%s'\n", "tex_Z");
+
+			tex_Z->Release();
+			tex_Z = nullptr;
+		}
+		if (tex_noZ) {
+			Com_Printf(CON_CHANNEL_CONSOLEONLY, "Releasing texture '%s'\n", "tex_noZ");
+
+			tex_noZ->Release();
+			tex_noZ = nullptr;
+		}
+
+		for (auto& i : r::imagePairs)
+			if (i.second) {
+				Com_Printf(CON_CHANNEL_CONSOLEONLY, "Releasing texture '%s'\n", i.first.c_str());
+				i.second->Release();
+				i.second = nullptr;
+			}
+
+		r::imagePairs.erase(r::imagePairs.begin(), r::imagePairs.end());
+		r::imagePairs.clear();
+		r::imagePairs.resize(0);
+
+
+
+		Com_Printf(CON_CHANNEL_CONSOLEONLY, "also removing imgui context\n");
 		ImGui_ImplDX9_Shutdown();
 		ImGui_ImplWin32_Shutdown();
 		ImGui::DestroyContext();
 
 	}
+	CL_ShutdownRenderer_f();
+
 	return 0;
 }
 char r::R_RecoverLostDevice()
 {
-	if (!r::device_needs_reset) {
+	if (!r::device_needs_reset && ImGui::GetCurrentContext()) {
 		if (analyzer.isPreviewing()) {
 			analyzer.setPreviewState(false);
 

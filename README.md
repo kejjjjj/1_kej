@@ -31,6 +31,7 @@ Jumping  \
 	- Terrain bouncing\
 	- Adjust bounce height\
 	- Always bounce (bounce from any surface with ease)\
+	- Steeper bounces\
 	- Custom weapon animations
 
 RPG\
