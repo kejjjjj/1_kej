@@ -42,17 +42,23 @@ void PlayerCmd_GetForwardMove(scr_entref_t arg)
 	if (HIWORD(arg)) {
 		Scr_ObjectError("Not an entity");
 		gent = NULL;
+		Scr_AddInt(0);
+		return;
 	}
 	else {
 		ent = LOWORD(arg);
 		gent = Scr_GetEntity(arg);
 		if (!gent->client) {
 			Scr_ObjectError("Entity: [%i] is not a player", ent);
+			Scr_AddInt(0);
+			return;
 		}
 	}
-	if (Scr_GetNumParam() > 0)
+	if (Scr_GetNumParam() > 0) {
 		Scr_ObjectError("Usage: player GetForwardMove()");
-
+		Scr_AddInt(0);
+		return;
+	}
 	const cg::usercmd_s* cmd = cg::cinput->GetUserCmd(cg::cinput->currentCmdNum - 1);
 
 	if (!cmd) {
@@ -70,17 +76,23 @@ void PlayerCmd_GetRightMove(scr_entref_t arg)
 	if (HIWORD(arg)) {
 		Scr_ObjectError("Not an entity");
 		gent = NULL;
+		Scr_AddInt(0);
+		return;
 	}
 	else {
 		ent = LOWORD(arg);
 		gent = Scr_GetEntity(arg);
 		if (!gent->client) {
 			Scr_ObjectError("Entity: [%i] is not a player", ent);
+			Scr_AddInt(0);
+			return;
 		}
 	}
-	if (Scr_GetNumParam() > 0)
+	if (Scr_GetNumParam() > 0) {
 		Scr_ObjectError("Usage: player GetRightMove()");
-
+		Scr_AddInt(0);
+		return;
+	}
 	const cg::usercmd_s* cmd = cg::cinput->GetUserCmd(cg::cinput->currentCmdNum - 1);
 
 	if (!cmd) {
@@ -109,9 +121,10 @@ void PlayerCmd_SetVelocity(scr_entref_t arg)
 			return;
 		}
 	}
-	if (Scr_GetNumParam() != 1)
+	if (Scr_GetNumParam() != 1) {
 		Scr_ObjectError("Usage: player setVelocity( vec3 )");
-
+		return;
+	}
 	Scr_GetVector(0, velocity);
 	VectorCopy(velocity, gent->client->ps.velocity);
 }
@@ -120,6 +133,7 @@ void GScr_WorldToScreen(scr_entref_t arg)
 {
 	if (Scr_GetNumParam() != 1) {
 		Scr_ObjectError("Usage: WorldToScreen( end )");
+		Scr_AddVector(vec3_t{ 0,0,0 });
 		return;
 	}
 	vec3_t end;
@@ -186,9 +200,11 @@ void GScr_GetEvarFloat()
 }
 void GScr_GetEvar()
 {
-	if (Scr_GetNumParam() != 1)
+	if (Scr_GetNumParam() != 1) {
 		Scr_ObjectError("Usage: GetEvar( string )");
-
+		Scr_AddString((char*)"");
+		return;
+	}
 	char* _evar = Scr_GetString(0);
 
 
@@ -272,10 +288,17 @@ void GScr_WriteToAddress()
 		Scr_ObjectError("invalid address format, (missing 0x)");
 		return;
 	}
-	const DWORD destination = std::stoul(addr_str, nullptr, 16);
+	DWORD destination;
+	try {
+		destination = std::stoul(addr_str, nullptr, 16);
 
-	if (!destination) {
-		Scr_ObjectError("invalid address");
+		if (!destination) {
+			Scr_ObjectError("invalid address");
+			return;
+		}
+	}
+	catch (std::exception& ex) {
+		Scr_ObjectError("invalid address format (must be i.e. FF FF FF FF FF)");
 		return;
 	}
 	BYTE* fixed_bytes = new BYTE[length];
@@ -327,9 +350,11 @@ void Gscr_GetAddressInt()
 }
 void Gscr_GetAddressFloat()
 {
-	if (Scr_GetNumParam() != 1)
+	if (Scr_GetNumParam() != 1) {
 		Scr_ObjectError("Usage: GetAddressFloat( address <as a string> )");
-
+		Scr_AddFloat(0);
+		return;
+	}
 	char* addr_str = Scr_GetString(0);
 
 	if (sizeof(addr_str) < 0) {

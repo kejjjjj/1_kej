@@ -35,7 +35,7 @@ namespace r
 	void R_OtherTab();
 	void R_GameMenuBrowser(bool& isOpen);
 	void R_GameMenuBrowser_ItemDef(itemDef_s* item);
-	void R_GameMenuBrowser_WindowProperties(windowDef_t wnd);
+	void R_GameMenuBrowser_WindowProperties(windowDef_t& wnd);
 	
 
 }

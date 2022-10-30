@@ -47,6 +47,7 @@ namespace v
 		mod_autoFPS_long125,
 		mod_autoFPS_space333,
 		mod_autoFPS_hug500,
+		mod_auto500_enabled,
 		mod_strafebot,
 		mod_strafebot_all,
 		mod_autoanglerpg,
@@ -65,6 +66,8 @@ namespace v
 		mod_bounce_height,
 		mod_ez_bounces,
 		mod_bounce_angle,
+		mod_bounce_calc,
+		mod_bounce_calcw2s,
 		mod_use_jump_anim,
 		mod_jump_anim;
 		

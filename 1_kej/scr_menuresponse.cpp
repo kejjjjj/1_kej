@@ -46,6 +46,10 @@ void Script_OnMenuResponse(int serverId, int menu, const char* response)
 
         else if (!strcmp(response, "500fps"))
             Mod_A_OnCreate500FPS();
+
+        else if (!strcmp(response, "bounce_calc"))
+            Mod_BounceCalculator_Create();
+
     }
 
     //printf("menu[" "%s" "], response[" "%s" "]\n", menu_name, response);

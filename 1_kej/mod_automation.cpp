@@ -3,7 +3,7 @@
 
 void cg::Mod_A_Strafebot()
 {
-	if (!v::mod_strafebot.isEnabled() || clients->snap.ps.pm_type == PM_UFO)
+	if (!v::mod_strafebot.isEnabled() || clients->snap.ps.pm_type == PM_UFO || !glob_pm)
 		return;
 
 	float optYaw, test;
@@ -28,7 +28,7 @@ void cg::Mod_A_Strafebot()
 
 
 	if (cmd->forwardmove != 0 || cmd->rightmove != 0) {
-		setYaw(clients->cgameViewangles[YAW], optYaw);
+		setYaw(glob_pm->ps->viewangles[YAW], optYaw);
 
 	}
 }
@@ -150,7 +150,7 @@ void cg::Mod_A_AutoSliding(pmove_t* pmove, pml_t* pml)
 	const DWORD ms = Sys_MilliSeconds();
 	
 
-	if ((old_ms + (move->jump == true && v::mod_bhop_nodelay.isEnabled() ? 0.1f : 100)) < ms) { //allow 100ms to slide and if jump is held, then stop slide instantly
+	if ((old_ms + (move->jump == true && v::mod_bhop_nodelay.isEnabled() ? 1 : 100)) < ms) { //allow 100ms to slide and if jump is not held
 		old_ms = ms;
 		automation.currentlySliding = false;
 		a->write_addr(0x410660, "\x83", 1);
@@ -163,6 +163,11 @@ void cg::Mod_A_AutoSliding(pmove_t* pmove, pml_t* pml)
 }
 void cg::Mod_A_OnCreate500FPS()
 {
+	if (!v::mod_auto500_enabled.isEnabled()) {
+		Com_PrintError(CON_CHANNEL_OBITUARY, "500fps area spawning is disabled!\n");
+		return;
+	}
+
 	trace_t trace;
 	vec3_t end;
 

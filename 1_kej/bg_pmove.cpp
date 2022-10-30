@@ -67,7 +67,11 @@ void cg::PM_AirMove(pmove_t* pm, pml_t* pml)
 	//animations
 	static DWORD ms = Sys_MilliSeconds();
 	static bool activeAnim;
-	if (v::mod_use_jump_anim.isEnabled() && !activeAnim/* && pm->ps->weapAnim == 0*/ /*&& pm->ps->weapAnim != (WEAP_SPRINT_LOOP | ~pm->ps->weapAnim & 0x200)*/ && anim_can_use) {
+
+	if(anim_can_use)
+		pm->ps->weapAnim = 0;
+
+	if (v::mod_use_jump_anim.isEnabled() && !activeAnim/* && pm->ps->weapAnim == 0*/ /*&& pm->ps->weapAnim != (WEAP_SPRINT_LOOP | ~pm->ps->weapAnim & 0x200)*/ && anim_can_use && pm->ps->jumpTime + 250 < pm->cmd.serverTime) {
 		pm->ps->weapAnim = 0;
 		pm->ps->weapAnim = v::mod_jump_anim.GetInt() | ~pm->ps->weapAnim & 0x200;
 		ms = Sys_MilliSeconds();
@@ -587,12 +591,58 @@ void cg::PM_ProjectVelocity(float* _velOut, float* _velIn, float* _normal)
 		if (lengthScale < 1.0) {
 			*velOut = velX * _lengthScale;
 			velOut[1] = velY * _lengthScale;
+			velOut[2] = _lengthScale * _newZ;
+
 		}
 
 	}
 
 	return;
 
+}
+bool cg::PM_CanBeBounced(float* normal, float* velIn)
+{
+	double _lengthSq2D; // st7
+	double newVelLength; // st6
+	double velLength; // st7
+	double _lengthScale; // st7
+	float lengthSq2D; // [esp+8h] [ebp-14h]
+	float newZ; // [esp+8h] [ebp-14h]
+	float _newZ; // [esp+8h] [ebp-14h]
+	float VelocityLength; // [esp+Ch] [ebp-10h]
+	float _newVelLength; // [esp+Ch] [ebp-10h]
+	float division; // [esp+Ch] [ebp-10h]
+	float lengthScale; // [esp+Ch] [ebp-10h]
+	float velX; // [esp+10h] [ebp-Ch]
+	float velY; // [esp+14h] [ebp-8h]
+
+	lengthSq2D = velIn[1] * velIn[1] + *velIn * *velIn;
+	_lengthSq2D = lengthSq2D;
+
+	if (lengthSq2D == 0.0 || normal[2] < 0.001f)
+	{
+		return false;
+	}
+
+	newZ = normal[1] * velIn[1] + *velIn * *normal;
+	_newZ = -newZ / normal[2];
+	velX = *velIn;
+	velY = velIn[1];
+	VelocityLength = velIn[2] * velIn[2] + _lengthSq2D;
+	newVelLength = _lengthSq2D + _newZ * _newZ;
+	velLength = VelocityLength;
+	_newVelLength = newVelLength;
+	division = velLength / _newVelLength;
+	lengthScale = sqrtf(division);
+	_lengthScale = lengthScale;
+
+	if (lengthScale < 1 || _newZ < 0.0 || velIn[2] > 0.0)
+	{
+		return true;
+
+	}
+
+	return false;
 }
 void scaler(float* val)
 {
@@ -606,8 +656,6 @@ __declspec(naked) void cg::PM_BounceHeight()
 	static float huh(0);
 	__asm {
 
-		//mov esi, offset[v::mod_bounce_height];
-		//mov eax, dword ptr[esi + 0xC];
 		lea ecx, _scale;
 		push ecx;
 		call scaler;
@@ -615,8 +663,6 @@ __declspec(naked) void cg::PM_BounceHeight()
 		fld dword ptr[esp + 78h];
 		fmul _scale;
 		fstp dword ptr[ebp + 08h];
-		//fld dword ptr[ebp + 08h];
-		//fstp velZ;
 		jmp _jmp_og;
 
 	}

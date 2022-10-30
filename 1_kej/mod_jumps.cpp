@@ -206,3 +206,59 @@ int32_t cg::Mod_RecommendedFPS(float yaw, char forwardmove, char rightmove)
 	}
 	return 500;
 }
+void cg::Mod_BounceCalculator_Create()
+{
+	trace_t trace;
+	vec3_t end;
+
+	if (!v::mod_bounce_calc.isEnabled()) {
+		Com_PrintError(CON_CHANNEL_OBITUARY, "Calculator usage is disabled!\n");
+		return;
+	}
+
+	const auto isBounce = [](vec3_t normals) -> bool {
+		return normals[2] >= 0.3f && normals[2] <= 0.7f;
+
+	};
+
+	AnglesToForward(clients->cgameViewangles, rg->viewOrg, 99999, end);
+
+	CG_TracePoint(vec3_t{ 1,1,1 }, &trace, rg->viewOrg, vec3_t{ -1,-1,-1 }, end, cgs->clientNum, MASK_PLAYERSOLID, 1, 1);
+
+	if (!isBounce(trace.normal)) {
+		Com_PrintError(CON_CHANNEL_OBITUARY, "This surface cannot be bounced!\n");
+		return;
+	}
+
+	VectorCopy(trace.normal, bcalc.normal);
+
+	bcalc.origin[0] = rg->viewOrg[0] + trace.fraction * (end[0] - rg->viewOrg[0]);
+	bcalc.origin[1] = rg->viewOrg[1] + trace.fraction * (end[1] - rg->viewOrg[1]);
+	bcalc.origin[2] = rg->viewOrg[2] + trace.fraction * (end[2] - rg->viewOrg[2]);
+
+	Com_Printf(CON_CHANNEL_OBITUARY, "marked normals ^2{%.3f, %.3f, %.3f}\n", bcalc.normal[0], bcalc.normal[1], bcalc.normal[2]);
+
+	bcalc.exists = true;
+}
+void cg::Mod_BounceCalculator()
+{
+	if (!bcalc.exists)
+		return;
+
+	Material* fxMaterial = r::R_RegisterMaterial("decode_characters");
+	Material* fxMaterialGlow = r::R_RegisterMaterial("decode_characters_glow");
+
+	bool const canBounce = PM_CanBeBounced(bcalc.normal, clients->cgameVelocity) && !jumpanalyzer.walking;
+
+	vec2_t xy;
+
+	if (v::mod_bounce_calcw2s.isEnabled()) {
+		if (r::WorldToScreen(bcalc.origin, xy)) {
+
+			r::R_AddCmdDrawTextWithEffects(canBounce == true ? (char*)"BOUNCE" : (char*)"NOT BOUNCE", "fonts/objectivefont", r::X(xy[0]), r::Y(xy[1]), 1.f, 1.f, 0.f, canBounce == true ? vec4_t{ 0,1,0,1 } : vec4_t{ 1,0,0,1 }, 3, v::mod_velometer_glow.evar->vecValue, fxMaterial, fxMaterialGlow, 0, 500, 1000, 2000);
+		}
+		return;
+	}
+	r::R_AddCmdDrawTextWithEffects(canBounce == true ? (char*)"BOUNCE" : (char*)"NOT BOUNCE", "fonts/objectivefont", r::X(900), r::Y(800), 1.3f, 1.3f, 0.f, canBounce == true ? vec4_t{ 0,1,0,1 } : vec4_t{ 1,0,0,1 }, 3, v::mod_velometer_glow.evar->vecValue, fxMaterial, fxMaterialGlow, 0, 500, 1000, 2000);
+
+}

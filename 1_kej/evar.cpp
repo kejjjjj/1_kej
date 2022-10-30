@@ -310,6 +310,7 @@ void Evar_Setup()
 	v::mod_autoFPS_long125.Register ("1_kej_autofps_long125",			evartype_t::EVAR_BOOL,		(float)1,				true);
 	v::mod_autoFPS_space333.Register("1_kej_autofps_space333",			evartype_t::EVAR_BOOL,		(float)1,				true);
 	v::mod_autoFPS_hug500.Register	("1_kej_autofps_hug500",			evartype_t::EVAR_INT,		(float)0,				true);
+	v::mod_auto500_enabled.Register	("1_kej_auto500_enabled",			evartype_t::EVAR_BOOL,		(float)1,				true);
 
 	v::mod_strafebot.Register		("1_kej_strafebot",					evartype_t::EVAR_BOOL,		(float)0,				true);
 	v::mod_strafebot_all.Register   ("1_kej_strafebot_all",				evartype_t::EVAR_BOOL,		(float)0,				true);
@@ -334,6 +335,8 @@ void Evar_Setup()
 	v::mod_bounce_height.Register	("1_kej_bounce_height",				evartype_t::EVAR_FLOAT,		(float)1,				true);
 	v::mod_ez_bounces.Register		("1_kej_ez_bounces",				evartype_t::EVAR_BOOL,		(float)1,				true);
 	v::mod_bounce_angle.Register	("1_kej_bounce_angle",				evartype_t::EVAR_BOOL,		(float)1,				true);
+	v::mod_bounce_calc.Register		("1_kej_bounce_calc",				evartype_t::EVAR_BOOL,		(float)1,				true);
+	v::mod_bounce_calcw2s.Register	("1_kej_bounce_calcw2s",			evartype_t::EVAR_BOOL,		(float)1,				true);
 
 	v::mod_use_jump_anim.Register	("1_kej_use_jump_anim",				evartype_t::EVAR_BOOL,		(float)0,				true);
 

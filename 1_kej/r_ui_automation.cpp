@@ -107,13 +107,27 @@ void r::R_Automation_Features()
 		ImGui::EndGroup();
 
 		ImGui::Text("\n500FPS");
-		r::UI_DrawGradientZone(ImVec2(330, 200));
+		r::UI_DrawGradientZone(ImVec2(330, 240));
 
 		ImGui::Text("\t");
 		ImGui::SameLine();
 
 		ImGui::BeginGroup();
 		{
+			if (ImGui::Checkbox("Enable spawning", &v::mod_auto500_enabled.evar->enabled)) {
+				v::mod_auto500_enabled.SetValue(v::mod_auto500_enabled.isEnabled());
+
+				if (!v::mod_auto500_enabled.isEnabled()) {
+					memset(&box500, 0, sizeof(area500_s));
+					box500.bounds[0] = 32;
+					box500.bounds[1] = 32;
+					box500.bounds[2] = 32;
+				}
+
+			} ImGui::SameLine(); r::MetricsHelpMarker("Allow 500fps zone spawning");
+
+			if (!v::mod_auto500_enabled.isEnabled())
+				ImGui::BeginDisabled();
 
 			if (!box500.boxExists) {
 				ImGui::TextColored(ImVec4(255, 255, 0, 255), "Spawn an area with the keybind");
@@ -130,6 +144,9 @@ void r::R_Automation_Features()
 				box500.bounds[2] = 32;
 			}
 			if (!box500.boxExists)
+				ImGui::EndDisabled();
+
+			if (!v::mod_auto500_enabled.isEnabled())
 				ImGui::EndDisabled();
 		}
 		ImGui::EndGroup();

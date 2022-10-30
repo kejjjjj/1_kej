@@ -1,7 +1,7 @@
 
 #include "pch.h"
 
-void r::R_GameMenuBrowser_WindowProperties(windowDef_t wnd)
+void r::R_GameMenuBrowser_WindowProperties(windowDef_t& wnd)
 {
 
 	Material* bg = wnd.background;

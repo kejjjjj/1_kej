@@ -2029,8 +2029,8 @@ struct cplane_s
 {
 	float normal[3];
 	float dist;
-	char type;
-	char signbits;
+	char type;  // for fast side tests: 0,1,2 = axial, 3 = nonaxial
+	char signbits;  // signx + (signy<<1) + (signz<<2), used as lookup during collision
 	char pad[2];
 };
 

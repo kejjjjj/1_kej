@@ -35,7 +35,15 @@ namespace cg {
 	void Mod_DetermineFPS(pmove_t* pm, pml_t* pml);
 	void Mod_JumpView(pmove_t* pm, pml_t* pml);
 	void Mod_SaveData(std::vector<jump_data>& storage, pmove_t* pm, bool& hasBounced, bool& hasJumped, bool& hasShotRpg);
+	void Mod_BounceCalculator();
+	void Mod_BounceCalculator_Create();
 
-
+	struct bcalc_t
+	{
+		bool exists;
+		vec3_t normal;
+		vec3_t origin;
+	};
+	inline bcalc_t bcalc;
 }
 #endif

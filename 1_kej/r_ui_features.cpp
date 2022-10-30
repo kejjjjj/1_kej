@@ -385,7 +385,7 @@ void Jump_Features()
 
 
 	}
-	ImGui::Text("Bounces\t"); {
+	ImGui::Text("\nBounces\t"); {
 		r::UI_DrawGradientZone(ImVec2(295, 210));
 
 		ImGui::Text("\t");
@@ -460,7 +460,7 @@ void Jump_Features()
 
 		ImGui::EndGroup();
 	}
-	ImGui::Text("Animations\t");
+	ImGui::Text("\nAnimations\t");
 	{
 
 
@@ -485,6 +485,37 @@ void Jump_Features()
 			ImGui::EndDisabled();
 		ImGui::EndGroup();
 
+	}
+	ImGui::Text("\nBounce Calculator\t");
+	{
+		r::UI_DrawGradientZone(ImVec2(250, 140));
+
+		ImGui::Text("\t");
+		ImGui::SameLine();
+		ImGui::BeginGroup();
+
+		if (ImGui::Checkbox("Use Calculator", &v::mod_bounce_calc.evar->enabled)) {
+			v::mod_bounce_calc.SetValue(v::mod_bounce_calc.evar->enabled);
+
+			if (!v::mod_bounce_calc.isEnabled())
+				memset(&bcalc, 0, sizeof(bcalc_t));
+
+		} ImGui::SameLine(); 			r::MetricsHelpMarker("Bounce calculator tells you if you can bounce from the specified normals with your current velocity\nThis toggle allows the keybind usage (Controls/Multiplayer Controls)");
+
+		if (!v::mod_bounce_calc.isEnabled())
+			ImGui::BeginDisabled();
+
+		if (ImGui::Checkbox("3D Text", &v::mod_bounce_calcw2s.evar->enabled)) {
+			v::mod_bounce_calcw2s.SetValue(v::mod_bounce_calcw2s.evar->enabled);
+		} ImGui::SameLine(); 			r::MetricsHelpMarker("Text is drawn at the marked spot");
+
+		if(ImGui::Button("Delete Spot"))
+			memset(&bcalc, 0, sizeof(bcalc_t));
+
+		if (!v::mod_bounce_calc.isEnabled())
+			ImGui::EndDisabled();
+
+		ImGui::EndGroup();
 	}
 	ImGui::EndGroup();
 
@@ -608,7 +639,7 @@ void r::R_Features(bool& wantsEditor)
 	static bool first_open(true);
 
 	if (first_open) {
-		ActiveIndex = UI_GetImageIndex("Automation");
+		ActiveIndex = UI_GetImageIndex("Jumping");
 		first_open = false;
 	}
 
@@ -669,7 +700,7 @@ void r::R_Features(bool& wantsEditor)
 	R_DrawMenuByName(category.c_str(), justPressed, wantsEditor);
 
 	if (r::imagePairs[ActiveIndex].first.find("Preview") != std::string::npos)
-		ActiveIndex = UI_GetImageIndex("Automation");
+		ActiveIndex = UI_GetImageIndex("Jumping");
 
 
 	const bool isMenu = !category.compare("Jump Builder");
