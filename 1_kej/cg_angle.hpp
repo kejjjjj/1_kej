@@ -18,10 +18,10 @@ namespace cg
 		float x1;
 		float x2;
 	};
-	float ProjectionX(float angle, float fov);
-	range_t AnglesToRange(float start, float end, float yaw, float fov);
+	float ProjectionX(float angle, float fov, int projType = 1);
+	range_t AnglesToRange(float start, float end, float yaw, float fov, int projType = 1);
 	//screencoordinates_t CG_RangeAnglesToSC(range_t range);
-	void CG_FillAngleYaw(float start, float end, float yaw, float y, float h, float fov, const vec4_t color, bool useImGui = true);
+	void CG_FillAngleYaw(float start, float end, float yaw, float y, float h, float fov, const vec4_t color, bool useImGui = true, bool isCylindrical = false);
 
 	void setYaw(float ref, float ang);
 	void setPitch(float ref, float ang);

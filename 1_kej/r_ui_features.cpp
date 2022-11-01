@@ -214,6 +214,9 @@ void Visual_Features()
 
 				ImGui::Text("draws a bar on the screen that indicates what FPS you should use");
 
+				if (ImGui::Checkbox("Cylindrical design", &v::mod_FPS_cylindrical.evar->enabled)) {
+					v::mod_FPS_cylindrical.SetValue(v::mod_FPS_cylindrical.isEnabled());
+				} ImGui::SameLine(); r::MetricsHelpMarker("This thing sucks and should be rewritten");
 
 				ImGui::PushItemWidth(100);
 				ImGui::DragFloat("y", &v::mod_fps_transferz.evar->arrayValue[1], 1.f, 0.f, 1080.f, "%.0f");
@@ -256,6 +259,14 @@ void Visual_Features()
 
 				ImGui::ColorEdit3("transfer", v::mod_markercol.evar->vecValue, ImGuiColorEditFlags_NoInputs); ImGui::SameLine(); r::MetricsHelpMarker("indicates when your velocity direction starts to shift");
 				ImGui::SameLine(); if (ImGui::Button(tmarker == true ? "hide##04" : "show##04")) { tmarker = !tmarker; v::mod_markercol.evar->vecValue[3] = (float)tmarker; }
+				//static float alpha; ImGui::PushItemWidth(60);
+				//ImGui::DragFloat("Alpha", &alpha, 0.05, 0, 1, "%.2f");
+
+				//v::mod_125col.evar->vecValue[3] = alpha;
+				//v::mod_200col.evar->vecValue[3] = alpha;
+				//v::mod_250col.evar->vecValue[3] = alpha;
+				//v::mod_333col.evar->vecValue[3] = alpha;
+				//v::mod_markercol.evar->vecValue[3] = alpha;
 
 				ImGui::NewLine();
 				static bool dummy = v::mod_fps_transferz.evar->arrayValue[4] != NULL;

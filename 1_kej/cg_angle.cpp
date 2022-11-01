@@ -1,6 +1,6 @@
 #include "pch.h"
 
-cg::range_t cg::AnglesToRange(float start, float end, float yaw, float fov)
+cg::range_t cg::AnglesToRange(float start, float end, float yaw, float fov, int projType)
 {
 	if (fabsf(end - start) > 2 * (float)M_PI)
 	{
@@ -20,10 +20,10 @@ cg::range_t cg::AnglesToRange(float start, float end, float yaw, float fov)
 		end = tmp;
 	}
 
-	range_t const ret = { ProjectionX(start, fov), ProjectionX(end, fov), split };
+	range_t const ret = { ProjectionX(start, fov, projType), ProjectionX(end, fov, projType), split };
 	return ret;
 }
-float cg::ProjectionX(float angle, float fov)
+float cg::ProjectionX(float angle, float fov, int projType)
 {
 	float SCREEN_WIDTH = 1920.f;
 	float const half_fov_x = (float)DEG2RAD(fov) / 2;
@@ -35,11 +35,24 @@ float cg::ProjectionX(float angle, float fov)
 	{
 		return SCREEN_WIDTH;
 	}
+	switch (projType) {
+	case 0:
+		return SCREEN_WIDTH / 2 * (1 - tanf(angle) / tanf(half_fov_x));
+		break;
+	case 1: 
+		return SCREEN_WIDTH / 2 * (1 - angle / half_fov_x);
+		break;
+	case 2: 
+		return SCREEN_WIDTH / 2 * (1 - tanf(angle / 2) / tanf(half_fov_x / 2));
+		break;
 
-	return SCREEN_WIDTH / 2 * (1 - angle / half_fov_x);
+	default:
+		return 0;
+		break;
 
+	}
 }
-void cg::CG_FillAngleYaw(float start, float end, float yaw, float y, float h, float fov, vec4_t const color, bool useImGui)
+void cg::CG_FillAngleYaw(float start, float end, float yaw, float y, float h, float fov, vec4_t const color, bool useImGui, bool isCylindrical)
 {
 
 	range_t const range = AnglesToRange(DEG2RAD(start), DEG2RAD(end), DEG2RAD(yaw), fov);
@@ -58,19 +71,46 @@ void cg::CG_FillAngleYaw(float start, float end, float yaw, float y, float h, fl
 
 	if (!range.split) {
 		//r::R_DrawRect("white", range.x1, y, range.x2 - range.x1, h, color);
-		if(useImGui)
-			ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(x1), r::Y(y)), ImVec2(r::X(ImClamp(range.x2, minX, maxX)), r::Y(y + h)), ImColor(color[0], color[1], color[2], color[3]));
-		else
-			r::R_DrawRect("white", range.x1, y, range.x2 - range.x1, h, color);
+		if (!isCylindrical) {
+			if (useImGui)
+				ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(x1), r::Y(y)), ImVec2(r::X(ImClamp(range.x2, minX, maxX)), r::Y(y + h)), ImColor(color[0], color[1], color[2], 0.7f));
+			else
+				r::R_DrawRect("white", range.x1, y, range.x2 - range.x1, h, color);
+
+			return;
+		}
+		int const heightOffsetX1 = glm::distance((float)range.x1, r::X(960.f));
+		int const heightOffsetX2 = glm::distance((float)range.x2, r::X(960.f));
+		
+		float midYAW = glm::distance(end, start)/2;
+		midYAW += start;
+		range_t const midpoint = AnglesToRange(DEG2RAD(midYAW), DEG2RAD(midYAW), DEG2RAD(yaw), fov);
+
+		int const heightOffsetMiddle = glm::distance((float)midpoint.x1, r::X(960.f));
+
+		const ImVec2 a(range.x1, y+heightOffsetX1/2);
+		const ImVec2 b(midpoint.x1, y+heightOffsetMiddle/2);
+		const ImVec2 c(range.x2, y+heightOffsetX2/2);
+
+		ImGui::GetBackgroundDrawList()->AddBezierQuadratic(a, b, c, ImColor(color[0], color[1], color[2], color[3]), h);
+		//ImGui::GetBackgroundDrawList()->AddText(ImVec2(range.x1, y), IM_COL32(255, 255, 255, 255), std::string(std::to_string(start)).c_str());
+		//ImGui::GetBackgroundDrawList()->AddText(ImVec2(range.x2, y), IM_COL32(255, 255, 255, 255), std::string(std::to_string(end)).c_str());
+
+		//float const val = midpoint.x1;
+
+		//ImGui::GetBackgroundDrawList()->AddText(ImVec2(val, y), IM_COL32(255, 255, 255, 255), std::string(std::to_string(midYAW)).c_str());
+
 	}
 	else {
-		if (useImGui) {
-			ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(minX), r::Y(y)), ImVec2(r::X(x1), r::Y(y + h)), ImColor(color[0], color[1], color[2], color[3]));
-			ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(ImClamp(range.x2, minX, maxX)), r::Y(y)), ImVec2(r::X(ImClamp((float)cgs->refdef.width, minX, maxX)), r::Y(y + h)), ImColor(color[0], color[1], color[2], color[3]));
-		}
-		else {
-			r::R_DrawRect("white", 0, y, range.x1, h, color);
-			r::R_DrawRect("white", range.x2, y, 1920.f - range.x2, h, color);
+		if (!isCylindrical) {
+			if (useImGui) {
+				ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(minX), r::Y(y)), ImVec2(r::X(x1), r::Y(y + h)), ImColor(color[0], color[1], color[2], color[3]));
+				ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(ImClamp(range.x2, minX, maxX)), r::Y(y)), ImVec2(r::X(ImClamp((float)cgs->refdef.width, minX, maxX)), r::Y(y + h)), ImColor(color[0], color[1], color[2], color[3]));
+			}
+			else {
+				r::R_DrawRect("white", 0, y, range.x1, h, color);
+				r::R_DrawRect("white", range.x2, y, 1920.f - range.x2, h, color);
+			}
 		}
 	}
 }

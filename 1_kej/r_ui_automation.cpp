@@ -83,7 +83,8 @@ void r::R_Automation_Features()
 
 				if (ImGui::Checkbox("Long 125##01", &v::mod_autoFPS_long125.evar->enabled)) {
 					v::mod_autoFPS_long125.SetValue(v::mod_autoFPS_long125.isEnabled());
-				} ImGui::SameLine(); r::MetricsHelpMarker("Don't let 333fps overwrite most of the 125fps angle");
+				} ImGui::SameLine(); r::MetricsHelpMarker("Don't let 333fps overwrite most of the 125fps angle\nnote: long 125fps should be disabled for jumps\nwhere you need to do a 125-333 flick in mid-air!"
+			"\nit is useful to recognize when you should use\nlong 125 and when you shouldn't");
 
 
 				if (ImGui::Checkbox("Spacebar 333FPS", &v::mod_autoFPS_space333.evar->enabled)) {
@@ -106,7 +107,9 @@ void r::R_Automation_Features()
 		} ImGui::SameLine(); r::MetricsHelpMarker("Use this FPS whenever you are touching a bounce");
 		ImGui::EndGroup();
 
-		ImGui::Text("\n500FPS");
+		ImGui::NewLine();
+		ImGui::Text("500FPS"); ImGui::SameLine(); 
+		MetricsHelpMarker("Spawns a bounding box and while you are inside of the bounds, your fps is set to 500");
 		r::UI_DrawGradientZone(ImVec2(330, 240));
 
 		ImGui::Text("\t");
@@ -153,8 +156,8 @@ void r::R_Automation_Features()
 
 		
 
-		ImGui::TextColored(ImVec4(255, 255, 0, 255), "\nnote: long 125fps should be disabled for jumps\nwhere you need to do a 125-333 flick in mid-air!"
-			"\nit is useful to recognize when you should use\nlong 125 and when you shouldn't");
+		//ImGui::TextColored(ImVec4(255, 255, 0, 255), "\nnote: long 125fps should be disabled for jumps\nwhere you need to do a 125-333 flick in mid-air!"
+		//	"\nit is useful to recognize when you should use\nlong 125 and when you shouldn't");
 
 		if (v::mod_autoFPS_long125.isEnabled())
 			ImGui::TextColored(ImVec4(0, 255, 0, 255), "Long 125 tip: use spacebar 333fps whenever\nyou need to curve earlier in the 125fps zone");

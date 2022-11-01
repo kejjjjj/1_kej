@@ -284,36 +284,37 @@ void cg::Mod_DrawFPSHelpers()
 	float &DistanceFromZone = mod_fps.DistanceToTransferZone;
 	const bool isLong125 = v::mod_autoFPS_long125.isEnabled();
 
+	const bool cylindrical = v::mod_FPS_cylindrical.isEnabled();
 
 	if (isInverted) {
 		if (v::mod_fps_transferz.evar->arrayValue[0] != NULL) {
 
 			if (!isLong125) {
-				CG_FillAngleYaw(-180.f + zone125[0], -180.f + (zone125[0] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue);
-				CG_FillAngleYaw(-180.f + zone125[1], -180.f + (zone125[1] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue);
+				CG_FillAngleYaw(-180.f + zone125[0], -180.f + (zone125[0] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue, true, cylindrical);
+				CG_FillAngleYaw(-180.f + zone125[1], -180.f + (zone125[1] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue, true, cylindrical);
 			}
 			else {
-				CG_FillAngleYaw(-180.f + zone333[0], -180.f + (zone333[0] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue);
-				CG_FillAngleYaw(-180.f + zone333[1], -180.f + (zone333[1] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue);
+				CG_FillAngleYaw(-180.f + zone333[0], -180.f + (zone333[0] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue, true, cylindrical);
+				CG_FillAngleYaw(-180.f + zone333[1], -180.f + (zone333[1] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue, true, cylindrical);
 			}
 
-			CG_FillAngleYaw(-180.f + zone250[0], -180.f + (zone250[0] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_250col.evar->vecValue);
-			CG_FillAngleYaw(-180.f + zone250[1], -180.f + (zone250[1] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_250col.evar->vecValue);
+			CG_FillAngleYaw(-180.f + zone250[0], -180.f + (zone250[0] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_250col.evar->vecValue, true, cylindrical);
+			CG_FillAngleYaw(-180.f + zone250[1], -180.f + (zone250[1] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_250col.evar->vecValue, true, cylindrical);
 
-			CG_FillAngleYaw(-180.f + zone200[0], -180.f + (zone200[0] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_200col.evar->vecValue);
-			CG_FillAngleYaw(-180.f + zone200[1], -180.f + (zone200[1] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_200col.evar->vecValue);
+			CG_FillAngleYaw(-180.f + zone200[0], -180.f + (zone200[0] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_200col.evar->vecValue, true, cylindrical);
+			CG_FillAngleYaw(-180.f + zone200[1], -180.f + (zone200[1] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_200col.evar->vecValue, true, cylindrical);
 
 			if (!isLong125) {
-				CG_FillAngleYaw(-180.f + zone333[0], -180.f + (zone333[0] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue);
-				CG_FillAngleYaw(-180.f + zone333[1], -180.f + (zone333[1] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue);
+				CG_FillAngleYaw(-180.f + zone333[0], -180.f + (zone333[0] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue, true, cylindrical);
+				CG_FillAngleYaw(-180.f + zone333[1], -180.f + (zone333[1] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue, true, cylindrical);
 			}
 			else {
-				CG_FillAngleYaw(-180.f + zone125[0], -180.f + (zone125[0] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue);
-				CG_FillAngleYaw(-180.f + zone125[1], -180.f + (zone125[1] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue);
+				CG_FillAngleYaw(-180.f + zone125[0], -180.f + (zone125[0] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue, true, cylindrical);
+				CG_FillAngleYaw(-180.f + zone125[1], -180.f + (zone125[1] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue, true, cylindrical);
 			}
 
-			CG_FillAngleYaw(-180.f + marker250[0], -180.f + (marker250[0] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_markercol.evar->vecValue);
-			CG_FillAngleYaw(-180.f + marker250[1], -180.f + (marker250[1] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_markercol.evar->vecValue);
+			CG_FillAngleYaw(-180.f + marker250[0], -180.f + (marker250[0] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_markercol.evar->vecValue, true, cylindrical);
+			CG_FillAngleYaw(-180.f + marker250[1], -180.f + (marker250[1] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_markercol.evar->vecValue, true, cylindrical);
 
 		}
 		DistanceFromZone = (rightmove == false) ? yaw - (-180.f + marker250[0]) : yaw - (-180.f + (marker250[0] + length_marker250));
@@ -329,32 +330,32 @@ void cg::Mod_DrawFPSHelpers()
 
 	if (v::mod_fps_transferz.evar->arrayValue[0] != NULL) {
 		if (!isLong125) {
-			CG_FillAngleYaw(zone125[0], (zone125[0] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue);
-			CG_FillAngleYaw(zone125[1], (zone125[1] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue);
+			CG_FillAngleYaw(zone125[0], (zone125[0] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue, true, cylindrical);
+			CG_FillAngleYaw(zone125[1], (zone125[1] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue, true, cylindrical);
 		}
 		else {
-			CG_FillAngleYaw(zone333[0], (zone333[0] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue);
-			CG_FillAngleYaw(zone333[1], (zone333[1] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue);
+			CG_FillAngleYaw(zone333[0], (zone333[0] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue, true, cylindrical);
+			CG_FillAngleYaw(zone333[1], (zone333[1] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue, true, cylindrical);
 
 		}
 
-		CG_FillAngleYaw(zone250[0], (zone250[0] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_250col.evar->vecValue);
-		CG_FillAngleYaw(zone250[1], (zone250[1] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_250col.evar->vecValue);
+		CG_FillAngleYaw(zone250[0], (zone250[0] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_250col.evar->vecValue, true, cylindrical);
+		CG_FillAngleYaw(zone250[1], (zone250[1] + fps_zones.length250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_250col.evar->vecValue, true, cylindrical);
 
-		CG_FillAngleYaw(zone200[0], (zone200[0] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_200col.evar->vecValue);
-		CG_FillAngleYaw(zone200[1], (zone200[1] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_200col.evar->vecValue);
+		CG_FillAngleYaw(zone200[0], (zone200[0] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_200col.evar->vecValue, true, cylindrical);
+		CG_FillAngleYaw(zone200[1], (zone200[1] + fps_zones.length200), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_200col.evar->vecValue, true, cylindrical);
 
 		if (!isLong125) {
-			CG_FillAngleYaw(zone333[0], (zone333[0] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue);
-			CG_FillAngleYaw(zone333[1], (zone333[1] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue);
+			CG_FillAngleYaw(zone333[0], (zone333[0] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue, true, cylindrical);
+			CG_FillAngleYaw(zone333[1], (zone333[1] + fps_zones.length333), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_333col.evar->vecValue, true, cylindrical);
 		}
 		else {
-			CG_FillAngleYaw(zone125[0], (zone125[0] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue);
-			CG_FillAngleYaw(zone125[1], (zone125[1] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue);
+			CG_FillAngleYaw(zone125[0], (zone125[0] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue, true, cylindrical);
+			CG_FillAngleYaw(zone125[1], (zone125[1] + fps_zones.length125), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_125col.evar->vecValue, true, cylindrical);
 		}
 	
-		CG_FillAngleYaw(marker250[0], (marker250[0] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_markercol.evar->vecValue);
-		CG_FillAngleYaw(marker250[1], (marker250[1] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_markercol.evar->vecValue);
+		CG_FillAngleYaw(marker250[0], (marker250[0] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_markercol.evar->vecValue, true, cylindrical);
+		CG_FillAngleYaw(marker250[1], (marker250[1] + length_marker250), yaw, BAR_START_Y, BAR_HEIGHT, fov, v::mod_markercol.evar->vecValue, true, cylindrical);
 	}
 
 	DistanceFromZone = fmodf(DistanceFromZone, 90);
@@ -364,7 +365,8 @@ void cg::Mod_DrawFPSHelpers()
 
 
 	if (v::mod_fps_transferz.evar->arrayValue[0] != NULL)
-		ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(958), r::Y(BAR_START_Y - 10)), ImVec2(r::X(962), r::Y(BAR_HEIGHT + BAR_START_Y + 10)), ImColor(1.f, 1.f, 1.f, 1.f));
+		//CG_FillAngleYaw(yaw-1, yaw+1, yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 255,255,255,255 }, true, true);
+		ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(958), r::Y(BAR_START_Y - 40)), ImVec2(r::X(962), r::Y(BAR_HEIGHT + BAR_START_Y + 30)), ImColor(1.f, 1.f, 1.f, 1.f));
 		//r::R_DrawRect("white", 958, BAR_START_Y - 10, 4, BAR_HEIGHT + 20, vec4_t{ 1,1,1,255 });
 
 

@@ -43,6 +43,7 @@ namespace v
 		mod_333col,
 		mod_markercol,
 		mod_showFPS,
+		mod_FPS_cylindrical,
 		mod_autoFPS,
 		mod_autoFPS_long125,
 		mod_autoFPS_space333,

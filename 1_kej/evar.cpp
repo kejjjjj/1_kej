@@ -292,6 +292,7 @@ void Evar_Setup()
 	v::mod_curve_speed.Register		("1_kej_curve_speed",				evartype_t::EVAR_BOOL,		(float)0,				true);
 
 	v::mod_showFPS.Register			("1_kej_showFPS",					evartype_t::EVAR_BOOL,		(float)0,				true);
+	v::mod_FPS_cylindrical.Register	("1_kej_FPS_cylindrical",			evartype_t::EVAR_BOOL,		(float)0,				true);
 
 	v::mod_jumpv_forcepos.Register	("1_kej_jumpv_forcepos",			evartype_t::EVAR_BOOL,		(float)0,				false);
 	v::mod_jumpv_path.Register		("1_kej_jumpv_path",				evartype_t::EVAR_BOOL,		(float)0,				true);

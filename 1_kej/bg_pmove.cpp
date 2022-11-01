@@ -403,14 +403,31 @@ void cg::Mod_DetermineFPS(pmove_t* pm, pml_t* pml)
 
 	//};
 
+	static bool rightmove{};
 
+	const usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
+
+
+	if (cmd->rightmove > 0)
+		rightmove = true;
+	else if (cmd->rightmove < 0)
+		rightmove = false;
+
+
+	FPS_CalculateSingleBeatDirection(rightmove, cmd);
 
 	fps_zones.fps125 = round((float)ps->speed / 8) + 10;
 	fps_zones.fps200 = round((float)ps->speed / 5) + 10;
 	fps_zones.fps250 = round((float)ps->speed / 4) + 10;
 	fps_zones.fps333 = round((float)ps->speed / 3) + 10;
-
+	
+	const bool long125 = v::mod_autoFPS_long125.isEnabled();
 	const float diff = ((float)ps->speed / 190.f);
+
+	if(!rightmove)
+		fps_zones.fps333 -= long125 == true ? 17.f * diff : 0;
+
+
 
 	fps_zones.length125 = (90.f - fps_zones.fps125) - fps_zones.fps125; //this way around because 125 starts from < 45
 	fps_zones.length200 = fps_zones.fps200 - (90.f - fps_zones.fps200) + 3.f * diff; //will fill the empty space with 200fps
@@ -419,8 +436,14 @@ void cg::Mod_DetermineFPS(pmove_t* pm, pml_t* pml)
 
 	fps_zones.fps125 -= fps_zones.length125;
 	fps_zones.fps250 += fps_zones.length250 - (11.f * diff);
-	fps_zones.fps200 = fps_zones.fps250 + 20.f * diff;
+	fps_zones.fps200 = fps_zones.fps250 + (20.f * diff);
 	fps_zones.fps333 -= fps_zones.length333;
+
+	fps_zones.length250 -= 6.f * diff; //hide overlap
+	fps_zones.length125 -= long125 == false ? 17.f * diff : 0;
+
+	if	(!rightmove)	fps_zones.length333 += long125 == true ? 17.f * diff : 0;
+	else							fps_zones.length333 -= long125 == true ? 17.f * diff : 0;
 
 	return;
 	//return Accelerate(wishdir, pml, wishspeed, 1.f, ps);
