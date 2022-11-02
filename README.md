@@ -33,7 +33,8 @@ Jumping  \
 	- Always bounce (bounce from any surface with ease)\
 	- Steeper bounces\
 	- Bounce calculator\
-	- Custom weapon animations
+	- Custom weapon animations\
+	- Disallow halfbeat (only for the brave)
 
 RPG\
 	- Show RPG timings/angles\

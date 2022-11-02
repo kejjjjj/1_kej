@@ -37,6 +37,7 @@ namespace cg {
 	void Mod_SaveData(std::vector<jump_data>& storage, pmove_t* pm, bool& hasBounced, bool& hasJumped, bool& hasShotRpg);
 	void Mod_BounceCalculator();
 	void Mod_BounceCalculator_Create();
+	void Mod_DisallowHalfbeat();
 
 	struct bcalc_t
 	{

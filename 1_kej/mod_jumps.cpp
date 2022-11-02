@@ -262,3 +262,50 @@ void cg::Mod_BounceCalculator()
 	r::R_AddCmdDrawTextWithEffects(canBounce == true ? (char*)"BOUNCE" : (char*)"NOT BOUNCE", "fonts/objectivefont", r::X(900), r::Y(800), 1.3f, 1.3f, 0.f, canBounce == true ? vec4_t{ 0,1,0,1 } : vec4_t{ 1,0,0,1 }, 3, v::mod_velometer_glow.evar->vecValue, fxMaterial, fxMaterialGlow, 0, 500, 1000, 2000);
 
 }
+void cg::Mod_DisallowHalfbeat()
+{
+	if (!v::mod_disallow_hb.isEnabled())
+		return;
+
+	static DWORD hb_start_time(0), hb_current_time(0);
+	float delta;
+	const float opt = getOptAngle(delta);
+
+	if (jumpanalyzer.walking) {
+		hb_start_time = 0;
+		hb_current_time = 0;
+		return;
+	}
+
+	const usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
+
+	if (!cmd)
+		return;
+
+	const bool isEasyMode = cmd->forwardmove == NULL && (cmd->rightmove < 0 || cmd->rightmove > 0);
+	const int velocity = (int32_t)glm::length(glm::vec2(ps_loc->velocity[0], ps_loc->velocity[1]));
+	const int old_velocity = (int32_t)glm::length(glm::vec2(ps_loc->oldVelocity[0], ps_loc->oldVelocity[1]));
+
+	if (DistanceToOpt(opt, clients->cgameViewangles[YAW]) < 5) {
+		
+		if (!isEasyMode) {
+			hb_start_time = Sys_MilliSeconds();
+			hb_current_time = hb_start_time;
+		}
+		else if(old_velocity < velocity)
+			hb_current_time = Sys_MilliSeconds();
+		
+		if (hb_start_time + 300 < hb_current_time) {
+			Cbuf_AddText("openscriptmenu cj load\n", cgs->clientNum);
+			ps_loc->velocity[0] = 0;
+			ps_loc->velocity[1] = 0;
+			ps_loc->velocity[2] = 0;
+			Com_Printf(CON_CHANNEL_OBITUARY, "^1Easy mode detected!\n");
+			hb_start_time = Sys_MilliSeconds();
+			hb_current_time = hb_start_time;
+			
+		}
+
+	}
+
+}

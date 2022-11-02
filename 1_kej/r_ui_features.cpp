@@ -438,7 +438,7 @@ void Jump_Features()
 	{
 
 
-		r::UI_DrawGradientZone(ImVec2(250, 140));
+		r::UI_DrawGradientZone(ImVec2(270, 170));
 
 		ImGui::Text("\t");
 		ImGui::SameLine();
@@ -468,6 +468,10 @@ void Jump_Features()
 		if (!v::mod_bhop.isEnabled())
 			ImGui::EndDisabled();
 
+		if (ImGui::Checkbox("Disallow halfbeat", &v::mod_disallow_hb.evar->enabled)) {
+			v::mod_disallow_hb.SetValue(v::mod_disallow_hb.isEnabled());
+		} ImGui::SameLine(); r::MetricsHelpMarker("Use if you are feeling brave");
+		ImGui::SameLine(); ImGui::Text("  ");
 
 		ImGui::EndGroup();
 	}
@@ -475,7 +479,7 @@ void Jump_Features()
 	{
 
 
-		r::UI_DrawGradientZone(ImVec2(250, 100));
+		r::UI_DrawGradientZone(ImVec2(270, 100));
 
 		ImGui::Text("\t");
 		ImGui::SameLine();
@@ -499,7 +503,7 @@ void Jump_Features()
 	}
 	ImGui::Text("\nBounce Calculator\t");
 	{
-		r::UI_DrawGradientZone(ImVec2(250, 140));
+		r::UI_DrawGradientZone(ImVec2(270, 140));
 
 		ImGui::Text("\t");
 		ImGui::SameLine();

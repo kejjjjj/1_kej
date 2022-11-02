@@ -40,22 +40,6 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 			Mod_A_500FPS();
 			//cg::CMod_HighlightSelected();
 
-			//const dvar_s* _fov = Dvar_FindMalleableVar("cg_fov");
-			//const dvar_s* fovscale = Dvar_FindMalleableVar("cg_fovscale");
-
-			//const float fov = _fov->current.value * fovscale->current.value * v::mod_fps_transferz.evar->arrayValue[3];
-			//vec2_t zone333 = { fps_zones.fps333, 90.f + fps_zones.fps333 };
-
-			////CG_FillAngleYaw(25, 70, clients->cgameViewangles[YAW], 700, 10, fov, vec4_t{0,255,0,170}, true, true);
-			//float yaw = clients->cgameViewangles[YAW] > 0 ? clients->cgameViewangles[YAW] : 180.f - clients->cgameViewangles[YAW] * -1; //mirror the yaw
-			//bool isInverted = clients->cgameViewangles[YAW] < fov || clients->cgameViewangles[YAW] > 180.f - fov;
-			//
-			//if (isInverted) {
-			//	CG_FillAngleYaw(-180.f + zone333[0], -180.f + (zone333[0] + fps_zones.length333), yaw, 700, 10, fov, v::mod_333col.evar->vecValue, true, true);
-			//	CG_FillAngleYaw(-180.f + zone333[1], -180.f + (zone333[1] + fps_zones.length333), yaw, 700, 10, fov, v::mod_333col.evar->vecValue, true, true);
-			//}
-			//CG_FillAngleYaw(zone333[0], (zone333[0] + fps_zones.length333), yaw, 700, 10, fov, v::mod_333col.evar->vecValue, true, true);
-			//CG_FillAngleYaw(zone333[1], (zone333[1] + fps_zones.length333), yaw, 700, 10, fov, v::mod_333col.evar->vecValue, true, true);
 			R_EndRender();
 		}
 		
@@ -76,6 +60,7 @@ void __cdecl r::CG_DrawActive()
 		Mod_A_AutoFPS();
 		Mod_DrawEvents();
 		Mod_BounceCalculator();
+		Mod_DisallowHalfbeat();
 		//if(jumpanalyzer.hugging_bounce && !jumpanalyzer.walking)
 		//	r::R_AddCmdDrawTextWithEffects((char*)"hugging", "fonts/objectivefont", r::X(300), r::Y(300), v::mod_velometer.GetArray(3), v::mod_velometer.GetArray(3), 0.f, vec4_t{255,255,0,255}, 3, v::mod_velometer_glow.evar->vecValue, 0, 0, 0, 500, 1000, 2000);
 
