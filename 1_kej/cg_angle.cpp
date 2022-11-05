@@ -196,7 +196,7 @@ float cg::R_getOptAngle(const bool rightmove, float& diff)
 
 	return yaw;
 }
-float cg::getOptAngle(float& _opt)
+float cg::getOptAngle(float& _opt, const bool all_techs)
 {
 	if (!glob_pm || !glob_pml)
 		return -400.0;
@@ -209,7 +209,6 @@ float cg::getOptAngle(float& _opt)
 	char forwardmove = cmd->forwardmove;
 	char rightmove = cmd->rightmove;
 
-	const bool all_techs = v::mod_strafebot_all.isEnabled();
 
 	float _speed = glm::length(glm::vec2(glob_pm->ps->velocity[1], glob_pm->ps->velocity[0]));
 

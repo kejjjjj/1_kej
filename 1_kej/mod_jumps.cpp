@@ -269,13 +269,19 @@ void cg::Mod_DisallowHalfbeat()
 
 	static DWORD hb_start_time(0), hb_current_time(0);
 	float delta;
-	const float opt = getOptAngle(delta);
+	const float opt = getOptAngle(delta, true);
 
-	if (jumpanalyzer.walking) {
+	if (jumpanalyzer.walking || opt == -400) {
 		hb_start_time = 0;
 		hb_current_time = 0;
 		return;
 	}
+	const float dist2opt = DistanceToOpt(opt, clients->cgameViewangles[YAW]);
+	//char buff[24];
+	//sprintf_s(buff, "d2opt: %.3f", dist2opt);
+	//Material* fxMaterial = r::R_RegisterMaterial("decode_characters");
+	//Material* fxMaterialGlow = r::R_RegisterMaterial("decode_characters_glow");
+	//r::R_AddCmdDrawTextWithEffects(buff, "fonts/objectivefont", r::X(900), r::Y(800), 1.3f, 1.3f, 0.f, vec4_t{ 1,0,0,1 }, 3, v::mod_velometer_glow.evar->vecValue, fxMaterial, fxMaterialGlow, 0, 500, 1000, 2000);
 
 	const usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
 
@@ -286,7 +292,7 @@ void cg::Mod_DisallowHalfbeat()
 	const int velocity = (int32_t)glm::length(glm::vec2(ps_loc->velocity[0], ps_loc->velocity[1]));
 	const int old_velocity = (int32_t)glm::length(glm::vec2(ps_loc->oldVelocity[0], ps_loc->oldVelocity[1]));
 
-	if (DistanceToOpt(opt, clients->cgameViewangles[YAW]) < 5) {
+	if (dist2opt < 5) {
 		
 		if (!isEasyMode) {
 			hb_start_time = Sys_MilliSeconds();

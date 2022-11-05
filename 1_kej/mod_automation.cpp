@@ -16,7 +16,7 @@ void cg::Mod_A_Strafebot()
 	else if (clients->viewangles[YAW] > 3000 || clients->viewangles[YAW] < -3000)
 		clients->viewangles[YAW] = fmodf(clients->viewangles[YAW], 360);
 
-	optYaw = getOptAngle(test);
+	optYaw = getOptAngle(test, v::mod_strafebot_all.isEnabled());
 	if (optYaw == -400.f || std::isnan(optYaw))
 		return;
 
