@@ -514,6 +514,9 @@ void cg::PM_OverBounce(pmove_t* pm, pml_t* pml)
 	}
 	//((void(__cdecl*)(float* vec))0x578FE0)(pm->ps->velocity); //Sys_SnapVector
 
+	jumpanalyzer.pm_flags = pm->ps->pm_flags;
+	jumpanalyzer.jumpOriginZ = pm->ps->jumpOriginZ;
+
 	return;
 
 }
@@ -623,7 +626,7 @@ void cg::PM_ProjectVelocity(float* _velOut, float* _velIn, float* _normal)
 	return;
 
 }
-bool cg::PM_CanBeBounced(float* normal, float* velIn)
+float cg::PM_CanBeBounced(float* normal, float* velIn)
 {
 	double _lengthSq2D; // st7
 	double newVelLength; // st6
@@ -644,7 +647,7 @@ bool cg::PM_CanBeBounced(float* normal, float* velIn)
 
 	if (lengthSq2D == 0.0 || normal[2] < 0.001f)
 	{
-		return false;
+		return 0;
 	}
 
 	newZ = normal[1] * velIn[1] + *velIn * *normal;
@@ -661,11 +664,11 @@ bool cg::PM_CanBeBounced(float* normal, float* velIn)
 
 	if (lengthScale < 1 || _newZ < 0.0 || velIn[2] > 0.0)
 	{
-		return true;
+		return lengthScale * 100;
 
 	}
 
-	return false;
+	return 0;
 }
 void scaler(float* val)
 {

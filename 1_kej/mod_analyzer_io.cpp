@@ -106,7 +106,7 @@ bool jAnalyzer::IO_ReadData(const std::string run_name)
 
 	if (!fs::F_OpenFile(f, full_path, fs::fileopen::FILE_IN)) 
 	{
-		Com_Printf(CON_CHANNEL_CONSOLEONLY, "IO_ReadData OpenFile failed with %s\n", fs::_GetLastError());
+		Com_Printf(CON_CHANNEL_CONSOLEONLY, "IO_ReadData OpenFile failed with %s\n", fs::_GetLastError().c_str());
 		return false;
 	}
 
@@ -211,6 +211,53 @@ bool jAnalyzer::IO_ReadVector1(std::fstream& fp, t& value)
 //IO_ReadVector2 assumes the current character is the character before {
 bool jAnalyzer::IO_ReadVector2(std::fstream& fp, vec2_t value)
 {
+	using namespace fs;
+	char ch = file.current_character;
+
+	////////////////////
+	//first component//
+	//////////////////
+	if (ch != '{') {
+		F_SyntaxError("IO_ReadVector2: couldn't find '{', found '%c' instead", ch);
+		return false;
+	}
+
+	std::string current_str = F_ReadUntil(fp, ',');
+	//F_Get(fp); //skip to the next next component
+
+	if (current_str == "N/A") {
+		F_SyntaxError("IO_ReadVector2: no value for key [0]");
+		return false;
+	}
+
+	try {
+		value[0] = std::stof(current_str);
+	}
+	catch (std::exception& ex) {
+		value = 0;
+		F_SyntaxError("IO_ReadVector2: value for key [0] is not a number ['%s']", current_str.c_str());
+		return false;
+	}
+
+	/////////////////////
+	//second component//
+	///////////////////
+	current_str = F_ReadUntil(fp, ',');
+	//F_Get(fp); //skip to the next next component
+
+	if (current_str == "N/A") {
+		F_SyntaxError("IO_ReadVector2: no value for key [1]");
+		return false;
+	}
+
+	try {
+		value[1] = std::stof(current_str);
+	}
+	catch (std::exception& ex) {
+		value = 0;
+		F_SyntaxError("IO_ReadVector2: value for key [1] is not a number ['%s']", current_str.c_str());
+		return false;
+	}
 	return true;
 }
 

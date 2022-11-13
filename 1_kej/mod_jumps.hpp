@@ -23,7 +23,9 @@ namespace cg {
 		bool walking; //pml->walking
 		float frametime;
 		int msec;
-		bool hugging_bounce; 
+		bool hugging_bounce;
+		int pm_flags;
+		float jumpOriginZ;
 
 	};
 	inline jumpanalyzer_s jumpanalyzer; 	//actively updating jump data

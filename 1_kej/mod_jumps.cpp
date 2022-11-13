@@ -248,18 +248,21 @@ void cg::Mod_BounceCalculator()
 	Material* fxMaterial = r::R_RegisterMaterial("decode_characters");
 	Material* fxMaterialGlow = r::R_RegisterMaterial("decode_characters_glow");
 
-	bool const canBounce = PM_CanBeBounced(bcalc.normal, clients->cgameVelocity) && !jumpanalyzer.walking;
+	const float bounce_percentage = PM_CanBeBounced(bcalc.normal, clients->cgameVelocity);
+	bool const canBounce = (bounce_percentage > 0 && bounce_percentage <= 100) && !jumpanalyzer.walking && jumpanalyzer.jumpOriginZ != NULL;
 
 	vec2_t xy;
 
+	char buff[64];
+	sprintf_s(buff, canBounce == true ? (char*)"BOUNCE (%.1f'/.)" : (char*)"NOT BOUNCE (%.1f'/.)", bounce_percentage);
 	if (v::mod_bounce_calcw2s.isEnabled()) {
 		if (r::WorldToScreen(bcalc.origin, xy)) {
 
-			r::R_AddCmdDrawTextWithEffects(canBounce == true ? (char*)"BOUNCE" : (char*)"NOT BOUNCE", "fonts/objectivefont", r::X(xy[0]), r::Y(xy[1]), 1.f, 1.f, 0.f, canBounce == true ? vec4_t{ 0,1,0,1 } : vec4_t{ 1,0,0,1 }, 3, v::mod_velometer_glow.evar->vecValue, fxMaterial, fxMaterialGlow, 0, 500, 1000, 2000);
+			r::R_AddCmdDrawTextWithEffects(buff, "fonts/objectivefont", r::X(xy[0]), r::Y(xy[1]), 1.f, 1.f, 0.f, canBounce == true ? vec4_t{ 0,1,0,1 } : vec4_t{ 1,0,0,1 }, 3, v::mod_velometer_glow.evar->vecValue, fxMaterial, fxMaterialGlow, 0, 500, 1000, 2000);
 		}
 		return;
 	}
-	r::R_AddCmdDrawTextWithEffects(canBounce == true ? (char*)"BOUNCE" : (char*)"NOT BOUNCE", "fonts/objectivefont", r::X(900), r::Y(800), 1.3f, 1.3f, 0.f, canBounce == true ? vec4_t{ 0,1,0,1 } : vec4_t{ 1,0,0,1 }, 3, v::mod_velometer_glow.evar->vecValue, fxMaterial, fxMaterialGlow, 0, 500, 1000, 2000);
+	r::R_AddCmdDrawTextWithEffects(buff, "fonts/objectivefont", r::X(900), r::Y(800), 1.3f, 1.3f, 0.f, canBounce == true ? vec4_t{ 0,1,0,1 } : vec4_t{ 1,0,0,1 }, 3, v::mod_velometer_glow.evar->vecValue, fxMaterial, fxMaterialGlow, 0, 500, 1000, 2000);
 
 }
 void cg::Mod_DisallowHalfbeat()

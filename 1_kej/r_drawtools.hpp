@@ -29,6 +29,14 @@ namespace r
 		const float* color, int style, const float* glowColor, Material* fxMaterial, Material* fxMaterialGlow,
 		int fxBirthTime, int fxLetterTime, int fxDecayStartTime, int fxDecayDuration);
 
+	void CG_DrawRotatedPic(int vertical, int horizontal, ScreenPlacement* scrPlace, float x, float y, float w, float h, float angle, float* color, Material* material);
+	void CG_DrawRotatedPic(int vertical, int horizontal, ScreenPlacement* scrPlace, float x, float y, float w, float h, float angle, float* color, const char* material);
+
+	ScreenPlacement* ScrPlace_ApplyRect(float* x, float* w, float* y, float* h, ScreenPlacement* placement, int horizontal, int vertical);
+	void CG_DrawRotatedPicPhysical(ScreenPlacement* scrPlace, float x, float y, float w, float h, float angle, float* color, Material* material);
+
+	ScreenPlacement* CG_GetScreenPlacement(int LocalClientNum);
+
 	std::string R_UserCmdKeysPressed(char forwardmove, char sidemove);
 
 	float X(float pos);

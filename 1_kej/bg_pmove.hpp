@@ -33,7 +33,7 @@ namespace cg
 	bool CM_IsEdgeWalkable(int edgeIndex, int triIndex);
 	BOOL PM_SlideMove(pmove_t* pm, pml_t* pml, int gravity);
 
-	bool PM_CanBeBounced(float* normal, float* velIn);
+	float PM_CanBeBounced(float* normal, float* velIn);
 	void PM_ProjectVelocity(float* normal, float* velIn, float* velOut);
 	void PM_BounceHeight();
 	void PM_BounceSteepness();

@@ -63,7 +63,14 @@ void __cdecl r::CG_DrawActive()
 		Mod_DisallowHalfbeat();
 		//if(jumpanalyzer.hugging_bounce && !jumpanalyzer.walking)
 		//	r::R_AddCmdDrawTextWithEffects((char*)"hugging", "fonts/objectivefont", r::X(300), r::Y(300), v::mod_velometer.GetArray(3), v::mod_velometer.GetArray(3), 0.f, vec4_t{255,255,0,255}, 3, v::mod_velometer_glow.evar->vecValue, 0, 0, 0, 500, 1000, 2000);
+		
+		//float delta = AngleDelta(cgs->compassNorthYaw, cgs->refdefViewAngles[1]);
+		//
+		//static float incr = 0;
+		//ScreenPlacement* scrPlace = CG_GetScreenPlacement(cgs->clientNum);
+		//CG_DrawRotatedPic(1, 1, scrPlace, 100, 100, 100, 100, delta, vec4_t{ 0,255,0,170 }, "white");
 
+		
 	
 	}
 

@@ -177,9 +177,6 @@ float cg::R_getOptAngle(const bool rightmove, float& diff)
 	diff = acos((g_speed - accel) / _speed) * 180.f / PI;
 	//const float minAngle = acos(g_speed / _speed) * 180.f / PI;
 
-	if (jumpanalyzer.recommendedFPS == 125)
-		diff += accel;
-
 	float delta = yaw;
 
 
@@ -277,9 +274,6 @@ float cg::getOptForAnalyzer(jump_data* data, bool onGround)
 	const float FPS = (float)data->FPS;
 
 	float accel = FPS / g_speed;
-
-	if (jumpanalyzer.recommendedFPS == 125)
-		accel = g_speed / FPS;
 
 	if (_speed < 190)
 		g_speed = 190.f - (190.f - _speed);
