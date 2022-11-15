@@ -581,6 +581,9 @@ void cg::PM_ProjectVelocity(float* _velOut, float* _velIn, float* _normal)
 	float velX; // [esp+10h] [ebp-Ch]
 	float velY; // [esp+14h] [ebp-8h]
 
+	if (!v::mod_ez_bounces.isEnabled())
+		return PM_ProjectVelocity_f(_velOut, _velIn, _normal);
+
 	float *normal = 0, *velOut, *velIn;
 
 	__asm mov normal, edi;
@@ -610,9 +613,9 @@ void cg::PM_ProjectVelocity(float* _velOut, float* _velIn, float* _normal)
 	lengthScale = sqrtf(division);
 	_lengthScale = lengthScale;
 
-	if (lengthScale < ((v::mod_ez_bounces.isEnabled() == true) ? 100000 : 1) || _newZ < 0.0 || velIn[2] > 0.0)
+	if (lengthScale < 10000 || _newZ < 0.0 || velIn[2] > 0.0)
 	{
-		velOut[2] = _lengthScale * _newZ;
+			velOut[2] = _lengthScale * _newZ;
 
 		if (lengthScale < 1.0) {
 			*velOut = velX * _lengthScale;

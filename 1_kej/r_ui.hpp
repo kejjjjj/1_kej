@@ -9,6 +9,7 @@ namespace r
 	inline bool should_draw_menu;
 	inline vec3_t angles_before_menu;
 
+	void IN_ActiveMouse(int active);
 	void R_RemoveInput(bool _true, bool save_file = true);
 	bool R_OpenMenu(IDirect3DDevice9* pDevice);
 	void R_EndRender();

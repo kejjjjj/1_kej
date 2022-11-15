@@ -87,7 +87,23 @@ void r::R_MenuStyle(float transparencyScale)
 	style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.25f, 1.00f, 0.00f, 0.43f * transparencyScale);
 	//style->Colors[ImGuiCol_ModalWindowDarkening] = ImVec4(1.00f, 0.98f, 0.95f, 0.73f);
 }
+void r::IN_ActiveMouse(int active)
+{
+	if (cod4x_entry) {
+		int returnVal;
+		const DWORD a = (cod4x_entry + 0x79918);
+		_asm {
+			push active;
+			call a;
+			add esp, 0x4;
+			mov returnVal, eax;
+		}
+		return;
+	}
+	s_wmv->mouseInitialized = active;
+	return;
 
+}
 void r::R_RemoveInput(bool _true, bool save_file)
 {
 
@@ -108,16 +124,18 @@ void r::R_RemoveInput(bool _true, bool save_file)
 		io.MouseDrawCursor = true;
 		io.WantCaptureMouse = true;
 		
-		a->write_addr(MouseInput, "\x00", 1);
+		IN_ActiveMouse(0);
+		//a->write_addr(MouseInput, "\x00", 1);
 		a->write_addr(KeyInput, "\xC3", 1);
 		a->write_addr(0x467EB0, "\xC3", 1); //CL_KeyEvent
 		return;
 	}
 
 	io.MouseDrawCursor = false;
-	io.WantCaptureMouse = false;
-	
-	a->write_addr(MouseInput, "\x01", 1);
+	io.WantCaptureMouse = false; 
+	IN_ActiveMouse(1);
+
+//	a->write_addr(MouseInput, "\x01", 1);
 	a->write_addr(KeyInput, "\x51", 1);
 	a->write_addr(0x467EB0, "\x8B", 1); //CL_KeyEvent
 	if(save_file)
