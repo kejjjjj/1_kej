@@ -81,18 +81,6 @@ LRESULT CALLBACK r::WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 		R_RemoveInput(r::should_draw_menu);
 		break;
 
-	//case WM_KEYDOWN:
-	//	if (r::should_draw_menu && !analyzer.InFreeMode() && VID_ACTIVE) { //possible cause for a freeze when imgui menu is open (wndproc might not get called ever)
-	//		cg::move->forward = false;
-	//		cg::move->back = false;
-	//		cg::move->jump = false;
-	//		cg::move->right = false;
-	//		cg::move->left = false;
-	//		cg::move->leanright = false;
-	//		cg::move->leanleft = false;
-	//		return 1;
-	//	}
-
 	}
 
 	return oWndProc(hWnd, uMsg, wParam, lParam);

@@ -198,7 +198,7 @@ float cg::getOptAngle(float& _opt, const bool all_techs)
 	if (!glob_pm || !glob_pml)
 		return -400.0;
 
-	if (!glob_pm->ps)
+	if ((DWORD)glob_pm->ps < 0x10000)
 		return -400.0;
 
 	usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
