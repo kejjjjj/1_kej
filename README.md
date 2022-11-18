@@ -7,70 +7,20 @@ Report any bugs you find!
 Join the discord!\
 https://discord.gg/eJSHyWWX
 
+![](https://github.com/kejjjjj/1_kej/raw/master/resources/banner.png)
+
 # Supported Versions
 
 
 This project is compatible with the following versions of CoD4:\
-1.7\
-IW3xo\
-CoD4x 21.1
+- **1.7**
+- **IW3xo**
+- **CoD4x 21.1**
 
 
-# Features
+# Documentation and Features
 
-
-Automation:\
-	- Strafebot\
-	- AutoFPS\
-	- RPG\
-	- Auto500\
-	- FPS on bounce
-
-Jumping  \
-	- Fixed FPS (simulates a stable fps)\
-	- Bunnyhopping\
-	- Hit/Jump analyzers\
-	- Unlimited bouncing\
-	- Terrain bouncing\
-	- Adjust bounce height\
-	- Always bounce (bounce from any surface with ease)\
-	- Steeper bounces\
-	- Bounce calculator\
-	- Custom weapon animations\
-	- Disallow halfbeat (only for the brave)
-
-RPG\
-	- Show RPG timings/angles\
-	- Change how the RPG behaves
-
-Game\
-	- Asset Manager (edit world materials and shaders)\
-	- Menu Browser (Browse all loaded .menu files)
-
-Visuals\
-	- Velometer\
-	- Coordinates\
-	- Crosshair color\
-	- Anglehelper (for strafing)\
-	- FPS assist (fps bar & text)\
-	- Bounceable surface (tells you if the surface you are looking at can be bounced)\
-	- Elevatable surface (tells you if the surface you are looking at can be elevated)\
-	- Custom viewhands\
-	- Change crosshair color based on your distance to a transfer zone\
-	- Velocity direction\
-	- World axes (optionally can also draw the optimal angle)\
-	- Draw curve speed
-
-Jump builder\
-	- Craft jumps in the menu (very epic)
-
-Jump Preview \
-	- Record jumps\
-	- Segment jumps\
-	- Save/load jumps\
-	- Playback jumps
-
-
+All documentation can be found from the [Wiki page](https://github.com/kejjjjj/1_kej/wiki)
 
 # Resources used: 
 
