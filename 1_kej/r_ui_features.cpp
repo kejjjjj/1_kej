@@ -728,9 +728,10 @@ void r::R_Features(bool& wantsEditor)
 	childSize.x = rect.x + 10;
 	childSize.y = rect.y + 10;
 
-	if (ImGui::GetWindowSize().x < 100 || ImGui::GetWindowSize().y < 100)
+	if (ImGui::GetWindowSize().x < 100 || ImGui::GetWindowSize().y < 100) {
+		ImGui::SetWindowSize(ImVec2(400, 400));
 		ImGui::Text("I guess it's kinda bugged atm so restart your game and let the developer know if this happens :-)");
-
+	}
 }
 
 void r::R_JumpView_Help()

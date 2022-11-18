@@ -315,7 +315,7 @@ void jump_builder_s::OnUpdatePosition(const bool erase)
 			this->OnFrameUpdate();
 		}
 	}
-	Com_Printf(CON_CHANNEL_OBITUARY, "orgZ: %.3f\n", segment.jData[segment.jData.size()-1].origin[2]);
+	//Com_Printf(CON_CHANNEL_OBITUARY, "orgZ: %.3f\n", segment.jData[segment.jData.size()-1].origin[2]);
 	memcpy_s(&segment.end_pm, sizeof(pmove_t), pm, sizeof(pmove_t));
 	memcpy_s(&segment.end_pml, sizeof(pml_t), pml, sizeof(pml_t));
 	memcpy_s(&segment.end_ps, sizeof(playerState_s), pm->ps, sizeof(playerState_s));
@@ -374,7 +374,7 @@ void jump_builder_s::OnDeleteSegment()
 	this->segments.erase(this->segments.begin() + this->current_segment);
 	this->OnUpdateOffsets();
 	this->OnUpdateAllPositions();
-	if(this->segments.size() > 1)
+	if(this->segments.size() > 1 && this->current_segment > 0)
 		this->current_segment -= 1;
 
 	Com_Printf(CON_CHANNEL_OBITUARY, "^1Segment deleted!\n");

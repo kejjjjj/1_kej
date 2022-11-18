@@ -211,6 +211,7 @@ bool r::R_OpenMenu(IDirect3DDevice9* pDevice)
 				g_gravity->current.value = 800;
 			}
 			jbuilder.SetEditMode(false);
+			Dvar_FindMalleableVar("com_maxfps")->current.integer = 250;
 			//CG_SetPlayerAngles(clients->viewangles, r::angles_before_menu);
 
 		}

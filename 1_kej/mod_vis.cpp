@@ -366,7 +366,7 @@ void cg::Mod_DrawFPSHelpers()
 
 	if (v::mod_fps_transferz.evar->arrayValue[0] != NULL)
 		//CG_FillAngleYaw(yaw-1, yaw+1, yaw, BAR_START_Y, BAR_HEIGHT, fov, vec4_t{ 255,255,255,255 }, true, true);
-		ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(958), r::Y(BAR_START_Y - 40)), ImVec2(r::X(962), r::Y(BAR_HEIGHT + BAR_START_Y + 30)), ImColor(1.f, 1.f, 1.f, 1.f));
+		ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(r::X(958), r::Y(BAR_START_Y - 20)), ImVec2(r::X(962), r::Y(BAR_HEIGHT + BAR_START_Y + 20)), ImColor(1.f, 1.f, 1.f, 1.f));
 		//r::R_DrawRect("white", 958, BAR_START_Y - 10, 4, BAR_HEIGHT + 20, vec4_t{ 1,1,1,255 });
 
 

@@ -3,7 +3,7 @@
 
 void cg::Mod_A_Strafebot()
 {
-	if (!v::mod_strafebot.isEnabled() || clients->snap.ps.pm_type == PM_UFO || !glob_pm)
+	if (!v::mod_strafebot.isEnabled() || clients->snap.ps.pm_type == PM_UFO)
 		return;
 
 	float optYaw, test;
@@ -28,7 +28,7 @@ void cg::Mod_A_Strafebot()
 
 
 	if (cmd->forwardmove != 0 || cmd->rightmove != 0) {
-		setYaw(glob_pm->ps->viewangles[YAW], optYaw);
+		setYaw(clients->cgameViewangles[YAW], optYaw);
 
 	}
 }
@@ -75,10 +75,10 @@ void cg::Mod_A_AutoFPS()
 		}
 		
 
-		if (v::mod_autoFPS_space333.isEnabled() && v::mod_autoFPS.isEnabled()) {
+		if (v::mod_autoFPS.isEnabled()) {
 			if (GROUND)
 				fps = 125;
-			else if (spaceHeld)
+			else if (spaceHeld && v::mod_autoFPS_space333.isEnabled())
 				fps = 333;
 
 			//if (mod_fps.DistanceToTransferZone > 45 && jumpanalyzer.recommendedFPS == 250)

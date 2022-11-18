@@ -89,8 +89,8 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 		dvar_s* com_maxfps = Dvar_FindMalleableVar("com_maxfps");
 		const jump_data* jData = analyzer.FetchFrameData(container, menu_frame);
 		
-		if (clients->snap.ps.pm_type == PM_UFO && !analyzer.InFreeMode() && v::mod_jumpv_forcepos.isEnabled())
-			Cbuf_AddText("ufo\n", 0);
+		//if (clients->snap.ps.pm_type == PM_UFO && !analyzer.InFreeMode() && v::mod_jumpv_forcepos.isEnabled())
+		//	Cbuf_AddText("ufo\n", 0);
 
 		if (wait_incr > timeScale - 1.f && jData && com_maxfps&& g_gravity) {
 			if(jData->FPS == 200)
@@ -198,7 +198,7 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 		ImGui::EndGroup();
 		const vec3_t empty = { 0,0,0 };
 
-		if (!analyzer.InFreeMode() && v::mod_jumpv_forcepos.isEnabled() || GetAsyncKeyState('C') & 1 && VID_ACTIVE) {
+		if (!analyzer.InFreeMode() && v::mod_jumpv_forcepos.isEnabled() || io.KeysDownDuration['C'] == 0.f && VID_ACTIVE) {
 			CG_SetPlayerAngles(clients->cgameViewangles, jData->angles);
 			VectorCopy(jData->origin, ps_loc->origin);
 			ps_loc->origin[2] -= (70.f - jData->maxs[2]);
@@ -302,6 +302,11 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 		if (v::mod_pmove_fixed.isEnabled()) {
 			ImGui::Text("\n\n\n");
 			ImGui::TextColored(ImVec4(255, 255, 0, 255), "Warning: fixed fps can cause playback issues!");
+
+			if (r::ButtonCentered("Disable##001")) {
+				v::mod_pmove_fixed.SetValue((float)false);
+			}
+
 		}
 		
 
@@ -317,7 +322,7 @@ void r::R_JumpView_HandleWeapons(int& menu_frame, int min_frame, int max_frame)
 {
 	const int rpg = BG_FindWeaponIndexForName("rpg_mp");
 	const int rpg_sustain = BG_FindWeaponIndexForName("rpg_sustain_mp");
-	const playerState_s ps = clients->snap.ps;
+	const playerState_s& ps = clients->snap.ps;
 	static bool rpg_used;
 
 	if (menu_frame > min_frame && menu_frame < max_frame && (ps.weapon != rpg && ps.weapon != rpg_sustain) && !rpg_used) {

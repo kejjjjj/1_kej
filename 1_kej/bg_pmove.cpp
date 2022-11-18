@@ -430,20 +430,20 @@ void cg::Mod_DetermineFPS(pmove_t* pm, pml_t* pml)
 
 
 	fps_zones.length125 = (90.f - fps_zones.fps125) - fps_zones.fps125; //this way around because 125 starts from < 45
-	fps_zones.length200 = fps_zones.fps200 - (90.f - fps_zones.fps200) + 3.f * diff; //will fill the empty space with 200fps
+	fps_zones.length200 = fps_zones.fps200 - (90.f - fps_zones.fps200) + 3.f; //will fill the empty space with 200fps
 	fps_zones.length250 = fps_zones.fps250 - (90.f - fps_zones.fps250);
 	fps_zones.length333 = fps_zones.fps333 - (90.f - fps_zones.fps333);
 
 	fps_zones.fps125 -= fps_zones.length125;
-	fps_zones.fps250 += fps_zones.length250 - (11.f * diff);
-	fps_zones.fps200 = fps_zones.fps250 + (20.f * diff);
+	fps_zones.fps250 += fps_zones.length250 - (11.f);
+	fps_zones.fps200 =  fps_zones.fps250 + (20.f);
 	fps_zones.fps333 -= fps_zones.length333;
 
-	fps_zones.length250 -= 6.f * diff; //hide overlap
-	fps_zones.length125 -= long125 == false ? 17.f * diff : 0;
+	fps_zones.length250 -= 6.f; //hide overlap
+	fps_zones.length125 -= long125 == false ? 17.f : 0;
 
-	if	(!rightmove)	fps_zones.length333 += long125 == true ? 17.f * diff : 0;
-	else							fps_zones.length333 -= long125 == true ? 17.f * diff : 0;
+	if	(!rightmove)	fps_zones.length333 += long125 == true ? 17.f : 0;
+	else				fps_zones.length333 -= long125 == true ? 17.f : 0;
 
 	return;
 	//return Accelerate(wishdir, pml, wishspeed, 1.f, ps);

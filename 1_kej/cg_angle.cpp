@@ -195,19 +195,13 @@ float cg::R_getOptAngle(const bool rightmove, float& diff)
 }
 float cg::getOptAngle(float& _opt, const bool all_techs)
 {
-	if (!glob_pm || !glob_pml)
-		return -400.0;
+	//usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
 
-	if ((DWORD)glob_pm->ps < 0x10000)
-		return -400.0;
-
-	usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
-
-	char forwardmove = cmd->forwardmove;
-	char rightmove = cmd->rightmove;
+	char forwardmove = input->move;
+	char rightmove = input->strafe;
 
 
-	float _speed = glm::length(glm::vec2(glob_pm->ps->velocity[1], glob_pm->ps->velocity[0]));
+	float _speed = glm::length(glm::vec2(clients->cgameVelocity[1], clients->cgameVelocity[0]));
 
 	if (_speed < 1 || !all_techs && forwardmove != 127 && rightmove != 0 || analyzer.isSegmenting() && !analyzer.segmenterData.isReady) 
 		return -400.0;
@@ -215,29 +209,42 @@ float cg::getOptAngle(float& _opt, const bool all_techs)
 	
 
 	if (all_techs)
-		forwardmove = cmd->forwardmove;
+		forwardmove = input->move;
 	else forwardmove = 127;
 
 
-	float yaw = glob_pm->ps->viewangles[YAW];
-	float g_speed = (float)clients->snap.ps.speed;
+	float yaw =clients->cgameViewangles[YAW];
+	float g_speed = (float)Dvar_FindMalleableVar("g_speed")->current.integer; //(float)clients->snap.ps.speed;
 	const float FPS = (float)Dvar_FindMalleableVar("com_maxfps")->current.integer;
 
 	float accel = FPS / g_speed;
 
 	//float accel = g_speed * jumpanalyzer.frametime;
 
-	if (jumpanalyzer.recommendedFPS == 125)
+	if (jumpanalyzer.recommendedFPS == 125 && NOT_GROUND)
 		accel = g_speed / FPS;
 
 	//float r = sqrtf();
 
+	static float speed = 224;
+
+	if (GetAsyncKeyState(VK_UP) & 1) {
+		speed += 0.5f;
+		Com_Printf(CON_CHANNEL_OBITUARY, "speed: %.2f\n", speed);
+
+	}
+	else if (GetAsyncKeyState(VK_DOWN) & 1) {
+		speed -= 0.5f;
+		Com_Printf(CON_CHANNEL_OBITUARY, "speed: %.2f\n", speed);
+
+	}
+
 	if (_speed < 190)
 		g_speed = 190.f - (190.f - _speed);
 	else if (GROUND)
-		g_speed = 224.f;
+		g_speed = 277.f;
 
-	const double velocitydirection = atan2(glob_pm->ps->velocity[1], glob_pm->ps->velocity[0]) * 180.f / PI;
+	const double velocitydirection = atan2(clients->cgameVelocity[1], clients->cgameVelocity[0]) * 180.f / PI;
 	const double accelerationAng = atan2(-rightmove, forwardmove) * 180.f / PI;
 	double diff = acos((g_speed - accel) / _speed) * 180.f / PI;
 	//const float minAngle = acos(g_speed / _speed) * 180.f / PI;
