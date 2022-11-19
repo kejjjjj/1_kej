@@ -19,6 +19,7 @@ namespace r
 
 	void R_DrawMenuByName(const char* category, const bool JustClicked, bool& wantsEditor);
 
+	void R_HomeTab();
 	void R_JumpView(bool& isOpen);
 	void R_JumpView_Main(std::vector<jump_data>& container);
 	void R_JumpView_KeyEvents();

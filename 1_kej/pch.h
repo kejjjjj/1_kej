@@ -167,7 +167,7 @@ typedef vec_t vec4_t[4];
 #include "bg_weapon.hpp"
 
 #include "sys_tools.hpp"
-
+#include "u_key.h"
 
 using namespace std::chrono_literals;
 

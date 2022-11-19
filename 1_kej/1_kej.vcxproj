@@ -214,6 +214,7 @@
     <ClInclude Include="scr_obj.hpp" />
     <ClInclude Include="sv_ccmds.hpp" />
     <ClInclude Include="sys_tools.hpp" />
+    <ClInclude Include="u_key.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bg_pmove.cpp" />
@@ -294,6 +295,7 @@
     <ClCompile Include="sv_ccmds.cpp" />
     <ClCompile Include="sys_tools.cpp" />
     <ClCompile Include="r_ui.cpp" />
+    <ClCompile Include="u_key.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="detours\detours.lib" />

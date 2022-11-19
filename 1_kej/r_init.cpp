@@ -58,6 +58,11 @@ bool r::R_ImGui(IDirect3DDevice9* pDevice)
 		return false;
 	}
 
+	if (!fs::FS_AllNecessaryImagesExist()) {
+		fs::Log_Write(LOG_FATAL, "Stopping initialization due to missing image(s)\n");
+		return false;
+	}
+
 	R_MenuStyle();
 
 	return true;

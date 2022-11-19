@@ -3,7 +3,7 @@
 
 void cg::Mod_A_Strafebot()
 {
-	if (!v::mod_strafebot.isEnabled() || clients->snap.ps.pm_type == PM_UFO)
+	if (!v::mod_strafebot.isEnabled() || clients->snap.ps.pm_type == PM_UFO || v::mod_strafebot.isEnabled() && (GetAsyncKeyState(v::mod_strafebot_ow.GetInt()) < 0) == true)
 		return;
 
 	float optYaw, test;

@@ -234,6 +234,9 @@
     <ClInclude Include="r_ui_assetmanager.hpp">
       <Filter>Source Files\render\ui</Filter>
     </ClInclude>
+    <ClInclude Include="u_key.h">
+      <Filter>Source Files\sys</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -391,6 +394,9 @@
     </ClCompile>
     <ClCompile Include="r_ui_assetmanager.cpp">
       <Filter>Source Files\render\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="u_key.cpp">
+      <Filter>Source Files\sys</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -149,6 +149,7 @@ void cg::CG_SetPlayerAngles(vec3_t source, vec3_t target)
 //more suited for visual stuff
 float cg::R_getOptAngle(const bool rightmove, float& diff)
 {
+	
 
 	//usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
 
@@ -225,19 +226,6 @@ float cg::getOptAngle(float& _opt, const bool all_techs)
 		accel = g_speed / FPS;
 
 	//float r = sqrtf();
-
-	static float speed = 224;
-
-	if (GetAsyncKeyState(VK_UP) & 1) {
-		speed += 0.5f;
-		Com_Printf(CON_CHANNEL_OBITUARY, "speed: %.2f\n", speed);
-
-	}
-	else if (GetAsyncKeyState(VK_DOWN) & 1) {
-		speed -= 0.5f;
-		Com_Printf(CON_CHANNEL_OBITUARY, "speed: %.2f\n", speed);
-
-	}
 
 	if (_speed < 190)
 		g_speed = 190.f - (190.f - _speed);

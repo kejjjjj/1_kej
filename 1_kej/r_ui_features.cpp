@@ -588,9 +588,13 @@ void r::R_DrawMenuByName(const char* category, bool justPressed, bool& wantsEdit
 {
 	ImGui::SameLine();
 	ImGui::BeginGroup();
+
 	if (!strcmp("Automation", category)) {
 		R_Automation_Features();
 		
+	}
+	else if (!strcmp("Home", category)) {
+		R_HomeTab();
 	}
 	else if (!strcmp("Game", category)) {
 		R_OtherTab();
@@ -633,6 +637,32 @@ void r::R_DrawMenuByName(const char* category, bool justPressed, bool& wantsEdit
 }
 void r::R_Features(bool& wantsEditor)
 {
+	const auto FindTextureByName = [](const char* name)->ImTextureID {
+		for (const auto& i : r::imagePairs) {
+			if (!i.first.compare(name))
+				return i.second;
+		}
+		return nullptr;
+	};
+	const auto DrawCategory = [](const ImTextureID tex, const char* name) -> void {
+		ImGui::BeginGroup();
+		ImGui::Image(tex, ImVec2(64, 64));
+		ImGui::SameLine();
+		ImGui::BeginGroup();
+		ImGui::Text("\n");
+		ImGui::Text(name);
+		ImGui::EndGroup();
+		ImGui::Separator();
+		ImGui::EndGroup();
+	};
+	const auto GetCategoryIndex = [](const char* name) -> size_t {
+		for (size_t i = 0; i < r::imagePairs.size(); i++) {
+			if (!r::imagePairs[i].first.compare(name))
+				return i;
+		}
+		return 0;
+	};
+		 
 	const float x = ImGui::GetWindowSize().x;
 	const float y = ImGui::GetWindowSize().y;
 	static ImVec2 childSize = ImVec2(250, y < 10 ? 400 : y - 30);
@@ -658,38 +688,47 @@ void r::R_Features(bool& wantsEditor)
 		first_open = false;
 	}
 
-	for (const auto& i : r::imagePairs) {
-
-		if (i.first.find("_no_load") != std::string::npos) {
-			++indx;
-			continue;
-		}
-
-		ImGui::BeginGroup();
-		ImGui::Image((ImTextureID)i.second, ImVec2(64, 64));
-		ImGui::SameLine();
-		ImGui::BeginGroup();
-		ImGui::Text("\n");
-		ImGui::Text(fs::removeFileExtension(i.first.c_str(), 4).c_str());
-		ImGui::EndGroup();
-		ImGui::Separator();
-		ImGui::EndGroup();		
-
-		if (ImGui::IsItemHovered()) {
-			ImVec2 rect = ImGui::GetItemRectSize();
-			ImGui::GetForegroundDrawList()->AddRectFilled(ImGui::GetItemRectMin(), ImVec2(ImGui::GetItemRectMin().x + childSize.x - 10, ImGui::GetItemRectMax().y), IM_COL32(255, 255, 255, 170));
-		}
-
-		if (ImGui::IsItemClicked()) {
-			justPressed = true;
-
-			ActiveIndex = indx;
-
-		}
-		++indx;
-
+	const ImTextureID homeTex = FindTextureByName("Home.png");
+	if (!homeTex) {
+		fs::Log_Write(LOG_FATAL, "Unable to load image %s from %s\n", "Home.png", std::string(fs::GetExePath() + "\\1_kej\\images").c_str());
+		return;
 	}
-	
+	//Home page always @ the top instead of in alphabetical order
+	DrawCategory(homeTex, "Home");
+	if (ImGui::IsItemHovered()) {
+		ImVec2 rect = ImGui::GetItemRectSize();
+		ImGui::GetForegroundDrawList()->AddRectFilled(ImGui::GetItemRectMin(), ImVec2(ImGui::GetItemRectMin().x + childSize.x - 10, ImGui::GetItemRectMax().y), IM_COL32(255, 255, 255, 170));
+	}
+
+	if (ImGui::IsItemClicked()) {
+		justPressed = true;
+		ActiveIndex = GetCategoryIndex("Home.png");
+	}
+	else {
+		for (const auto& i : r::imagePairs) {
+
+			if (i.first.find("_no_load") != std::string::npos || i.first.find("Home") != std::string::npos) {
+				++indx;
+				continue;
+			}
+
+			DrawCategory(i.second, fs::removeFileExtension(i.first.c_str(), 4).c_str());
+
+			if (ImGui::IsItemHovered()) {
+				ImVec2 rect = ImGui::GetItemRectSize();
+				ImGui::GetForegroundDrawList()->AddRectFilled(ImGui::GetItemRectMin(), ImVec2(ImGui::GetItemRectMin().x + childSize.x - 10, ImGui::GetItemRectMax().y), IM_COL32(255, 255, 255, 170));
+			}
+
+			if (ImGui::IsItemClicked()) {
+				justPressed = true;
+
+				ActiveIndex = indx;
+
+			}
+			++indx;
+
+		}
+	}
 	ImGui::EndGroup();
 
 	static ImVec2 rect = ImGui::GetItemRectSize();
@@ -715,7 +754,7 @@ void r::R_Features(bool& wantsEditor)
 	R_DrawMenuByName(category.c_str(), justPressed, wantsEditor);
 
 	if (r::imagePairs[ActiveIndex].first.find("Preview") != std::string::npos)
-		ActiveIndex = UI_GetImageIndex("Jumping");
+		ActiveIndex = UI_GetImageIndex("Home");
 
 
 	const bool isMenu = !category.compare("Jump Builder");
@@ -728,9 +767,9 @@ void r::R_Features(bool& wantsEditor)
 	childSize.x = rect.x + 10;
 	childSize.y = rect.y + 10;
 
-	if (ImGui::GetWindowSize().x < 100 || ImGui::GetWindowSize().y < 100) {
+	if (!ImGui::GetCurrentWindow()->Active && (ImGui::GetWindowSize().x < 100 || ImGui::GetWindowSize().y < 100)) {
 		ImGui::SetWindowSize(ImVec2(400, 400));
-		ImGui::Text("I guess it's kinda bugged atm so restart your game and let the developer know if this happens :-)");
+		ImGui::GetBackgroundDrawList()->AddText(ImVec2(0, 200), IM_COL32(255,0,0,255), "I guess it's kinda bugged atm so restart your game and let the developer know if this happens :-)");
 	}
 }
 
@@ -749,5 +788,129 @@ void r::R_JumpView_Help()
 	ImGui::BulletText("[<-]		   - Previous Frame");
 	ImGui::BulletText("[F]		    - Toggle Force Position");
 	//ImGui::BulletText("[M]		    - Toggle Menu Drawing");
+
+}
+void r::R_HomeTab()
+{
+	const auto FetchConfigs = [](std::vector<std::string>& cfgs)->bool {
+		cfgs.clear();
+		const std::string cfgdirectory = fs::GetExePath() + "\\1_kej\\configs";
+		if (!fs::F_DirectoryExists(cfgdirectory)) {
+			if (!fs::F_CreateDirectory(cfgdirectory)) {
+				fs::Log_Write(LOG_ERROR, "Unable to create directory '%s', missing permissions?\n", cfgdirectory.c_str());
+				return false;
+			}
+			
+		}
+		static std::vector<std::string> dir_contents;
+
+		fs::F_FilesInThisDirectory(cfgdirectory, &dir_contents);
+		static std::string fname;
+		for (const auto& i : dir_contents) {
+
+			if (!fs::GetFileExtension(i).compare(".cfg")) {
+				fname = fs::F_GetFileName(i);
+				fname.erase(fname.end() - 4, fname.end());
+				cfgs.push_back(fname);
+			}
+
+		};
+		return true;
+	};
+
+	static std::vector<std::string> cfgs;
+	static std::vector<const char*> cfgs_cstr;
+	static bool first_open = true;
+	ImGui::Text("Config");
+	r::UI_DrawGradientZone(ImVec2(370, 175));
+
+	ImGui::Text("\t");
+	ImGui::SameLine();
+	ImGui::BeginGroup();
+	static bool list_is_fine(true);
+
+	if (ImGui::Button("Update List") || first_open) {
+		first_open = false;
+		list_is_fine = FetchConfigs(cfgs);
+
+		if (!list_is_fine)
+			Com_PrintError(CON_CHANNEL_OBITUARY, "Couldn't refresh list.. see the log file for more information\n");
+		
+		if (cfgs.empty()) {
+			list_is_fine = false;
+			Com_PrintError(CON_CHANNEL_OBITUARY, "the directory has no configs\n");
+		}
+		cfgs_cstr.clear();
+
+		for (auto& i : cfgs)
+			cfgs_cstr.push_back(i.c_str());
+
+
+
+	}
+
+	static int item;
+
+	ImGui::PushItemWidth(200);
+	if (ImGui::Combo("Active Config", &item, cfgs_cstr.data(), cfgs.size())) {
+		if (list_is_fine) {
+			v::mod_loaded_cfg.SetValue(cfgs_cstr[item]);
+
+			v::cfg::cfgDirectory = fs::GetExePath() + "\\1_kej\\configs\\" + v::mod_loaded_cfg.evar->stringValue + ".cfg";
+			Evar_LoadFromFile(v::cfg::cfgDirectory);
+
+			Com_Printf(CON_CHANNEL_OBITUARY, "loaded '%s'\n", v::mod_loaded_cfg.evar->stringValue.c_str());
+		}else
+			Com_PrintError(CON_CHANNEL_OBITUARY, "Can't set config due to errors\n");
+
+	}
+
+	static bool creating_new;
+	ImGui::NewLine();
+	if (ImGui::Button("Create New"))
+		creating_new = !creating_new;
+
+
+	ImGui::EndGroup();
+
+	ImGui::NewLine();
+	ImGui::TextColored(ImVec4(255, 0, 0, 255), "This is an early version of the mod and does NOT represent the final product\nYou can report all bugs and suggestions on discord or github!");
+
+	if (creating_new) {
+		ImGui::Begin("New Config", &creating_new, ImGuiWindowFlags_AlwaysAutoResize);
+
+		static char buff[64];
+		
+		ImGui::InputText("Name", buff, 64);
+
+		if (ButtonCentered("OK")) {
+			fs::Log_Write(LOG_NONE, "Attempting to create new config\n");
+			const std::string fname = buff;
+			const std::string fullpath = fs::GetExePath() + "\\1_kej\\configs\\" + fname + ".cfg";
+			if (!fs::F_isValidFileName(fname) || fname.empty()) {
+				Com_PrintError(CON_CHANNEL_OBITUARY, "'%s' contains illegal characters\n", buff);
+				fs::Log_Write(LOG_ERROR, "'%s' contains illegal characters\n", buff);
+
+				creating_new = false;
+			}
+			if (!fs::F_CreateFile(fullpath)) {
+				Com_PrintError(CON_CHANNEL_OBITUARY, "Unable to create file! Are you low on disk space or missing permissions?\n");
+				fs::Log_Write(LOG_ERROR, "Unable to create file! Are you low on disk space or missing permissions?\n");
+				creating_new = false;
+			}
+			if (creating_new) {
+				v::mod_loaded_cfg.SetValue(buff);
+
+				v::cfg::cfgDirectory = fs::GetExePath() + "\\1_kej\\configs\\" + v::mod_loaded_cfg.evar->stringValue + ".cfg";
+				Evar_LoadFromFile(v::cfg::cfgDirectory);
+
+				Com_Printf(CON_CHANNEL_OBITUARY, "config '%s' created successfully\n", buff);
+				fs::Log_Write(LOG_NONE, "config '%s' created successfully\n", buff);
+				creating_new = false;
+			}
+		}
+
+		ImGui::End();
+	}
 
 }

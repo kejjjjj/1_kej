@@ -83,7 +83,7 @@ void cg::Mod_DrawVelocity()
 	}
 
 	char buffer[20];
-	if(!v::mod_showFPS.isEnabled())
+	if(!v::mod_showFPS.isEnabled() || clc.demoplaying && v::mod_showFPS.isEnabled())
 		sprintf_s(buffer, "%i", velocity);
 	else
 		sprintf_s(buffer, "%i\n%i %s", velocity, jumpanalyzer.recommendedFPS, GetAsyncKeyState(VK_SPACE) < 0 == true && v::mod_autoFPS_space333.isEnabled() && VID_ACTIVE ? "(hold 333)" : "");

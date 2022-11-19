@@ -190,9 +190,10 @@ std::string fs::F_ReadUntil(std::fstream& fp, char end)
 }
 bool fs::F_isValidFileName(const std::string file_name)
 {
+	
 
 	for (const auto& i : file_name) {
-		if (!std::isalnum(i) && i != '-' && i != '_')
+		if (!std::isalnum(i) && i != '-' && i != '_' && i != ' ')
 			return false;
 
 	}
@@ -312,4 +313,40 @@ bool fs::F_FileAlreadyExists(std::string directory, std::string file)
 	}
 
 	return false;
+}
+bool fs::FS_AllNecessaryImagesExist()
+{
+	const char* should_exist[10] = {
+		"Automation",
+		"Error_no_load",
+		"Game",
+		"Home",
+		"Jump Builder",
+		"Jump Preview",
+		"Jumping",
+		"Rpg",
+		"Settings_no_load",
+		"Visuals"
+	};
+
+	for (size_t j = 0; j < IM_ARRAYSIZE(should_exist); j++) {
+		bool exists(false);
+
+		for (auto& i : r::imagePairs) {
+			if (i.first.find(should_exist[j]) != std::string::npos) {
+				exists = true;
+				break;
+			}
+
+
+		}
+		if (!exists) {
+			Log_Write(LOG_FATAL, "Couldn't find image '%s' from '%s'\n", should_exist[j], std::string(GetExePath() + "\\1_kej\\images").c_str());
+			return false;
+		}
+
+
+	}
+
+	return true;
 }

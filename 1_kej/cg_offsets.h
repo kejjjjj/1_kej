@@ -147,6 +147,7 @@ namespace cg
 	inline ConDrawInputGlob* conDrawInputGlob = reinterpret_cast<ConDrawInputGlob*>(0x8CC2C8);
 	inline Console* con = reinterpret_cast<Console*>(0x8DC8C0);
 	inline field_t* g_consoleField = reinterpret_cast<field_t*>(0x8F1B88);
+	inline field_t* historyEditLines = reinterpret_cast<field_t*>(0x8F29CC);
 
 	// console variables
 	//Font_s* con_font = reinterpret_cast<Font_s*>(0xC5AE94));

@@ -60,6 +60,8 @@ namespace fs
 	std::vector<std::pair<std::string, LPDIRECT3DTEXTURE9>>
 		FS_CreatePairsForTextures();
 
+	bool FS_AllNecessaryImagesExist(); 
+
 }
 
 #endif

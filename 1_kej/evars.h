@@ -51,6 +51,7 @@ namespace v
 		mod_auto500_enabled,
 		mod_strafebot,
 		mod_strafebot_all,
+		mod_strafebot_ow,
 		mod_autoanglerpg,
 		mod_jbuild_hitbox,
 		mod_jbuild_wasd,
@@ -71,7 +72,8 @@ namespace v
 		mod_bounce_calcw2s,
 		mod_use_jump_anim,
 		mod_jump_anim,
-		mod_disallow_hb;
+		mod_disallow_hb,
+		mod_loaded_cfg;
 		
 
 

@@ -6,7 +6,7 @@
 void r::R_Automation_Features()
 {
 	ImGui::Text("Strafing\t");
-	r::UI_DrawGradientZone(ImVec2(300, 100));
+	r::UI_DrawGradientZone(ImVec2(300, 150));
 
 	ImGui::Text("\t");
 	ImGui::SameLine();
@@ -22,7 +22,9 @@ void r::R_Automation_Features()
 
 	ImGui::BeginGroup();
 
-	if (!v::mod_strafebot.isEnabled())
+	static bool editing_keybind;
+
+	if (!v::mod_strafebot.isEnabled() && !editing_keybind)
 		ImGui::BeginDisabled();
 
 	if (ImGui::Checkbox("All techniques", &v::mod_strafebot_all.evar->enabled)) {
@@ -31,7 +33,37 @@ void r::R_Automation_Features()
 		"\nWQ/WE -> W only strafing"
 		"\nSQ/SE -> S only strafing");
 
-	if (!v::mod_strafebot.isEnabled())
+	if (ImGui::Button("Bind Overwrite")) 
+		editing_keybind = !editing_keybind;
+
+	ImGui::SameLine();
+	ImGui::Text("key: (%c)", (BYTE)v::mod_strafebot_ow.GetInt());
+
+	if (editing_keybind) {
+		ImGui::Begin("Press a key", &editing_keybind, ImGuiWindowFlags_AlwaysAutoResize);
+
+		ImGui::Text("Press a key to bind...");
+		ImGui::NewLine();
+		ImGui::Separator();
+		if (ButtonCentered("Unbind")) {
+			v::mod_strafebot_ow.SetValue((float)0);
+			editing_keybind = false;
+			Com_Printf(CON_CHANNEL_OBITUARY, "key unbound\n");
+
+		}
+		const BYTE key = KeyPressed();
+
+		if (key && !ImGui::IsItemClicked()) {
+			v::mod_strafebot_ow.SetValue(key);
+			Com_Printf(CON_CHANNEL_OBITUARY, "bound to '^2%c^7'\n", (BYTE)key);
+			editing_keybind = false;
+		}
+
+
+		ImGui::End();
+	}
+
+	if (!v::mod_strafebot.isEnabled() && !editing_keybind)
 		ImGui::EndDisabled();
 
 	ImGui::EndGroup();

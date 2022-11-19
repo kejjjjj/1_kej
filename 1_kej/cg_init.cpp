@@ -8,6 +8,7 @@ void cg::cod4x()
 		Com_Printf(CON_CHANNEL_CONSOLEONLY, "cod4x not 21.1 detected\n");
 		r::WndProcAddr = 0x57BB20;
 		r::CG_DrawActive_fnc = 0x42F7F0;
+		CL_PlayDemo_Addr = 0x469120;
 		return;
 	}
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, "cod4x 21.1 detected\n");
@@ -23,7 +24,7 @@ void cg::cod4x()
 	cmd_functions = reinterpret_cast<cmd_function_s*>(cod4x_entry + 0x227A28);
 	Cmd_AddCommand_fnc = (void*)(cod4x_entry + 0x2116C);
 	r::CG_DrawActive_fnc = (DWORD)a->find_pattern("cod4x_021.dll", "55 89 E5 83 EC 18 B8 38 E3 74 00 D9 80 9C F3 04 00 D9 5D F4");
-
+	CL_PlayDemo_Addr = (cod4x_entry + 0x1B3B5);
 	if (!r::WndProcAddr || !r::CG_DrawActive_fnc) {
 		fs::Log_Write(LOG_FATAL, "Failed to find necessary cod4x 21.1 addresses! Notify the developer about this!\n");
 		return;
@@ -93,6 +94,9 @@ void cg::CG_InitForeverHooks()
 	SV_Map_f					= (void(*)())					(0x527670);
 	r::CL_ShutdownRenderer_f	= (void*(__stdcall*)())			(0x46CA40);
 	r::R_RecoverLostDevice_f	= (char(__stdcall*)())			(0x5F5360);
+	CL_PlayDemo_f				= (void(*)())					(0x469120);
+	xCL_PlayDemo_f				= (void(*)(char*,int,int))		(cod4x_entry + 0x1B3B5);
+
 	hook* a = nullptr;
 
 	a->nop(0x4D76DA); //setstat: developer_script must be false.
@@ -101,6 +105,12 @@ void cg::CG_InitForeverHooks()
 	a->install(&(PVOID&)SV_Map_f, SV_Map);
 	a->install(&(PVOID&)r::CL_ShutdownRenderer_f, r::CL_ShutdownRenderer);
 	a->install(&(PVOID&)r::R_RecoverLostDevice_f, r::R_RecoverLostDevice);
+	if(!cod4x_entry)
+		a->install(&(PVOID&)CL_PlayDemo_f, CL_PlayDemo);
+	else
+		a->install(&(PVOID&)xCL_PlayDemo_f, xCL_PlayDemo);
+
+
 }
 void cg::CG_InitHooks()
 {
@@ -141,6 +151,7 @@ void cg::CG_InitHooks()
 	a->install(&(PVOID&)PM_ProjectVelocity_f, PM_ProjectVelocity);
 	a->install(&(PVOID&)PM_BounceHeight_f, PM_BounceHeight);
 	a->install(&(PVOID&)PM_BounceSteepness_f, PM_BounceSteepness);
+
 	//a->install(&(PVOID&)r::Material_Register_FastFile_f, r::Material_Register_FastFile);
 
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, " done!\n");

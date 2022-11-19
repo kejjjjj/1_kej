@@ -260,7 +260,6 @@ void Evar_Setup()
 {
 	evarCount = 0;
 
-	v::cfg::cfgDirectory = fs::GetExePath() + "\\1_kej.cfg";
 	
 	float mod_velometer[4] = { 0, 960, 540, 3.f };
 	float mod_coordinates[4] = { 0, 0, 540, 1.3f };
@@ -315,6 +314,7 @@ void Evar_Setup()
 
 	v::mod_strafebot.Register		("1_kej_strafebot",					evartype_t::EVAR_BOOL,		(float)0,				true);
 	v::mod_strafebot_all.Register   ("1_kej_strafebot_all",				evartype_t::EVAR_BOOL,		(float)0,				true);
+	v::mod_strafebot_ow.Register	("1_kej_strafebot_ow",				evartype_t::EVAR_INT,		(float)0,				true);
 
 	v::mod_autoanglerpg.Register	("1_kej_autoanglerpg",				evartype_t::EVAR_BOOL,		(float)0,				true);
 
@@ -333,7 +333,7 @@ void Evar_Setup()
 
 	v::mod_unlim_bounces.Register	("1_kej_unlim_bounces",				evartype_t::EVAR_BOOL,		(float)0,				true);
 	v::mod_terrain_bounces.Register	("1_kej_terrain_bounces",			evartype_t::EVAR_BOOL,		(float)0,				true);
-	v::mod_bounce_height.Register	("1_kej_bounce_height",				evartype_t::EVAR_FLOAT,		(float)0,				true);
+	v::mod_bounce_height.Register	("1_kej_bounce_height",				evartype_t::EVAR_FLOAT,		(float)1,				true);
 	v::mod_ez_bounces.Register		("1_kej_ez_bounces",				evartype_t::EVAR_BOOL,		(float)0,				true);
 	v::mod_bounce_angle.Register	("1_kej_bounce_angle",				evartype_t::EVAR_BOOL,		(float)0,				true);
 	v::mod_bounce_calc.Register		("1_kej_bounce_calc",				evartype_t::EVAR_BOOL,		(float)0,				true);
@@ -343,6 +343,10 @@ void Evar_Setup()
 
 	v::mod_jump_anim.Register		("1_kej_jump_anim",					evartype_t::EVAR_INT,		(float)WEAP_FIRST_RAISE,true);
 	v::mod_disallow_hb.Register		("1_kej_disallow_hb",				evartype_t::EVAR_BOOL,		(float)0,				true);
+	v::mod_loaded_cfg.Register		("1_kej_loaded_cfg",				evartype_t::EVAR_STRING,	"1_kej",				true);
+
+	v::cfg::cfgDirectory = fs::GetExePath() + "\\1_kej\\configs\\" + v::mod_loaded_cfg.evar->stringValue + ".cfg";
+
 
 }
 int evar_o::GetInt()
