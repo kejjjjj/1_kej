@@ -28,6 +28,9 @@ namespace cg
 	void setRoll(float ref, float ang);
 	void CG_SetPlayerAngles(vec3_t source, vec3_t target);
 
+	void CG_ApplySmoothing(vec3_t src, vec3_t dst, const float smoothing, vec3_t out);
+	void CG_ApplySmoothing(float src, float dst, const float smoothing, float& out);
+
 	float getOptAngle(float& delta, const bool use_all_techs = false);
 	float R_getOptAngle(const bool rightmove, float& delta); //more suited for visual stuff
 	float getOptForAnalyzer(jump_data* data, bool onGround);

@@ -52,6 +52,7 @@ namespace v
 		mod_strafebot,
 		mod_strafebot_all,
 		mod_strafebot_ow,
+		mod_strafebot_smooth,
 		mod_autoanglerpg,
 		mod_jbuild_hitbox,
 		mod_jbuild_wasd,

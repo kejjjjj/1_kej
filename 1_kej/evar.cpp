@@ -315,6 +315,7 @@ void Evar_Setup()
 	v::mod_strafebot.Register		("1_kej_strafebot",					evartype_t::EVAR_BOOL,		(float)0,				true);
 	v::mod_strafebot_all.Register   ("1_kej_strafebot_all",				evartype_t::EVAR_BOOL,		(float)0,				true);
 	v::mod_strafebot_ow.Register	("1_kej_strafebot_ow",				evartype_t::EVAR_INT,		(float)0,				true);
+	v::mod_strafebot_smooth.Register("1_kej_strafebot_smooth",			evartype_t::EVAR_FLOAT,		(float)1,				true);
 
 	v::mod_autoanglerpg.Register	("1_kej_autoanglerpg",				evartype_t::EVAR_BOOL,		(float)0,				true);
 
@@ -349,15 +350,15 @@ void Evar_Setup()
 
 
 }
-int evar_o::GetInt()
+int& evar_o::GetInt()
 {
 	return this->evar->intValue;
 }
-float evar_o::GetFloat()
+float& evar_o::GetFloat()
 {
 	return this->evar->floatValue;
 }
-float evar_o::GetVector(uint32_t prm)
+float& evar_o::GetVector(uint32_t prm)
 {
 	return this->evar->vecValue[prm];
 }
@@ -369,7 +370,7 @@ bool evar_o::isEnabled()
 {
 	return this->evar->enabled;
 }
-float evar_o::GetArray(uint32_t prm)
+float& evar_o::GetArray(uint32_t prm)
 {
 	return this->evar->arrayValue[prm];
 }

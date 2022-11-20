@@ -6,7 +6,7 @@
 void r::R_Automation_Features()
 {
 	ImGui::Text("Strafing\t");
-	r::UI_DrawGradientZone(ImVec2(300, 150));
+	r::UI_DrawGradientZone(ImVec2(300, 170));
 
 	ImGui::Text("\t");
 	ImGui::SameLine();
@@ -32,6 +32,9 @@ void r::R_Automation_Features()
 	} ImGui::SameLine(); r::MetricsHelpMarker("Strafing is not only limited to holding the WA/WD keys if this feature is enabled" 
 		"\nWQ/WE -> W only strafing"
 		"\nSQ/SE -> S only strafing");
+
+	ImGui::PushItemWidth(75);
+	ImGui::DragFloat("Smoothing Scale", &v::mod_strafebot_smooth.evar->floatValue, 0.5f, 1, 45, "%.2f");
 
 	if (ImGui::Button("Bind Overwrite")) 
 		editing_keybind = !editing_keybind;

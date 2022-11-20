@@ -1,1 +1,0 @@
-just drop the contents of this folder to your cod4 directory

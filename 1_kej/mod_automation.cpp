@@ -28,7 +28,14 @@ void cg::Mod_A_Strafebot()
 
 
 	if (cmd->forwardmove != 0 || cmd->rightmove != 0) {
-		setYaw(clients->cgameViewangles[YAW], optYaw);
+		float smoothed_yaw = optYaw;
+
+		if (NOT_GROUND && v::mod_strafebot_smooth.GetFloat() != 1.f) {
+			if (DistanceToOpt(optYaw, clients->cgameViewangles[YAW]) > 1)
+				CG_ApplySmoothing(clients->cgameViewangles[YAW], optYaw, v::mod_strafebot_smooth.GetFloat(), smoothed_yaw);
+		}
+
+		setYaw(clients->cgameViewangles[YAW], smoothed_yaw);
 
 	}
 }

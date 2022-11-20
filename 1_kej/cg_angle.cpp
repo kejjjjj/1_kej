@@ -146,6 +146,23 @@ void cg::CG_SetPlayerAngles(vec3_t source, vec3_t target)
 	setYaw(source[1], target[1]);
 	setRoll(source[2], target[2]);
 }
+void cg::CG_ApplySmoothing(vec3_t src, vec3_t dst, const float smoothing, vec3_t out)
+{
+	vec3_t dist;
+	VectorSubtract(dst, src, dist);
+
+	out[0] = (dist[0] / smoothing) + src[0];
+	out[1] = (dist[1] / smoothing) + src[1];
+	out[2] = (dist[2] / smoothing) + src[2];
+
+
+}
+void cg::CG_ApplySmoothing(float src, float dst, const float smoothing, float& out) {
+
+	const float dist = dst - src;
+
+	out = (dist / smoothing) + src;
+}
 //more suited for visual stuff
 float cg::R_getOptAngle(const bool rightmove, float& diff)
 {

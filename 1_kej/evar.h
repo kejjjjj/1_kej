@@ -50,10 +50,10 @@ struct evar_o
 	void Register(const char* name, evartype_t type, float* defaultValue, uint32_t size, bool save); //arrays
 
 
-	int GetInt();
-	float GetFloat();
-	float GetVector(uint32_t prm);
-	float GetArray(uint32_t prm);
+	int& GetInt();
+	float& GetFloat();
+	float& GetVector(uint32_t prm);
+	float& GetArray(uint32_t prm);
 	const char* GetString();
 	bool isEnabled();
 
