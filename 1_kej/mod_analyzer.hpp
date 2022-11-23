@@ -21,6 +21,7 @@ namespace cg
 		int32_t FPS;
 		bool colliding;
 		bool jumped;
+		int jumpTime;
 	};
 	struct segmenter_data
 	{

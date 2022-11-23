@@ -315,30 +315,37 @@ int jAnalyzer::Segmenter_Prepare()
 
 		return -1;
 	}
+	jump_data* jData = FetchFrameData(segment_frame);
+	if (jData) {
+		static int time(0);
+		if (time > 10) {
+			VectorCopy(clients->cgameViewangles, vangle_que.src);
+			VectorCopy(jData->angles, vangle_que.dst);
+			vangle_que.yes = true;
+			//Com_Printf(CON_CHANNEL_OBITUARY, "angles\n");
+			time = 0;
+		}
+		++time;
+		//CG_SetPlayerAngles(clients->cgameViewangles, jData->angles);
 
-	if ((startTime + (DWORD)(v::mod_jumpv_segtime.GetFloat() * 1000)) < Sys_MilliSeconds()) {
-
-		jump_data* jData = FetchFrameData(segment_frame);
-
-		if (jData) {
-			Com_Printf(CON_CHANNEL_OBITUARY, "^2launch\n");
-			VectorCopy(jData->origin, ps_loc->origin);
-			VectorCopy(jData->velocity, ps_loc->velocity);
-
-			CG_SetPlayerAngles(clients->cgameViewangles, jData->angles);
-
-			ps_loc->pm_flags = ps_loc->pm_flags & 0xFFFFFE7F | PMF_JUMPING; //reset bouncing flags
-			ps_loc->jumpOriginZ = jData->origin[2];
-
-			current_frame = NULL;
-
-			segmenterData.hasLaunched = true;
-			segmenterData.isReady = true;
+		if ((startTime + (DWORD)(v::mod_jumpv_segtime.GetFloat() * 1000)) < Sys_MilliSeconds()) {
 
 
+				Com_Printf(CON_CHANNEL_OBITUARY, "^2launch\n");
+				VectorCopy(jData->origin, ps_loc->origin);
+				VectorCopy(jData->velocity, ps_loc->velocity);
 
 
-			return 0;
+				ps_loc->pm_flags = ps_loc->pm_flags & 0xFFFFFE7F | PMF_JUMPING; //reset bouncing flags
+				ps_loc->jumpOriginZ = jData->origin[2];
+
+				current_frame = NULL;
+
+				segmenterData.hasLaunched = true;
+				segmenterData.isReady = true;
+
+				return 0;
+			
 		}
 	}
 

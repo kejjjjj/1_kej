@@ -63,16 +63,17 @@ void __cdecl r::CG_DrawActive()
 			Mod_A_AutoFPS();
 			Mod_DisallowHalfbeat();
 		}
-
-		if (GetAsyncKeyState(VK_NUMPAD8) & 1) {
-			int key = GetKeyBinding("openscriptmenu cj strafe_overwrite");
-			Com_Printf(CON_CHANNEL_OBITUARY, "str: '%c'\n", key);
-
-		}
-
-		//if(jumpanalyzer.hugging_bounce && !jumpanalyzer.walking)
-		//	r::R_AddCmdDrawTextWithEffects((char*)"hugging", "fonts/objectivefont", r::X(300), r::Y(300), v::mod_velometer.GetArray(3), v::mod_velometer.GetArray(3), 0.f, vec4_t{255,255,0,255}, 3, v::mod_velometer_glow.evar->vecValue, 0, 0, 0, 500, 1000, 2000);
 		
+		if (vangle_que.yes) {
+
+			CG_SetPlayerAngles(vangle_que.src, vangle_que.dst);
+			vangle_que.yes = false;
+		}
+		//if(jumpanalyzer.hugging_bounce && !jumpanalyzer.walking)
+		//char buff[48];
+		//sprintf_s(buff, "airTime: %i\ngroundTime: %i", jumpanalyzer.serverTime - jumpanalyzer.airTime, jumpanalyzer.serverTime - jumpanalyzer.groundTime);
+		//r::R_AddCmdDrawTextWithEffects(buff, "fonts/objectivefont", r::X(300), r::Y(300), v::mod_velometer.GetArray(3), v::mod_velometer.GetArray(3), 0.f, vec4_t{255,255,0,255}, 3, v::mod_velometer_glow.evar->vecValue, 0, 0, 0, 500, 1000, 2000);
+		//
 		//float delta = AngleDelta(cgs->compassNorthYaw, cgs->refdefViewAngles[1]);
 		//
 		//static float incr = 0;

@@ -58,7 +58,7 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 	ImGui::NewLine();
 
 	r::UI_DrawGradientZone(ImVec2(330, 80));
-	ImGui::PushItemWidth(100);
+	ImGui::PushItemWidth(205);
 	ImGui::SliderInt("Frame", &menu_frame, 0, analyzer.GetTotalFrames(container), "%u", ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_ClampOnInput);
 
 	//ImGui::SameLine();
@@ -199,10 +199,15 @@ void r::R_JumpView_Main(std::vector<jump_data>& container)
 		const vec3_t empty = { 0,0,0 };
 
 		if (!analyzer.InFreeMode() && v::mod_jumpv_forcepos.isEnabled() || io.KeysDownDuration['C'] == 0.f && VID_ACTIVE) {
-			CG_SetPlayerAngles(clients->cgameViewangles, jData->angles);
-			VectorCopy(jData->origin, ps_loc->origin);
-			ps_loc->origin[2] -= (70.f - jData->maxs[2]);
-			VectorCopy(empty, ps_loc->velocity);
+			//static int time(0);
+			//if (time > 10) {
+				CG_SetPlayerAngles(clients->cgameViewangles, jData->angles);
+				VectorCopy(jData->origin, ps_loc->origin);
+				ps_loc->origin[2] -= (70.f - jData->maxs[2]);
+				VectorCopy(empty, ps_loc->velocity);
+				//time = 0;
+			//}
+			//time++;
 		}
 		
 		R_JumpView_HandleWeapons(menu_frame, rpg_frames_min, rpg_frames_max);

@@ -30,9 +30,19 @@ void cg::Mod_A_Strafebot()
 	if (cmd->forwardmove != 0 || cmd->rightmove != 0) {
 		float smoothed_yaw = optYaw;
 
-		if (NOT_GROUND && v::mod_strafebot_smooth.GetFloat() != 1.f) {
-			if (DistanceToOpt(optYaw, clients->cgameViewangles[YAW]) > 1)
+		const int time_since_jumped = jumpanalyzer.serverTime - jumpanalyzer.airTime;
+		const int groundTime = jumpanalyzer.serverTime - jumpanalyzer.groundTime;
+
+
+		if (NOT_GROUND && v::mod_strafebot_smooth.GetFloat() != 1.f || (time_since_jumped > 0 && time_since_jumped < 300 || groundTime < 200) && v::mod_strafebot_bhop_s.GetFloat() != 1.f) {
+			const float dist2opt = DistanceToOpt(optYaw, clients->cgameViewangles[YAW]);
+			if (time_since_jumped < 400 && dist2opt > 1) {
+				CG_ApplySmoothing(clients->cgameViewangles[YAW], optYaw, v::mod_strafebot_bhop_s.GetFloat(), smoothed_yaw);
+			}
+			else if (dist2opt > 1 && dist2opt < 90)
 				CG_ApplySmoothing(clients->cgameViewangles[YAW], optYaw, v::mod_strafebot_smooth.GetFloat(), smoothed_yaw);
+			
+				
 		}
 
 		setYaw(clients->cgameViewangles[YAW], smoothed_yaw);
@@ -134,8 +144,38 @@ void cg::Mod_A_AdjustRPG(pmove_t* pm, pml_t* pml)
 		rpg_isangling = false;
 
 }
+
 void cg::Mod_A_AutoSliding(pmove_t* pmove, pml_t* pml)
 {
+	// force sliding through engine
+	const auto methodA = [](pmove_t* pmove, pml_t* pml, DWORD& old_ms, const bool part1) -> void
+	{
+		hook* a = nullptr;
+		if (automation.pendingSlide && (pml->almostGroundPlane || pml->groundPlane)) {
+			automation.currentlySliding = true;
+			a->write_addr(0x410660, "\xC3", 1);
+			old_ms = Sys_MilliSeconds();
+		}
+		if (part1)
+			return;
+
+		const DWORD ms = Sys_MilliSeconds();
+
+
+		if ((old_ms + (move->jump == true && v::mod_bhop_nodelay.isEnabled() ? 1 : 100)) < ms) { //allow 100ms to slide and if jump is not held
+			old_ms = ms;
+			automation.currentlySliding = false;
+			a->write_addr(0x410660, "\x83", 1);
+			automation.pendingSlide = false;
+		}
+
+	};	
+	//switch to 15fps
+	const auto methodB = [](pmove_t* pmove, pml_t* pml, DWORD& old_ms, const bool part1) -> void 
+	{
+
+	};
+
 	hook* a = 0;
 	static DWORD old_ms(0);
 
@@ -145,25 +185,12 @@ void cg::Mod_A_AutoSliding(pmove_t* pmove, pml_t* pml)
 	}
 
 	
-	if (automation.pendingSlide && (pml->almostGroundPlane || pml->groundPlane)) {
-		automation.currentlySliding = true;
-		a->write_addr(0x410660, "\xC3", 1);
-		old_ms = Sys_MilliSeconds();
-	}
+	methodA(pmove, pml, old_ms, true);
 
 	if (!automation.currentlySliding)
 		return;
-
-	const DWORD ms = Sys_MilliSeconds();
 	
-
-	if ((old_ms + (move->jump == true && v::mod_bhop_nodelay.isEnabled() ? 1 : 100)) < ms) { //allow 100ms to slide and if jump is not held
-		old_ms = ms;
-		automation.currentlySliding = false;
-		a->write_addr(0x410660, "\x83", 1);
-		automation.pendingSlide = false;
-	}
-
+	methodA(pmove, pml, old_ms, false);
 
 
 

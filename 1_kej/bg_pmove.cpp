@@ -127,11 +127,12 @@ void cg::Pmove(pmove_t* pm)
 		Com_PrintError(CON_CHANNEL_OBITUARY, "please use com_maxfps as your dvar name\n");
 		return;
 	}
+	const int ref_fps = /*automation.currentlySliding == true ? 15 : */com_maxfps->current.integer;
 
 	int frametime = cls->frametime == 0 ? 1 : cls->frametime;
 	int _msec;
 
-	_msec = 1000.f / (com_maxfps->current.integer == 0 ? 1 : com_maxfps->current.integer);
+	_msec = 1000.f / (ref_fps == 0 ? 1 : ref_fps);
 
 	if (_msec == NULL)
 		_msec = 1;
@@ -516,7 +517,26 @@ void cg::PM_OverBounce(pmove_t* pm, pml_t* pml)
 
 	jumpanalyzer.pm_flags = pm->ps->pm_flags;
 	jumpanalyzer.jumpOriginZ = pm->ps->jumpOriginZ;
+	jumpanalyzer.jumpTime = pm->ps->jumpTime;
+	
+	static bool was_airborne(false);
 
+	if (was_airborne && pml->walking) {
+		jumpanalyzer.groundTime = jumpanalyzer.serverTime;
+		was_airborne = false;
+	}
+
+	if (pml->walking) {
+		if (was_airborne) {
+			jumpanalyzer.groundTime = jumpanalyzer.serverTime;
+			was_airborne = false;
+		}
+		jumpanalyzer.airTime = jumpanalyzer.serverTime;
+	}
+	else {
+		jumpanalyzer.groundTime = jumpanalyzer.serverTime;
+		was_airborne = true;
+	}
 	return;
 
 }

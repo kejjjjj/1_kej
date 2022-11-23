@@ -7,6 +7,13 @@
 
 namespace cg
 {
+	inline struct vangle_queue
+	{
+		bool yes;
+		vec3_t src;
+		vec3_t dst;
+	}vangle_que;
+
 	//actively updating automation data
 	struct automation_s {
 		bool keybindPressed;
@@ -26,6 +33,7 @@ namespace cg
 	void Mod_A_AutoFPS();
 	void Mod_A_AdjustRPG(pmove_t* pm, pml_t* pml);
 	void Mod_A_AutoSliding(pmove_t* pm, pml_t* pml);
+
 
 	inline area500_s box500;
 	void Mod_A_500FPS();

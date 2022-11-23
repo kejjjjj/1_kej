@@ -6,7 +6,7 @@
 void r::R_Automation_Features()
 {
 	ImGui::Text("Strafing\t");
-	r::UI_DrawGradientZone(ImVec2(300, 170));
+	r::UI_DrawGradientZone(ImVec2(360, 200));
 
 	ImGui::Text("\t");
 	ImGui::SameLine();
@@ -35,6 +35,9 @@ void r::R_Automation_Features()
 
 	ImGui::PushItemWidth(75);
 	ImGui::DragFloat("Smoothing Scale", &v::mod_strafebot_smooth.evar->floatValue, 0.5f, 1, 45, "%.2f");
+
+	ImGui::PushItemWidth(75);
+	ImGui::DragFloat("Bhop Smoothing Scale", &v::mod_strafebot_bhop_s.evar->floatValue, 0.5f, 1, 100, "%.2f");
 
 	if (ImGui::Button("Bind Overwrite")) 
 		editing_keybind = !editing_keybind;

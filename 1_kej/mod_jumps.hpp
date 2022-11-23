@@ -26,7 +26,9 @@ namespace cg {
 		bool hugging_bounce;
 		int pm_flags;
 		float jumpOriginZ;
-
+		int jumpTime;
+		int groundTime; //time spent on the ground
+		int airTime; //time spent in the air
 	};
 	inline jumpanalyzer_s jumpanalyzer; 	//actively updating jump data
 	void Mod_HitAnalyzer(pmove_t* pm, pml_t* pml);
