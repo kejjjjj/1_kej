@@ -318,6 +318,7 @@ void Evar_Setup()
 	v::mod_strafebot_smooth.Register("1_kej_strafebot_smooth",			evartype_t::EVAR_FLOAT,		(float)1,				true);
 	v::mod_strafebot_bhop_s.Register("1_kej_strafebot_bhop_s",			evartype_t::EVAR_FLOAT,		(float)1,				true);
 
+	v::mod_autoslide.Register		("1_kej_autoslide",					evartype_t::EVAR_INT,		(float)0,				true);
 	v::mod_autoanglerpg.Register	("1_kej_autoanglerpg",				evartype_t::EVAR_BOOL,		(float)0,				true);
 
 	v::mod_jbuild_hitbox.Register	("1_kej_jbuild_hitbox",				evartype_t::EVAR_BOOL,		(float)1,				true);

@@ -138,7 +138,7 @@ void Script_OnPositionLoaded()
 
     }
     if (analyzer.isSegmenting()) {
-        Com_Printf(CON_CHANNEL_OBITUARY, "segment frames: [%i]\n", analyzer.segData.size());
+       // Com_Printf(CON_CHANNEL_OBITUARY, "segment frames: [%i]\n", analyzer.segData.size());
 
         //analyzer.segData.erase(analyzer.segData.begin(), analyzer.segData.end());
         //analyzer.segData.clear();
@@ -149,6 +149,8 @@ void Script_OnPositionLoaded()
     analyzer.OnEndSegment();
 
     memset(&cg::jumpanalyzer, 0, sizeof(cg::jumpanalyzer_s));
+
+    memset(&automation, 0, sizeof(automation_s));
 
 }
 void Script_OnPositionSaved()

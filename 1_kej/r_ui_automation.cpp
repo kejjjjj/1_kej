@@ -88,6 +88,36 @@ void r::R_Automation_Features()
 
 	ImGui::EndGroup();
 
+	ImGui::Text("\nSliding\t");
+	r::UI_DrawGradientZone(ImVec2(300, 110));
+
+	ImGui::Text("\t");
+	ImGui::SameLine();
+	ImGui::BeginGroup();
+
+	const int keyBind = GetKeyBinding("openscriptmenu cj autoslide");
+
+	if (keyBind == 0) {
+		ImGui::TextColored(ImVec4(255, 255, 0, 255), "key unbound!");
+		ImGui::BeginDisabled();
+		v::mod_autoslide.SetValue((float)0);
+	}
+	static bool methodA = v::mod_autoslide.GetInt() == 1, methodB = v::mod_autoslide.GetInt() == 2;
+
+
+	if (ImGui::Checkbox("Engine Slide", &methodA)) {
+		methodB = !methodA;
+		v::mod_autoslide.SetValue((float)1);
+	} ImGui::SameLine(); r::MetricsHelpMarker("Game forces a 100ms slide after landing (no fps switching required)");
+
+	if (ImGui::Checkbox("FPS slide", &methodB)) {
+		methodA = !methodB;
+		v::mod_autoslide.SetValue((float)2);
+	} ImGui::SameLine(); r::MetricsHelpMarker("Switches to 15fps when you get close to the ground");
+
+	if (keyBind == 0)
+		ImGui::EndDisabled();
+	ImGui::EndGroup();
 
 	ImGui::EndGroup();
 	

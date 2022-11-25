@@ -127,7 +127,7 @@ void cg::Pmove(pmove_t* pm)
 		Com_PrintError(CON_CHANNEL_OBITUARY, "please use com_maxfps as your dvar name\n");
 		return;
 	}
-	const int ref_fps = /*automation.currentlySliding == true ? 15 : */com_maxfps->current.integer;
+	const int ref_fps = com_maxfps->current.integer;
 
 	int frametime = cls->frametime == 0 ? 1 : cls->frametime;
 	int _msec;

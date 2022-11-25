@@ -147,13 +147,20 @@ void cg::Mod_A_AdjustRPG(pmove_t* pm, pml_t* pml)
 
 void cg::Mod_A_AutoSliding(pmove_t* pmove, pml_t* pml)
 {
+
+	if (!v::mod_autoslide.isEnabled()) {
+		//Com_PrintError(CON_CHANNEL_OBITUARY, "Mod_A_AutoSliding(): shouldn't have been called at this time! (keybind used but the feature itself thinks its unbound?)\n");
+		//Com_PrintError(CON_CHANNEL_CONSOLEONLY, "Mod_A_AutoSliding(): shouldn't have been called at this time! (keybind used but the feature itself thinks its unbound?)\n");
+		return;
+	}
+
 	// force sliding through engine
 	const auto methodA = [](pmove_t* pmove, pml_t* pml, DWORD& old_ms, const bool part1) -> void
 	{
 		hook* a = nullptr;
 		if (automation.pendingSlide && (pml->almostGroundPlane || pml->groundPlane)) {
 			automation.currentlySliding = true;
-			a->write_addr(0x410660, "\xC3", 1);
+			a->write_addr(0x410660, "\xC3", 1); 
 			old_ms = Sys_MilliSeconds();
 		}
 		if (part1)
@@ -171,9 +178,42 @@ void cg::Mod_A_AutoSliding(pmove_t* pmove, pml_t* pml)
 
 	};	
 	//switch to 15fps
-	const auto methodB = [](pmove_t* pmove, pml_t* pml, DWORD& old_ms, const bool part1) -> void 
+	const auto methodB = [](pmove_t* pm, pml_t* pml, DWORD& old_ms, const bool part1) -> void 
 	{
+		static int fps_b4_switch = 125;
+		if (automation.pendingSlide && !automation.currentlySliding) {
+			fps_b4_switch = Dvar_FindMalleableVar("com_maxfps")->current.integer;
+			trace_t trace;
+			playerState_s* ps = pm->ps;
+			vec3_t end(ps->origin[0], ps->origin[1], ps->origin[2]);
+			end[2] -= 100;
+			
+			PM_playerTrace(pm, &trace, ps->origin, pm->mins, pm->maxs, end, ps->clientNum, pm->tracemask);
 
+			if (trace.fraction != 1.f && ps->velocity[2] > 0 && NOT_GROUND) {
+				//Com_Printf(CON_CHANNEL_OBITUARY, "hey from 15fps\n");
+				automation.currentlySliding = true;
+			}
+
+			old_ms = Sys_MilliSeconds();
+
+		}
+		else if (automation.currentlySliding) {
+			if (v::mod_autoFPS.isEnabled())
+				jumpanalyzer.recommendedFPS = 15;
+			else
+				Dvar_FindMalleableVar("com_maxfps")->current.integer = 15;
+
+			if (old_ms + 250 < Sys_MilliSeconds()) {
+				automation.pendingSlide = false;
+				automation.currentlySliding = false;
+
+				Dvar_FindMalleableVar("com_maxfps")->current.integer = fps_b4_switch;
+
+
+			}
+
+		}
 	};
 
 	hook* a = 0;
@@ -184,13 +224,20 @@ void cg::Mod_A_AutoSliding(pmove_t* pmove, pml_t* pml)
 		automation.keybindPressed = false;
 	}
 
-	
-	methodA(pmove, pml, old_ms, true);
+	bool use_methodA = v::mod_autoslide.GetInt() == 1;
+
+	if (use_methodA)
+		methodA(pmove, pml, old_ms, true);
+	else
+		methodB(pmove, pml, old_ms, true);
+
 
 	if (!automation.currentlySliding)
 		return;
 	
-	methodA(pmove, pml, old_ms, false);
+
+	if (use_methodA)
+		methodA(pmove, pml, old_ms, false);
 
 
 
