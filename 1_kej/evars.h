@@ -74,6 +74,7 @@ namespace v
 		mod_bounce_calc,
 		mod_bounce_calcw2s,
 		mod_use_jump_anim,
+		mod_smooth_rpg_anim,
 		mod_jump_anim,
 		mod_disallow_hb,
 		mod_loaded_cfg;

@@ -65,23 +65,52 @@ void cg::PM_AirMove(pmove_t* pm, pml_t* pml)
 	}
 
 	//animations
-	static DWORD ms = Sys_MilliSeconds();
-	static bool activeAnim;
+	static DWORD ms = Sys_MilliSeconds(), anim_time = 0;
+	static bool activeAnim = false, wait_anim = 0;
 
 	if(anim_can_use)
 		pm->ps->weapAnim = 0;
 
-	if (v::mod_use_jump_anim.isEnabled() && !activeAnim/* && pm->ps->weapAnim == 0*/ /*&& pm->ps->weapAnim != (WEAP_SPRINT_LOOP | ~pm->ps->weapAnim & 0x200)*/ && anim_can_use && pm->ps->jumpTime + 250 < pm->cmd.serverTime) {
-		pm->ps->weapAnim = 0;
-		pm->ps->weapAnim = v::mod_jump_anim.GetInt() | ~pm->ps->weapAnim & 0x200;
-		ms = Sys_MilliSeconds();
-		activeAnim = true;
-		anim_can_use = false;
-	}else if (activeAnim && ms + 2 < Sys_MilliSeconds()) {
-		pm->ps->weapAnim = 0;
-		activeAnim = false;
-		
+	if (!v::mod_smooth_rpg_anim.isEnabled()) {
+		if (v::mod_use_jump_anim.isEnabled() && !activeAnim/* && pm->ps->weapAnim == 0*/ /*&& pm->ps->weapAnim != (WEAP_SPRINT_LOOP | ~pm->ps->weapAnim & 0x200)*/ && anim_can_use && pm->ps->jumpTime + 250 < pm->cmd.serverTime) {
+			pm->ps->weapAnim = 0;
+			pm->ps->weapAnim = v::mod_jump_anim.GetInt() | ~pm->ps->weapAnim & 0x200;
+			ms = Sys_MilliSeconds();
+			activeAnim = true;
+			anim_can_use = false;
+		}
+		else if (activeAnim && ms + 2 < Sys_MilliSeconds()) {
+			pm->ps->weapAnim = 0;
+			activeAnim = false;
+
+		}
 	}
+	else if (v::mod_smooth_rpg_anim.isEnabled()) {
+		
+		if (anim_can_use || wait_anim) {
+
+			if (!wait_anim && (clients->snap.ps.weapon == BG_FindWeaponIndexForName("rpg_mp") || clients->snap.ps.weapon == BG_FindWeaponIndexForName("rpg_sustain_mp"))) {
+				anim_can_use = false;
+				//CG_SelectWeaponIndex(BG_FindWeaponIndexForName("deserteaglegold_mp"), cgs->clientNum);
+				SendCommand("weapnext");
+				anim_time = Sys_MilliSeconds();
+				wait_anim = true;
+			}
+			
+			else if(anim_time != 0) {
+				if (Sys_MilliSeconds() - anim_time > 2) {
+					CG_SelectWeaponIndex(BG_FindWeaponIndexForName(v::mod_rpg_mode.GetString() == "sustain" ? "rpg_sustain_mp" : "rpg_mp"), cgs->clientNum);
+					wait_anim = false;
+					anim_time = 0;
+				}
+			}
+
+
+		}
+
+	}
+
+
 
 	glob_pm = reinterpret_cast<pmove_t*>(pm);
 	glob_pml = reinterpret_cast<pml_t*>(pml);
@@ -250,8 +279,8 @@ void cg::Mod_JumpView(pmove_t* pm, pml_t* pml)
 
 		//afkSnapshots++;
 
-		if (GetAsyncKeyState(VK_PRIOR) & 1)
-			Com_Printf(CON_CHANNEL_OBITUARY, "angDist: %.6f\n", angDist/*Sys_MilliSeconds() - afkSnapshots*/);
+		//if (GetAsyncKeyState(VK_PRIOR) & 1)
+		//	Com_Printf(CON_CHANNEL_OBITUARY, "angDist: %.6f\n", angDist/*Sys_MilliSeconds() - afkSnapshots*/);
 
 		if (afkSnapshots + 2000 < Sys_MilliSeconds()) {
 			analyzer.PauseRecording();
@@ -409,13 +438,29 @@ void cg::Mod_DetermineFPS(pmove_t* pm, pml_t* pml)
 	const usercmd_s* cmd = cinput->GetUserCmd(cinput->currentCmdNum - 1);
 
 
+
 	if (cmd->rightmove > 0)
 		rightmove = true;
 	else if (cmd->rightmove < 0)
 		rightmove = false;
 
 
-	FPS_CalculateSingleBeatDirection(rightmove, cmd);
+	if (analyzer.isPreviewing() || jbuilder.isEditing()) {
+
+		jump_data* jData;
+		if (analyzer.isPreviewing())
+			jData = analyzer.FetchFrameData(analyzer.Segmenter_RecordingExists() ? analyzer.segData : analyzer.data, analyzer.preview_frame);
+		else
+			jData = jbuilder.FetchFrameData(jbuilder.preview_frame);
+
+
+		if (jData) {
+			rightmove = jData->rightmove > 0;
+		}
+
+	}
+	else
+		FPS_CalculateSingleBeatDirection(rightmove, cmd);
 
 	fps_zones.fps125 = round((float)ps->speed / 8) + 10;
 	fps_zones.fps200 = round((float)ps->speed / 5) + 10;
@@ -424,6 +469,8 @@ void cg::Mod_DetermineFPS(pmove_t* pm, pml_t* pml)
 	
 	const bool long125 = v::mod_autoFPS_long125.isEnabled();
 	const float diff = ((float)ps->speed / 190.f);
+
+
 
 	if(!rightmove)
 		fps_zones.fps333 -= long125 == true ? 17.f * diff : 0;

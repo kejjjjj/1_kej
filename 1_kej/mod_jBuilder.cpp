@@ -115,7 +115,7 @@ size_t jump_builder_s::GetTotalFrames()
 		return 0;
 
 	for (const auto& i : this->segments)
-		total += i.jData.size();
+		total += i.jData.size() - 1;
 
 	return total;
 

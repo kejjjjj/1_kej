@@ -17,6 +17,7 @@ namespace cg
 
 	void __cdecl G_SelectWeaponIndex(int clientNum, int iWeaponIndex);
 	size_t G_GetWeaponsList(int* weapons);
+	uint32_t CG_SelectWeaponIndex(uint32_t weaponIndex, int localClientNum);
 }
 
 #endif

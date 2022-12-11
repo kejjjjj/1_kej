@@ -343,6 +343,7 @@ void Evar_Setup()
 	v::mod_bounce_calcw2s.Register	("1_kej_bounce_calcw2s",			evartype_t::EVAR_BOOL,		(float)0,				true);
 
 	v::mod_use_jump_anim.Register	("1_kej_use_jump_anim",				evartype_t::EVAR_BOOL,		(float)0,				true);
+	v::mod_smooth_rpg_anim.Register ("1_kej_smooth_rpg_anim",			evartype_t::EVAR_BOOL,		(float)0,				true);
 
 	v::mod_jump_anim.Register		("1_kej_jump_anim",					evartype_t::EVAR_INT,		(float)WEAP_FIRST_RAISE,true);
 	v::mod_disallow_hb.Register		("1_kej_disallow_hb",				evartype_t::EVAR_BOOL,		(float)0,				true);

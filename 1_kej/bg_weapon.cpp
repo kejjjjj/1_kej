@@ -72,3 +72,18 @@ size_t cg::G_GetWeaponsList(int* weapons)
 	}
 	return count;
 }
+uint32_t cg::CG_SelectWeaponIndex(uint32_t weaponIndex, int localClientNum)
+{
+	uint32_t out = 0;
+	__asm
+	{
+		mov eax, weaponIndex;
+		mov ecx, localClientNum;
+		mov esi, 0x458F10;
+		call esi;
+		mov out, eax;
+
+	}
+
+	return out;
+}

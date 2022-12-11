@@ -192,7 +192,14 @@ void r::R_JumpBuilder_Builder()
 				isPlayback = false;
 		}
 
-		if (isPlayback && menu_frame < total_frames) {
+		jump_data* jData = jbuilder.FetchFrameData(jbuilder.preview_frame);
+
+		dvar_s* com_maxfps = Dvar_FindMalleableVar("com_maxfps");
+
+		if (isPlayback && menu_frame < total_frames && jData && com_maxfps) {
+			
+			com_maxfps->current.integer = jData->FPS; //meh
+
 			menu_frame++;
 		}
 		else
@@ -279,7 +286,7 @@ void r::R_JumpBuilder_Builder()
 
 		ImGui::BeginGroup();
 		static bool editingStart(FALSE);
-		jump_data* jData = jbuilder.FetchFrameData(jbuilder.preview_frame);
+		//jump_data* jData = jbuilder.FetchFrameData(jbuilder.preview_frame);
 		if (jData) {
 			if (jbuilder.current_segment == NULL) {
 				if (ImGui::Button("Modify Start"))

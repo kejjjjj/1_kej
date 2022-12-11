@@ -479,7 +479,7 @@ void Jump_Features()
 	{
 
 
-		r::UI_DrawGradientZone(ImVec2(270, 100));
+		r::UI_DrawGradientZone(ImVec2(270, 130));
 
 		ImGui::Text("\t");
 		ImGui::SameLine();
@@ -489,15 +489,30 @@ void Jump_Features()
 			v::mod_use_jump_anim.SetValue(v::mod_use_jump_anim.evar->enabled);
 		} ImGui::SameLine(); 			r::MetricsHelpMarker("Use custom weapon animations after jumping (requires sprinting)");
 
+
+
 		if (!v::mod_use_jump_anim.isEnabled())
+			ImGui::BeginDisabled();
+
+		if (v::mod_smooth_rpg_anim.isEnabled())
 			ImGui::BeginDisabled();
 
 		ImGui::Text("\t");
 		ImGui::SameLine(); ImGui::PushItemWidth(100);
 		ImGui::Combo("Anim\t\t", &v::mod_jump_anim.evar->intValue, WEAPON_ANIMS, 30);
 
+		if (v::mod_smooth_rpg_anim.isEnabled())
+			ImGui::EndDisabled();
+
+		if (ImGui::Checkbox("RPG jump", &v::mod_smooth_rpg_anim.evar->enabled)) {
+			v::mod_smooth_rpg_anim.SetValue(v::mod_smooth_rpg_anim.evar->enabled);
+		} /*ImGui::SameLine(); 			r::MetricsHelpMarker(""); */
+
+
+
 		if (!v::mod_use_jump_anim.isEnabled())
 			ImGui::EndDisabled();
+
 		ImGui::EndGroup();
 
 	}

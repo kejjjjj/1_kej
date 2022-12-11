@@ -5,6 +5,8 @@ XAssetHeader __cdecl Material_Register_FastFile(const char* a1)
 {
 	return ((XAssetHeader(*)(const char* a1))0x489570)(a1);
 }
+
+
 HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 {
 	r::device_needs_reset = false;
@@ -37,6 +39,7 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 				Mod_A_500FPS();
 			}
 
+
 			R_EndRender();
 		}
 		
@@ -44,6 +47,7 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 
 	return pEndScene(pDevice);
 }
+
 void __cdecl r::CG_DrawActive()
 {
 	if (mglobs.isUsing) {
