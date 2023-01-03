@@ -6,7 +6,7 @@
 void r::R_Automation_Features()
 {
 	ImGui::Text("Strafing\t");
-	r::UI_DrawGradientZone(ImVec2(360, 200));
+	r::UI_DrawGradientZone(ImVec2(360, 250));
 
 	ImGui::Text("\t");
 	ImGui::SameLine();
@@ -22,7 +22,7 @@ void r::R_Automation_Features()
 
 	ImGui::BeginGroup();
 
-	static bool editing_keybind;
+	static bool editing_keybind = false;
 
 	if (!v::mod_strafebot.isEnabled() && !editing_keybind)
 		ImGui::BeginDisabled();
@@ -32,6 +32,10 @@ void r::R_Automation_Features()
 	} ImGui::SameLine(); r::MetricsHelpMarker("Strafing is not only limited to holding the WA/WD keys if this feature is enabled" 
 		"\nWQ/WE -> W only strafing"
 		"\nSQ/SE -> S only strafing");
+
+	if (ImGui::Checkbox("Engine Acceleration", &v::mod_strafebot_accel.evar->enabled)) {
+		v::mod_strafebot_accel.SetValue(v::mod_strafebot_accel.isEnabled());
+	} ImGui::SameLine(); r::MetricsHelpMarker("Strafebot is disabled whenever velocity < g_speed and not on the ground");
 
 	ImGui::PushItemWidth(75);
 	ImGui::DragFloat("Smoothing Scale", &v::mod_strafebot_smooth.evar->floatValue, 0.5f, 1, 45, "%.2f");

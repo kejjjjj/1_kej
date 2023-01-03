@@ -26,6 +26,19 @@ void cg::Mod_EditMemory(bool forceDisable)
 void cg::SV_Map()
 {
 
+	const auto L_CreateCmd = [](const char* cmdname) -> void {
+		
+		if (Dvar_FindMalleableVar(cmdname)) 
+			return;
+		
+		char buff[128];
+
+		sprintf_s(buff, "seta %s 0\n", cmdname);
+
+		Cbuf_AddText(buff, cgs->clientNum);
+
+	};
+
 	SV_Map_f();
 
 	const dvar_s* fs_game = Dvar_FindMalleableVar("fs_game");
@@ -41,6 +54,16 @@ void cg::SV_Map()
 			Com_PrintError(CON_CHANNEL_CONSOLEONLY, "failed to [%s] because '%s' is missing\n", *(sv_cmd_args->argv[sv_cmd_args->nesting] + 0), *(sv_cmd_args->argv[sv_cmd_args->nesting] + 1));
 			return;
 		}
+
+		//for restore position
+		L_CreateCmd("cjmod_mapname");
+		L_CreateCmd("cjmod_X");
+		L_CreateCmd("cjmod_Y");
+		L_CreateCmd("cjmod_Z");
+		L_CreateCmd("cjmod_angleX");
+		L_CreateCmd("cjmod_angleY");
+
+
 
 		dvar_s* sv_punkbuster = Dvar_FindMalleableVar("sv_punkbuster");
 		dvar_s* cl_punkbuster = Dvar_FindMalleableVar("cl_punkbuster");

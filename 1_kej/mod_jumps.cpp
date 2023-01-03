@@ -204,7 +204,7 @@ int32_t cg::Mod_RecommendedFPS(float yaw, char forwardmove, char rightmove)
 		jumpanalyzer.recommendedFPS = 250;
 		return 250;
 	}
-	return 500;
+	return 333;
 }
 void cg::Mod_BounceCalculator_Create()
 {

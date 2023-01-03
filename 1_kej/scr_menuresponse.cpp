@@ -15,6 +15,7 @@ void Script_OnMenuResponse(int serverId, int menu, const char* response)
     const bool axis = !strcmp(response, "axis");
     const bool autoassign = !strcmp(response, "autoassign");
     const bool team_marinesopfor = !strcmp(menu_name, "team_marinesopfor");
+    static bool hasColls = true;
 
     if ((team_marinesopfor) && (allies || axis || autoassign)) {
 
@@ -49,6 +50,16 @@ void Script_OnMenuResponse(int serverId, int menu, const char* response)
 
         else if (!strcmp(response, "bounce_calc"))
             Mod_BounceCalculator_Create();
+
+        else if (!strcmp(response, "toggle_collisions")) {
+            hook* a = 0;
+            if (hasColls)
+                a->nop(0x4F4C8E);
+            else
+                a->write_addr(0x4F4C8E, "\xE8\x1D\xF4\xFF\xFF", 5);
+            hasColls = !hasColls;
+        }
+
     }
 
     //printf("menu[" "%s" "], response[" "%s" "]\n", menu_name, response);

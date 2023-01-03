@@ -221,7 +221,7 @@ float cg::getOptAngle(float& _opt, const bool all_techs)
 
 	float _speed = glm::length(glm::vec2(clients->cgameVelocity[1], clients->cgameVelocity[0]));
 
-	if (_speed < 1 || !all_techs && forwardmove != 127 && rightmove != 0 || analyzer.isSegmenting() && !analyzer.segmenterData.isReady) 
+	if (_speed < 1 || _speed < clients->snap.ps.speed && NOT_GROUND || !all_techs && forwardmove != 127 && rightmove != 0 || analyzer.isSegmenting() && !analyzer.segmenterData.isReady)
 		return -400.0;
 
 	

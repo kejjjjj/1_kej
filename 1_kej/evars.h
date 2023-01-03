@@ -54,6 +54,7 @@ namespace v
 		mod_strafebot_ow,
 		mod_strafebot_smooth,
 		mod_strafebot_bhop_s,
+		mod_strafebot_accel,
 		mod_autoslide,
 		mod_autoanglerpg,
 		mod_jbuild_hitbox,

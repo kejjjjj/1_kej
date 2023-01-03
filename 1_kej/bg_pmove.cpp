@@ -125,6 +125,9 @@ void cg::PM_UFOMove(pmove_t* pmm, pml_t* pmll)
 
 	PM_UFOMove_f(pmm, pmll);
 
+	Mod_DetermineFPS(pm, pml);
+
+
 	jumpanalyzer.commandTime = pm->ps->commandTime;
 	jumpanalyzer.serverTime = pm->cmd.serverTime;
 	jumpanalyzer.hugging_bounce = false;
@@ -455,7 +458,11 @@ void cg::Mod_DetermineFPS(pmove_t* pm, pml_t* pml)
 
 
 		if (jData) {
-			rightmove = jData->rightmove > 0;
+
+			if(jData->rightmove > 0)
+				rightmove = true;
+			else if (jData->rightmove < 0)
+				rightmove = false;
 		}
 
 	}
@@ -490,8 +497,10 @@ void cg::Mod_DetermineFPS(pmove_t* pm, pml_t* pml)
 	fps_zones.length250 -= 6.f; //hide overlap
 	fps_zones.length125 -= long125 == false ? 17.f : 0;
 
-	if	(!rightmove)	fps_zones.length333 += long125 == true ? 17.f : 0;
-	else				fps_zones.length333 -= long125 == true ? 17.f : 0;
+	if	(!rightmove)	
+		fps_zones.length333 += (long125 == true ? 17.f : 0);
+	else	
+		fps_zones.length333 -= (long125 == true ? 17.f : 0);
 
 	return;
 	//return Accelerate(wishdir, pml, wishspeed, 1.f, ps);
