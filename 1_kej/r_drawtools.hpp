@@ -81,6 +81,8 @@ namespace r
 	//void R_DrawConstructedBoxEdges(box_s box, vec4_t col);
 
 	void R_DrawTriangle(vec3_t points[3], vec4_t col);
+	void R_DrawTriangleOutline(vec3_t points[3], vec4_t col);
+
 	void R_DrawTriangle(vec3_t pointA, vec3_t pointB, vec3_t pointC, vec4_t col);
 
 	bool ButtonCentered(const char* label, float alignment = 0.5f);

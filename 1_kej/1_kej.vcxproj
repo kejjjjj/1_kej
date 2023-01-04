@@ -171,6 +171,7 @@
     <ClInclude Include="cg_offsets.h" />
     <ClInclude Include="cl_main.hpp" />
     <ClInclude Include="cmod_data.hpp" />
+    <ClInclude Include="cmod_export.hpp" />
     <ClInclude Include="com_channel.h" />
     <ClInclude Include="detours\detours.h" />
     <ClInclude Include="dvar.hpp" />
@@ -224,6 +225,7 @@
     <ClCompile Include="cg_main.cpp" />
     <ClCompile Include="cl_main.cpp" />
     <ClCompile Include="cmod_data.cpp" />
+    <ClCompile Include="cmod_export.cpp" />
     <ClCompile Include="com_channel.cpp" />
     <ClCompile Include="dvar.cpp" />
     <ClCompile Include="entry.cpp" />

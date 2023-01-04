@@ -143,6 +143,7 @@ typedef vec_t vec4_t[4];
 #include "com_channel.h"
 
 #include "cmod_data.hpp"
+#include "cmod_export.hpp"
 
 #include "scr_cmd.hpp"
 #include "scr_functions.hpp"

@@ -11,11 +11,11 @@ std::string fs::GetExePath()
 	std::string f = GetExeFileName();
 	return f.substr(0, f.find_last_of("\\/"));
 }
-bool fs::F_DirectoryExists(std::string directory_path)
+bool fs::F_DirectoryExists(const std::string& directory_path)
 {
 	return _fs::exists(directory_path);
 }
-bool fs::F_FileExists(std::string directory, std::string file_name)
+bool fs::F_FileExists(const std::string& directory, const std::string& file_name)
 {
 	if (!_fs::exists(directory)) {
 		return false;
@@ -29,7 +29,7 @@ bool fs::F_FileExists(std::string directory, std::string file_name)
 	}
 	return false;
 }
-bool fs::F_WriteToFile(std::fstream& fp, std::string text)
+bool fs::F_WriteToFile(std::fstream& fp, const std::string& text)
 {
 	if (!fp.is_open())
 		return false;
@@ -38,7 +38,7 @@ bool fs::F_WriteToFile(std::fstream& fp, std::string text)
 
 	return true;
 }
-bool fs::F_OpenFile(std::fstream& fp, std::string path, fileopen type)
+bool fs::F_OpenFile(std::fstream& fp, const std::string& path, fileopen type)
 {
 	if (fp.is_open())
 		return true;
@@ -80,11 +80,11 @@ bool fs::F_CloseFile(std::fstream& fp)
 	return true;
 }
 
-bool fs::F_CreateDirectory(std::string path)
+bool fs::F_CreateDirectory(const std::string& path)
 {
 	return _mkdir((path).c_str()) != -1;
 }
-bool fs::F_CreateFile(std::string path)
+bool fs::F_CreateFile(const std::string& path)
 {
 	//std::fstream f;
 
@@ -101,7 +101,7 @@ bool fs::F_CreateFile(std::string path)
 
 	return true;
 }
-void fs::F_FilesInThisDirectory(std::string directory, std::vector<std::string>* out)
+void fs::F_FilesInThisDirectory(const std::string& directory, std::vector<std::string>* out)
 {
 	out->clear();
 	out->resize(1);
@@ -121,7 +121,7 @@ void fs::F_FilesInThisDirectory(std::string directory, std::vector<std::string>*
 	}
 	out->resize(i);
 }
-std::string fs::GetFileExtension(std::string file)
+std::string fs::GetFileExtension(const std::string& file)
 {
 
 	int extensionPos = file.find_last_of(".");
@@ -129,12 +129,12 @@ std::string fs::GetFileExtension(std::string file)
 	if (extensionPos < 0)
 		return "No extension";
 
-	file = file.substr(extensionPos);
+	std::string file2 = file.substr(extensionPos);
 
 
-	return file;
+	return file2;
 }
-std::string fs::removeFileExtension(std::string file, size_t chars)
+std::string fs::removeFileExtension(const std::string& file, size_t chars)
 {
 	return file.substr(0, file.size() - chars);
 }
@@ -298,7 +298,7 @@ fs::FS_CreatePairsForTextures()
 
 
 }
-bool fs::F_FileAlreadyExists(std::string directory, std::string file)
+bool fs::F_FileAlreadyExists(const std::string& directory, const std::string& file)
 {
 	std::vector<std::string> files;
 

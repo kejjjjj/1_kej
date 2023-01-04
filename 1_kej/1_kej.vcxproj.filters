@@ -237,6 +237,9 @@
     <ClInclude Include="u_key.h">
       <Filter>Source Files\sys</Filter>
     </ClInclude>
+    <ClInclude Include="cmod_export.hpp">
+      <Filter>Source Files\CMod</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -397,6 +400,9 @@
     </ClCompile>
     <ClCompile Include="u_key.cpp">
       <Filter>Source Files\sys</Filter>
+    </ClCompile>
+    <ClCompile Include="cmod_export.cpp">
+      <Filter>Source Files\CMod</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

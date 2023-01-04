@@ -28,21 +28,23 @@ namespace fs
 
 	bool F_isValidFileName(const std::string file_name);
 
-	bool F_DirectoryExists(std::string directory_path);
-	bool F_FileExists(std::string directory, std::string file_name);
+	bool F_DirectoryExists(const std::string& directory_path);
+	bool F_FileExists(const std::string& directory, const std::string& file_name);
 
-	bool F_OpenFile(std::fstream& fp, std::string path, fileopen type);
+	bool F_OpenFile(std::fstream& fp, const std::string& path, fileopen type);
 	bool F_CloseFile(std::fstream& fp);
 
-	bool F_WriteToFile(std::fstream& fp, std::string text);
-	bool F_CreateDirectory(std::string path);
-	bool F_CreateFile(std::string path);
+	bool F_WriteToFile(std::fstream& fp, const std::string& text);
+	bool F_CreateDirectory(const std::string& path);
+	bool F_CreateFile(const std::string& path);
 
-	std::string GetFileExtension(std::string file);
+	std::string GetFileExtension(const std::string& file);
 
-	void F_FilesInThisDirectory(std::string directory, std::vector<std::string>* out);
-	std::string removeFileExtension(std::string file, size_t chars);
-	std::string F_GetFileName(std::string fullpath);
+
+	void F_FilesInThisDirectory(const std::string& directory, std::vector<std::string>* out);
+	std::string removeFileExtension(const std::string& file, size_t chars);
+	std::string F_GetFileName(std::string const fullpath);
+	std::string F_GoToPreviousDirectory(std::string& directory);
 
 
 	uint64_t F_ReadAddress(std::fstream& fp);
@@ -54,7 +56,7 @@ namespace fs
 	std::string _GetLastError();
 	inline file_s file;
 
-	bool F_FileAlreadyExists(std::string directory, std::string path);
+	bool F_FileAlreadyExists(const std::string& directory, const std::string& path);
 
 
 	std::vector<std::pair<std::string, LPDIRECT3DTEXTURE9>>

@@ -38,7 +38,7 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 				Mod_DrawFPSHelpers();
 				Mod_A_500FPS();
 			}
-
+			CMod_OnHighlightTriangle();
 
 			R_EndRender();
 		}
@@ -55,6 +55,7 @@ void __cdecl r::CG_DrawActive()
 		Mod_DrawCoordinates();
 		Mod_DrawSurfaceInfo();
 		/*Mod_DrawFPSHelpers();*/
+		
 		Mod_DrawCurveSpeed();
 
 		Mod_DrawEvents();

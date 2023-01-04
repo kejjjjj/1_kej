@@ -12,6 +12,8 @@ namespace cg
 
 	void CMod_HighlightSelected();
 
+	void CMod_OnHighlightTriangle();
+
 }
 
 

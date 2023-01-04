@@ -85,6 +85,9 @@ void cg::CMod_HighlightSelected()
 						cplane_s* plane = brushside->plane;
 
 						dmaterial_t mat = cm->materials[brushside->materialNum];
+
+
+
 						std::cout << "brushside->materialNum: " << mat.material << '\n';
 
 					}
@@ -144,6 +147,168 @@ void cg::CMod_HighlightSelected()
 		box.R_DrawConstructedBox(vec4_t{ 0,255,0,50});
 
 	}
+
+
+}
+
+
+struct v3
+{
+	float x, y, z;
+};
+void cg::CMod_OnHighlightTriangle()
+{
+	static bool edit_mode = false;
+
+	if ((GetAsyncKeyState(VK_NUMPAD6) & 1)) {
+
+		edit_mode = !edit_mode;
+
+		if(edit_mode)
+			VectorCopy(clients->cgameOrigin, exp_mins);
+		else {
+			for (int i = 0; i < 3; i++) {
+				exp_origin[i] = exp_mins[i] + (exp_maxs[i] - exp_mins[i]) / 2;
+				exp_maxs[i] = fabs(exp_maxs[i] - exp_origin[i]);
+				exp_mins[i] = fabs(exp_origin[i] - exp_mins[i]);
+			}
+		}
+	}
+
+	if (edit_mode) {
+		VectorCopy(clients->cgameOrigin, exp_maxs);
+	}
+
+	r::box_s box(exp_origin, exp_mins, exp_maxs);
+
+	box.R_DrawConstructedBoxEdges(vec4_t{ 0,255,0,255 });
+	box.R_DrawConstructedBox(vec4_t{ 0,255,0,55});
+
+	if ((GetAsyncKeyState(VK_NUMPAD5) & 1) == false) {
+		return;
+	}
+	
+
+	cg::MapExport map;
+
+	map.EXP_BeginExport();
+
+	return;
+	
+	static vec3_t trisA{}, trisB{}, trisC{};
+	static unsigned int leafnum = 0;
+	static std::vector<v3> v;
+	vec2_t s;
+
+	if (v.size() >= 3) {
+		for (int i = 0; i < v.size() - 3; i += 3) {
+
+			vec3_t tris[3];
+
+			tris[0][0] = v[i].x;
+			tris[0][1] = v[i].y;
+			tris[0][2] = v[i].z;
+
+
+			tris[1][0] = v[i + 1].x;
+			tris[1][1] = v[i + 1].y;
+			tris[1][2] = v[i + 1].z;
+
+			tris[2][0] = v[i + 2].x;
+			tris[2][1] = v[i + 2].y;
+			tris[2][2] = v[i + 2].z;
+
+			r::R_DrawTriangleOutline(tris, vec4_t{ 255,0,0,255 });
+			r::R_DrawTriangle(tris, vec4_t{ 255,0,0,50 });
+
+		}
+	}
+
+	v.clear();
+	
+	uint16_t model = 0;
+
+	cLeaf_t* leaf = &cm->leafs[ImClamp<unsigned int>(++leafnum, 0, cm->numLeafs)];
+
+	if (!leaf)
+		return;
+
+	int idx = 0;
+	std::cout << "leaf["<<leafnum<<"]collAabbCount: " << leaf->collAabbCount << '\n';
+
+	if (leaf->collAabbCount) {
+			
+		//do {
+
+			CollisionAabbTree* aabb = &cm->aabbTrees[idx + leaf->firstCollAabbIndex];
+			CollisionAabbTreeIndex fChild = aabb->u;
+
+			//while(aabb->childCount){
+			//	int v4 = 0;
+			//	auto child = &cm->aabbTrees[fChild.firstChildIndex];
+
+			//	do {
+
+			//		++aabb;
+			//		++v4;
+
+			//	} while (v4 < aabb->childCount);
+
+			//}
+			fChild = aabb->u;
+			CollisionPartition* partition = &cm->partitions[fChild.firstChildIndex];
+			std::cout << "partition[" << fChild.firstChildIndex << "]triCount: " << (int)partition->triCount << '\n';
+
+			int firstTri = partition->firstTri;
+
+			if (firstTri < firstTri + partition->triCount)
+			{
+				int triIndice = 3 * firstTri;
+
+				do
+				{
+
+					vec3_t X = { cm->verts[cm->triIndices[triIndice]][0],	 cm->verts[cm->triIndices[triIndice]][1],    cm->verts[cm->triIndices[triIndice]][2]   };
+					vec3_t Y = { cm->verts[cm->triIndices[triIndice+1]][0],  cm->verts[cm->triIndices[triIndice+1]][1],  cm->verts[cm->triIndices[triIndice+1]][2] };
+					vec3_t Z = { cm->verts[cm->triIndices[triIndice+2]][0],  cm->verts[cm->triIndices[triIndice+2]][1],  cm->verts[cm->triIndices[triIndice+2]][2] };
+
+					v.push_back(v3{ X[0], X[1], X[2] });
+					v.push_back(v3{ Y[0], Y[1], Y[2] });
+					v.push_back(v3{ Z[0], Z[1], Z[2] });
+
+					//VectorCopy(X, tris[i]);
+
+					//std::cout << "X: " << X[0] << '\n';
+					//std::cout << "Y: " << X[1] << '\n';
+					//std::cout << "Z: " << X[2] << "\n\n";
+
+					std::cout << std::format("A: {:.3f}, {:.3f}, {:.3f}\n", X[0], X[1], X[2]);
+					std::cout << std::format("B: {:.3f}, {:.3f}, {:.3f}\n", Y[0], Y[1], Y[2]);
+					std::cout << std::format("C: {:.3f}, {:.3f}, {:.3f}\n\n", Z[0], Z[1], Z[2]);
+
+
+					++firstTri;
+					triIndice += 3;
+
+				} while (firstTri < partition->firstTri + partition->triCount);
+
+			}
+
+
+		//} while (++idx < leaf->collAabbCount);
+
+	}
+
+	//if (leaf) {
+
+	//	std::cout << "cmodel->leaf.mins[0] = " << leaf->mins[0] << '\n';
+	//	std::cout << "cmodel->leaf.mins[1] = " << leaf->mins[1] << '\n';
+	//	std::cout << "cmodel->leaf.mins[2] = " << leaf->mins[2] << '\n';
+
+
+	//}
+
+
 
 
 }
