@@ -144,6 +144,7 @@ typedef vec_t vec4_t[4];
 
 #include "cmod_data.hpp"
 #include "cmod_export.hpp"
+#include "cm_brush.hpp"
 
 #include "scr_cmd.hpp"
 #include "scr_functions.hpp"

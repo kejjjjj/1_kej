@@ -583,6 +583,7 @@ void r::UI_DrawGradientZone(ImVec2 size)
 	const ImVec2 sp = ImGui::GetCursorScreenPos();
 	ImGui::DrawGradientBar(&grad, sp, size.x, 5);
 	ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(sp.x, sp.y + 5), ImVec2(sp.x + size.x, sp.y + size.y), ImColor(0.08f, 0.07f, 0.075f, 0.8f));
+	ImGui::Dummy(ImVec2(size.x, 1));
 }
 
 

@@ -316,7 +316,7 @@ bool fs::F_FileAlreadyExists(const std::string& directory, const std::string& fi
 }
 bool fs::FS_AllNecessaryImagesExist()
 {
-	const char* should_exist[10] = {
+	const char* should_exist[11] = {
 		"Automation",
 		"Error_no_load",
 		"Game",
@@ -324,6 +324,7 @@ bool fs::FS_AllNecessaryImagesExist()
 		"Jump Builder",
 		"Jump Preview",
 		"Jumping",
+		"Map",
 		"Rpg",
 		"Settings_no_load",
 		"Visuals"

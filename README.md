@@ -41,4 +41,5 @@ All documentation can be found from the [Wiki page](https://github.com/kejjjjj/1
 <a href="https://www.flaticon.com/free-icons/preferences" title="preferences icons">Preferences icons created by Creatype - Flaticon</a>\
 <a href="https://www.flaticon.com/free-icons/sketch" title="sketch icons">Sketch icons created by Freepik - Flaticon</a>\
 <a href="https://www.flaticon.com/free-icons/project" title="project icons">Project icons created by Freepik - Flaticon</a>\
-<a href="https://www.flaticon.com/free-icons/home-button" title="home button icons">Home button icons created by Kiranshastry - Flaticon</a>
+<a href="https://www.flaticon.com/free-icons/home-button" title="home button icons">Home button icons created by Kiranshastry - Flaticon</a>\
+<a href="https://www.flaticon.com/free-icons/adventure" title="adventure icons">Adventure icons created by ultimatearm - Flaticon</a>

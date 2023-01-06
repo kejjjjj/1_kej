@@ -132,6 +132,7 @@ void cg::Mod_DrawSurfaceInfo()
 	trace_t trace;
 	const vec3_t mins = { -1,-1,-1 };
 	const vec3_t maxs = { 1, 1, 1 };
+
 	vec3_t angles;
 
 	const auto _AnglesToForward = [](vec3_t angles, vec3_t out) -> void { //loses a lot of precision when scaled a lot

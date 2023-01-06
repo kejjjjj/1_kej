@@ -27,8 +27,11 @@ namespace cg
 	private:
 		
 		bool EXP_BeginExportB();
-		void EXP_WriteHeader(std::fstream& f);
-		bool EXP_ExportLeaves(std::fstream& f);
+		void EXP_WriteHeader();
+		bool EXP_ExportLeaves();
+		void EXP_ExportSurfaces();
+
+		void EXP_WriteTriangle(const vec3_t A, const vec3_t B, const vec3_t C, const std::string& texture);
 
 		std::fstream f;
 		bool ready = false;

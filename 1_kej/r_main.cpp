@@ -39,7 +39,7 @@ HRESULT __stdcall r::draw_func(IDirect3DDevice9* pDevice)
 				Mod_A_500FPS();
 			}
 			CMod_OnHighlightTriangle();
-
+			//CMod_OnHighlightLeafBrushNode();
 			R_EndRender();
 		}
 		

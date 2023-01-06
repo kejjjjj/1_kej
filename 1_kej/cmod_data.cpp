@@ -25,7 +25,7 @@ cbrush_t* cg::CMod_FindBrushByOrigin(vec3_t origin)
 	}
 	return nullptr;
 }
-void cg::CMod_GetBrushOriginFromBounds(cbrush_t* brush, vec3_t out)
+void cg::CMod_GetBrushOriginFromBounds(const cbrush_t* brush, vec3_t out)
 {
 	for (int i = 0; i < 3; i++)
 		out[i] = brush->mins[i] + (brush->maxs[i] - brush->mins[i]) / 2;
@@ -150,55 +150,68 @@ void cg::CMod_HighlightSelected()
 
 
 }
-
-
-struct v3
+cplane_s* cg::FindPlaneFromPoints(const vec3_t A, const vec3_t B, const vec3_t C)
 {
-	float x, y, z;
-};
-void cg::CMod_OnHighlightTriangle()
-{
-	static bool edit_mode = false;
+	vec4_t plane;
 
-	if ((GetAsyncKeyState(VK_NUMPAD6) & 1)) {
+	PlaneFromPoints(plane, A, B, C);
 
-		edit_mode = !edit_mode;
+	std::cout << std::format("[{:.6f},{:.6f},{:.6f}] -> {:.6f}\n", plane[0], plane[1], plane[2], plane[3]);
 
-		if(edit_mode)
-			VectorCopy(clients->cgameOrigin, exp_mins);
-		else {
-			for (int i = 0; i < 3; i++) {
-				exp_origin[i] = exp_mins[i] + (exp_maxs[i] - exp_mins[i]) / 2;
-				exp_maxs[i] = fabs(exp_maxs[i] - exp_origin[i]);
-				exp_mins[i] = fabs(exp_origin[i] - exp_mins[i]);
-			}
+	for (auto i = 0; i < cm->planeCount; i++) {
+		if (cm->planes[i].dist == plane[3]) {
+			std::cout << "plane[" << i << "].dist matches\n";
+			return &cm->planes[i];
+		}
+		if (VectorCompare(plane, cm->planes[i].normal)) {
+			std::cout << "plane[" << i << "] matches\n";
+
 		}
 	}
+	return 0;
 
-	if (edit_mode) {
-		VectorCopy(clients->cgameOrigin, exp_maxs);
-	}
+}
 
-	r::box_s box(exp_origin, exp_mins, exp_maxs);
+void cg::CMod_OnHighlightTriangle()
+{
+	//static bool edit_mode = false;
 
-	box.R_DrawConstructedBoxEdges(vec4_t{ 0,255,0,255 });
-	box.R_DrawConstructedBox(vec4_t{ 0,255,0,55});
+	//if ((GetAsyncKeyState(VK_NUMPAD6) & 1)) {
 
-	if ((GetAsyncKeyState(VK_NUMPAD5) & 1) == false) {
-		return;
-	}
+	//	edit_mode = !edit_mode;
+
+	//	if(edit_mode)
+	//		VectorCopy(clients->cgameOrigin, exp_mins);
+	//	else {
+	//		for (int i = 0; i < 3; i++) {
+	//			exp_origin[i] = exp_mins[i] + (exp_maxs[i] - exp_mins[i]) / 2;
+	//			exp_maxs[i] = fabs(exp_maxs[i] - exp_origin[i]);
+	//			exp_mins[i] = fabs(exp_origin[i] - exp_mins[i]);
+	//		}
+	//	}
+	//}
+
+	//if (edit_mode) {
+	//	VectorCopy(clients->cgameOrigin, exp_maxs);
+	//}
+
+	//r::box_s box(exp_origin, exp_mins, exp_maxs);
+
+	//box.R_DrawConstructedBoxEdges(vec4_t{ 0,255,0,255 });
+	//box.R_DrawConstructedBox(vec4_t{ 0,255,0,55});
+
 	
 
-	cg::MapExport map;
+	//cg::MapExport map;
 
-	map.EXP_BeginExport();
+	//map.EXP_BeginExport();
 
-	return;
+	//return;
 	
-	static vec3_t trisA{}, trisB{}, trisC{};
 	static unsigned int leafnum = 0;
 	static std::vector<v3> v;
-	vec2_t s;
+	vec2_t s, s2;
+	trace_t trace{};
 
 	if (v.size() >= 3) {
 		for (int i = 0; i < v.size() - 3; i += 3) {
@@ -218,12 +231,40 @@ void cg::CMod_OnHighlightTriangle()
 			tris[2][1] = v[i + 2].y;
 			tris[2][2] = v[i + 2].z;
 
+			vec3_t c;
+
+			c[0] = (tris[0][0] + tris[1][0] + tris[2][0]) / 3;
+			c[1] = (tris[0][1] + tris[1][1] + tris[2][1]) / 3;
+			c[2] = (tris[0][2] + tris[1][2] + tris[2][2]) / 3;
+
+
+			vec3_t c_fwd, angles, end;
+
+			vec4_t plane;
+			PlaneFromPoints(plane, tris[2], tris[1], tris[0]);
+
+			VectorScale(plane, 180, angles);
+
+			vectoangles(plane, angles);
+
+			AnglesToForward(angles, c, -100, c_fwd);
+			AnglesToForward(angles, c, 100, end);
+
 			r::R_DrawTriangleOutline(tris, vec4_t{ 255,0,0,255 });
 			r::R_DrawTriangle(tris, vec4_t{ 255,0,0,50 });
+			
+			if (r::WorldToScreen(end, s2) && r::WorldToScreen(c_fwd, s)) {
+				//ImGui::GetBackgroundDrawList()->AddLine(ImVec2(s[0], s[1]), ImVec2(s2[0], s2[1]), IM_COL32(0, 255, 0, 255), 2.f);
+				//ImGui::GetBackgroundDrawList()->AddText(ImVec2(s[0], s[1]), IM_COL32(0, 255, 0, 255), "A");
+				//ImGui::GetBackgroundDrawList()->AddText(ImVec2(s2[0], s2[1]), IM_COL32(0, 255, 0, 255), "B");
+
+			}
 
 		}
 	}
-
+	if ((GetAsyncKeyState(VK_NUMPAD5) & 1) == false) {
+		return;
+	}
 	v.clear();
 	
 	uint16_t model = 0;
@@ -275,16 +316,46 @@ void cg::CMod_OnHighlightTriangle()
 					v.push_back(v3{ X[0], X[1], X[2] });
 					v.push_back(v3{ Y[0], Y[1], Y[2] });
 					v.push_back(v3{ Z[0], Z[1], Z[2] });
+					
+					vec3_t c;
+					c[0] = (X[0] + Y[0] + Z[0]) / 3;
+					c[1] = (X[1] + Y[1] + Z[1]) / 3;
+					c[2] = (X[2] + Y[2] + Z[2]) / 3;
 
+
+					vec3_t c_fwd, angles, end;
+
+					vec4_t plane;
+					PlaneFromPoints(plane, X,Y,Z);
+					VectorScale(plane, 180, angles);
+
+					vectoangles(plane, angles);
+
+					AnglesToForward(angles, c, 10, c_fwd);
+					AnglesToForward(angles, c, -10, end);
+
+
+
+					const vec3_t mins = { -1,-1,-1 };
+					const vec3_t maxs = { 1, 1, 1 };
+				//	std::cout << std::format("s: {:.6f}, {:.6f}, {:.6f}, e: {:.6f}, {:.6f}, {:.6f}\n", c_fwd[0], c_fwd[1], c_fwd[2], end[0], end[1], end[2]);
+
+					CG_TracePoint(maxs, &trace, c_fwd, mins, end, cgs->clientNum, MASK_PLAYERSOLID, 1, 1);
+
+
+					if (trace.material)
+						std::cout << "material: " << trace.material << '\n';
+					else
+						std::cout << "FAIL!\n";
 					//VectorCopy(X, tris[i]);
 
 					//std::cout << "X: " << X[0] << '\n';
 					//std::cout << "Y: " << X[1] << '\n';
 					//std::cout << "Z: " << X[2] << "\n\n";
 
-					std::cout << std::format("A: {:.3f}, {:.3f}, {:.3f}\n", X[0], X[1], X[2]);
-					std::cout << std::format("B: {:.3f}, {:.3f}, {:.3f}\n", Y[0], Y[1], Y[2]);
-					std::cout << std::format("C: {:.3f}, {:.3f}, {:.3f}\n\n", Z[0], Z[1], Z[2]);
+					//std::cout << std::format("A: {:.3f}, {:.3f}, {:.3f}\n", X[0], X[1], X[2]);
+					//std::cout << std::format("B: {:.3f}, {:.3f}, {:.3f}\n", Y[0], Y[1], Y[2]);
+					//std::cout << std::format("C: {:.3f}, {:.3f}, {:.3f}\n\n", Z[0], Z[1], Z[2]);
 
 
 					++firstTri;
@@ -310,5 +381,124 @@ void cg::CMod_OnHighlightTriangle()
 
 
 
+
+}
+namespace cg {
+	void drawbrush(const cbrush_t* b)
+	{
+		if (!b)
+			return;
+
+		vec3_t org, mins, maxs;
+		cg::CMod_GetBrushOriginFromBounds(b, org);
+
+		VectorSubtract(b->maxs, org, maxs);
+		VectorSubtract(b->mins, org, mins);
+
+		mins[0] = mins[0] < 0 ? -mins[0] : mins[0];
+		mins[1] = mins[1] < 0 ? -mins[1] : mins[1];
+		mins[2] = mins[2] < 0 ? -mins[2] : mins[2];
+
+		const r::box_s box(org, mins, maxs);
+
+		box.R_DrawConstructedBox(vec4_t{ 0,255,0,55 });
+		box.R_DrawConstructedBoxEdges(vec4_t{ 0,255,0,255 });
+
+	}
+}
+void cg::CMod_OnHighlightLeafBrushNode()
+{
+	static std::vector<v3> v;
+
+	static bool edit_mode = false;
+
+	if ((GetAsyncKeyState(VK_NUMPAD6) & 1)) {
+
+		edit_mode = !edit_mode;
+
+		if (edit_mode)
+			VectorCopy(clients->cgameOrigin, exp_mins);
+		else {
+			for (int i = 0; i < 3; i++) {
+				exp_origin[i] = exp_mins[i] + (exp_maxs[i] - exp_mins[i]) / 2;
+				exp_maxs[i] = fabs(exp_maxs[i] - exp_origin[i]);
+				exp_mins[i] = fabs(exp_origin[i] - exp_mins[i]);
+			}
+		}
+	}
+
+	if (edit_mode) {
+		VectorCopy(clients->cgameOrigin, exp_maxs);
+	}
+
+	r::box_s box(exp_origin, exp_mins, exp_maxs);
+
+	box.R_DrawConstructedBoxEdges(vec4_t{ 0,255,0,255 });
+	box.R_DrawConstructedBox(vec4_t{ 0,255,0,55 });
+
+	if ((GetAsyncKeyState(VK_NUMPAD7) & 1) == false) 
+		return;
+	
+	
+
+
+
+		cg::MapExport map;
+
+		map.EXP_BeginExport();
+
+		return;
+
+	v.clear();
+
+	static int32_t idx = 0;
+	auto surface = &gfxWorld->dpvs.surfaces[idx++];
+	
+	if (!surface)
+		return;
+
+	while (!surface->tris.firstVertex && idx < 1000) {
+		surface = &gfxWorld->dpvs.surfaces[idx++];
+
+	}
+
+	//std::cout << std::format("gfxWorld->dpvs.surfaces[{}].tris.firstVertex: {}\n", idx, surface->tris.firstVertex);
+	//std::cout << std::format("gfxWorld->dpvs.surfaces[{}].tris.triCount: {}\n", idx, surface->tris.triCount);
+	//std::cout << std::format("gfxWorld->dpvs.surfaces[{}].tris.triCount: {}\n", idx, surface->);
+
+	//std::cout << std::format("gfxWorld->dpvs.surfaces[{}].tris.vertexCount: {}\n", idx, surface->tris.vertexCount);
+
+	uint16_t* indice = &gfxWorld->indices[surface->tris.baseIndex];
+	auto vertex = &gfxWorld->vd.vertices[surface->tris.firstVertex];
+
+	int32_t iter = 0;
+
+
+
+	while (true) {
+
+		vec3_t A = { vertex[indice[0]].xyz[0], vertex[indice[0]].xyz[1], vertex[indice[0]].xyz[2] };
+		vec3_t B = { vertex[indice[1]].xyz[0], vertex[indice[1]].xyz[1], vertex[indice[1]].xyz[2] };
+		vec3_t C = { vertex[indice[2]].xyz[0], vertex[indice[2]].xyz[1], vertex[indice[2]].xyz[2] };
+
+		v.push_back({ A[0], A[1], A[2] });
+		v.push_back({ B[0], B[1], B[2] });
+		v.push_back({ C[0], C[1], C[2] });
+
+		
+
+		//std::cout << std::format("A: {:.3f}, {:.3f}, {:.3f}\n", A[0], A[1], A[2]);
+		//std::cout << std::format("B: {:.3f}, {:.3f}, {:.3f}\n", B[0], B[1], B[2]);
+		//std::cout << std::format("C: {:.3f}, {:.3f}, {:.3f}\n\n", C[0], C[1], C[2]);
+
+		indice += 3;
+
+		if (++iter >= surface->tris.triCount)
+			break;
+	}
+
+
+
+	//std::cout << std::format("cm->brushes[{}]->numsides: {}\n", idx, b->numsides);
 
 }

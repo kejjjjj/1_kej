@@ -47,12 +47,14 @@ bool cg::MapExport::EXP_BeginExportB()
 
 
 
-	EXP_WriteHeader(f);
+	EXP_WriteHeader();
 
-	if (!EXP_ExportLeaves(f)) {
-		Com_PrintError(CON_CHANNEL_OBITUARY, "EXP_MapExport(): cannot export leaves\n");
-		return false;
-	}
+	//if (!EXP_ExportLeaves()) {
+	//	Com_PrintError(CON_CHANNEL_OBITUARY, "EXP_MapExport(): cannot export leaves\n");
+	//	return false;
+	//}
+
+	EXP_ExportSurfaces();
 
 	f << "}";
 
@@ -63,7 +65,7 @@ bool cg::MapExport::EXP_BeginExportB()
 	return true;
 
 }
-void cg::MapExport::EXP_WriteHeader(std::fstream& f)
+void cg::MapExport::EXP_WriteHeader()
 {
 	f << "iwmap 4\n";
 	f << "\"000_Global\" flags  active\n";
@@ -80,7 +82,7 @@ void cg::MapExport::EXP_WriteHeader(std::fstream& f)
 	f << "\"bouncefraction\" " "\".7\"" << '\n';
 	f << "\"classname\" \"worldspawn\"\n";
 }
-bool cg::MapExport::EXP_ExportLeaves(std::fstream& f)
+bool cg::MapExport::EXP_ExportLeaves()
 {
 	uint32_t idx = 0;
 	cLeaf_t* leaf;
@@ -92,32 +94,6 @@ bool cg::MapExport::EXP_ExportLeaves(std::fstream& f)
 	auto exp = this;
 
 
-	const auto L_WriteMesh = [&f, this](const vec3_t A, const vec3_t B, const vec3_t C)->void{
-		
-		if (!A || !B || !C)
-			return;
-
-		VectorCopy(A, e.A1);
-		VectorCopy(B, e.B1);
-		VectorCopy(C, e.C1);
-
-		f << "// brush " << e.brush++ << "\n {";
-		f << "  mesh\n   {\n";
-		f << "  toolFlags splitGeo;\n";
-		f << "  caulk\n";
-		f << "  lightmap_grey\n";
-		f << "   smoothing smoothing_hard";
-		f << "   2 2 0 8\n   (\n";
-		f << "\tv " << A[0] << ' ' << A[1] << ' ' << A[2] << " t -8192 4096 -4 4\n";
-		f << "\tv " << B[0] << ' ' << B[1] << ' ' << B[2] << " t -8192 4096 -4 4\n";
-		f << "   )\n   (\n";
-		f << "\tv " << C[0] << ' ' << C[1] << ' ' << C[2] << " t -8192 4096 -4 4\n";
-		f << "\tv " << C[0] << ' ' << C[1] << ' ' << C[2] << " t -8192 4096 -4 4\n";
-		f << "   )\n";
-		f << "  }\n }\n";
-
-
-	};
 	vec3_t mins, maxs;
 
 	for (int j= 0; j < 3; j++) {
@@ -202,20 +178,7 @@ bool cg::MapExport::EXP_ExportLeaves(std::fstream& f)
 			VectorCopy(B, e.B1);
 			VectorCopy(C, e.C1);
 
-			f << "// brush " << e.brush++ << "\n {";
-			f << "  mesh\n   {\n";
-			f << "  toolFlags splitGeo;\n";
-			f << "  caulk\n";
-			f << "  lightmap_grey\n";
-			f << "   smoothing smoothing_hard";
-			f << "   2 2 0 8\n   (\n";
-			f << "\tv " << A[0] << ' ' << A[1] << ' ' << A[2] << " t -8192 4096 -4 4\n";
-			f << "\tv " << B[0] << ' ' << B[1] << ' ' << B[2] << " t -8192 4096 -4 4\n";
-			f << "   )\n   (\n";
-			f << "\tv " << C[0] << ' ' << C[1] << ' ' << C[2] << " t -8192 4096 -4 4\n";
-			f << "\tv " << C[0] << ' ' << C[1] << ' ' << C[2] << " t -8192 4096 -4 4\n";
-			f << "   )\n";
-			f << "  }\n }\n";
+			EXP_WriteTriangle(A, B, C, "caulk");
 
 			//L_WriteMesh(X, Y, Z);
 
@@ -232,4 +195,82 @@ bool cg::MapExport::EXP_ExportLeaves(std::fstream& f)
 	}
 
 	return true;
+}
+void cg::MapExport::EXP_ExportSurfaces()
+{
+	static int32_t idx = 1;
+	GfxSurface* surface = 0;
+	int32_t iter = 0;
+	uint16_t* indice;
+	GfxWorldVertex* vertex;
+	surface = &gfxWorld->dpvs.surfaces[0];
+
+	vec3_t mins, maxs;
+
+	for (int j = 0; j < 3; j++) {
+		mins[j] = exp_origin[j] - exp_mins[j];
+		maxs[j] = exp_origin[j] + exp_maxs[j];
+
+	}
+
+	while (idx < 50000) {
+
+		indice = &gfxWorld->indices[surface->tris.baseIndex];
+		vertex = &gfxWorld->vd.vertices[surface->tris.firstVertex];
+		iter = 0;
+		
+		while (true) {
+			bool stop = false;
+			vec3_t A = { vertex[indice[0]].xyz[0], vertex[indice[0]].xyz[1], vertex[indice[0]].xyz[2] };
+			vec3_t B = { vertex[indice[1]].xyz[0], vertex[indice[1]].xyz[1], vertex[indice[1]].xyz[2] };
+			vec3_t C = { vertex[indice[2]].xyz[0], vertex[indice[2]].xyz[1], vertex[indice[2]].xyz[2] };
+
+			for (int i = 0; i < 3; i++) {
+
+				if (A[i] < mins[i] || A[i] > maxs[i] ||
+					B[i] < mins[i] || B[i] > maxs[i] ||
+					C[i] < mins[i] || C[i] > maxs[i]) {
+					stop = true;
+					break;
+				}
+
+
+			}
+			if (stop)
+				break;
+
+			std::string mat = surface->material->info.name;
+
+			mat.erase(mat.begin(), mat.begin() + 3);
+
+
+			EXP_WriteTriangle(A, B, C, mat);
+
+			indice += 3;
+
+			if (++iter >= surface->tris.triCount)
+				break;
+
+		}
+		surface = &gfxWorld->dpvs.surfaces[idx++];
+
+	}
+}
+
+void  cg::MapExport::EXP_WriteTriangle(const vec3_t A, const vec3_t B, const vec3_t C, const std::string& texture)
+{
+	f << "// brush " << e.brush++ << "\n {";
+	f << "  mesh\n   {\n";
+	f << "  toolFlags splitGeo;\n";
+	f << "  " << texture << "\n";
+	f << "  lightmap_grey\n";
+	f << "   smoothing smoothing_hard";
+	f << "   2 2 0 8\n   (\n";
+	f << "\tv " << A[0] << ' ' << A[1] << ' ' << A[2] << " t -8192 4096 -4 4\n";
+	f << "\tv " << B[0] << ' ' << B[1] << ' ' << B[2] << " t -8192 4096 -4 4\n";
+	f << "   )\n   (\n";
+	f << "\tv " << C[0] << ' ' << C[1] << ' ' << C[2] << " t -8192 4096 -4 4\n";
+	f << "\tv " << C[0] << ' ' << C[1] << ' ' << C[2] << " t -8192 4096 -4 4\n";
+	f << "   )\n";
+	f << "  }\n }\n";
 }

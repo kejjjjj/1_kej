@@ -3250,6 +3250,12 @@ struct cmodel_t
 //#pragma pack(pop)
 
 				/* 861 */
+struct Poly
+{
+	float(*pts)[3];
+	unsigned int ptCount;
+};
+
 #pragma pack(push, 16)
 struct cbrush_t
 {

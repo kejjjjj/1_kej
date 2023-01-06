@@ -79,6 +79,9 @@
     <Filter Include="Header Files\lib\ImGradient">
       <UniqueIdentifier>{eab82273-3385-47b3-98ad-ef0ade7c8b01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\cm">
+      <UniqueIdentifier>{cd3be425-cb1b-48d5-acfe-2d61ac748953}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -239,6 +242,9 @@
     </ClInclude>
     <ClInclude Include="cmod_export.hpp">
       <Filter>Source Files\CMod</Filter>
+    </ClInclude>
+    <ClInclude Include="cm_brush.hpp">
+      <Filter>Source Files\cm</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -403,6 +409,9 @@
     </ClCompile>
     <ClCompile Include="cmod_export.cpp">
       <Filter>Source Files\CMod</Filter>
+    </ClCompile>
+    <ClCompile Include="cm_brush.cpp">
+      <Filter>Source Files\cm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

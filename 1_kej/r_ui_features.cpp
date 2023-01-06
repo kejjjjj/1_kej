@@ -3,6 +3,19 @@
 void Visual_Features();
 void RPG_Features();
 void Jump_Features();
+void Map_Features();
+void Map_Features()
+{
+	ImGui::Text("Terrain Patches\t");
+	{
+		r::UI_DrawGradientZone(ImVec2(300, 100));
+
+		ImGui::Text("\t"); ImGui::SameLine();
+		ImGui::BeginGroup();
+
+		ImGui::EndGroup();
+	}
+}
 void Visual_Features()
 {
 	//ImGui::Text("Basic");
@@ -635,8 +648,12 @@ void r::R_DrawMenuByName(const char* category, bool justPressed, bool& wantsEdit
 		}
 		
 	}
+
 	else if (!strcmp("Jumping", category)) {
 		Jump_Features();
+	}
+	else if (!strcmp("Map", category)) {
+		Map_Features();
 	}
 	else if (!strcmp("Rpg", category)) {
 		RPG_Features();

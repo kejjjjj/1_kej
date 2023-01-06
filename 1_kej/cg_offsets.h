@@ -64,7 +64,7 @@ namespace cg
 	inline 	DebugGlobals* debugGlob = reinterpret_cast<DebugGlobals*>((((char*)frontEndDataOut) + 0x11E71C));
 	inline GfxBackEndData* _frontEndDataOut = reinterpret_cast<GfxBackEndData*>(0xCC9827C);
 	inline GfxBackEndData* _backEndData = reinterpret_cast<GfxBackEndData*>(0xD0704BC);
-	inline 	GfxWorld* _gfxWorld = reinterpret_cast<GfxWorld*>(0xD0701E0);
+	inline 	GfxWorld* gfxWorld = reinterpret_cast<GfxWorld*>(0xD0701E0);
 
 	// print3d // DebugStrings / Lines
 	inline int* clsDebugFromServer = reinterpret_cast<int*>(0xC5B020);

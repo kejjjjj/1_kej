@@ -211,6 +211,20 @@ void CrossProduct(const vec3_t v1, const vec3_t v2, vec3_t cross)
 	cross[1] = v1[2] * v2[0] - v1[0] * v2[2];
 	cross[2] = v1[0] * v2[1] - v1[1] * v2[0];
 }
+bool PlaneFromPoints(vec4_t plane, const vec3_t a, const vec3_t b, const vec3_t c)
+{
+	vec3_t	d1, d2;
+
+	VectorSubtract(b, a, d1);
+	VectorSubtract(c, a, d2);
+	CrossProduct(d2, d1, plane);
+	if (VectorNormalize(plane) == 0) {
+		return 0;
+	}
+
+	plane[3] = DotProduct(a, plane);
+	return 1;
+}
 void RotatePointAroundVector(vec3_t dst, vec3_t dir, float degrees, vec3_t point)
 {
 	float	m[3][3];
