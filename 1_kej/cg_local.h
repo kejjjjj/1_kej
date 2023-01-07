@@ -974,7 +974,7 @@ union PackedUnitVec
 union GfxColor
 {
 	unsigned int packed;
-	char array[4];
+	unsigned char array[4];
 };
 
 // fucking namespaces
@@ -2060,7 +2060,7 @@ struct XSurfaceVertexInfo
 struct GfxPointVertex
 {
 	float xyz[3];
-	char color[4];
+	unsigned char color[4];
 };
 
 union PackedTexCoords

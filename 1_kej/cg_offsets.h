@@ -88,7 +88,7 @@ namespace cg
 
 	inline Material* floatz_display = reinterpret_cast<Material*>(0xFA5378);
 	inline GfxCmdBufSourceState* gfxCmdBufSourceState = reinterpret_cast<GfxCmdBufSourceState*>(0xD53F5F0);
-
+	inline GfxCmdBufState* gfxCmdBufState = reinterpret_cast<GfxCmdBufState*>(0xD5404F0);
 	inline clientDebugLineInfo_t* clientDebugLineInfo_client = reinterpret_cast<clientDebugLineInfo_t*>(0xC5B054);
 	inline 	clientDebugLineInfo_t* clientDebugLineInfo_server = reinterpret_cast<clientDebugLineInfo_t*>(0xC5B074);
 

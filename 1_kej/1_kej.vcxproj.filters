@@ -82,6 +82,9 @@
     <Filter Include="Source Files\cm">
       <UniqueIdentifier>{cd3be425-cb1b-48d5-acfe-2d61ac748953}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RB">
+      <UniqueIdentifier>{b914f9ae-02e1-4143-b6af-8c1cd09b1976}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -245,6 +248,12 @@
     </ClInclude>
     <ClInclude Include="cm_brush.hpp">
       <Filter>Source Files\cm</Filter>
+    </ClInclude>
+    <ClInclude Include="rb_endscene.hpp">
+      <Filter>Source Files\RB</Filter>
+    </ClInclude>
+    <ClInclude Include="rb_world.hpp">
+      <Filter>Source Files\RB</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -412,6 +421,12 @@
     </ClCompile>
     <ClCompile Include="cm_brush.cpp">
       <Filter>Source Files\cm</Filter>
+    </ClCompile>
+    <ClCompile Include="rb_endscene.cpp">
+      <Filter>Source Files\RB</Filter>
+    </ClCompile>
+    <ClCompile Include="rb_world.cpp">
+      <Filter>Source Files\RB</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

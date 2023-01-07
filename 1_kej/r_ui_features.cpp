@@ -8,10 +8,53 @@ void Map_Features()
 {
 	ImGui::Text("Terrain Patches\t");
 	{
-		r::UI_DrawGradientZone(ImVec2(300, 100));
+		r::UI_DrawGradientZone(ImVec2(350, 250));
 
 		ImGui::Text("\t"); ImGui::SameLine();
 		ImGui::BeginGroup();
+
+		if (v::mod_wcol_patch_clips.isEnabled() && Dvar_FindMalleableVar("developer")->current.integer == 0) {
+			ImGui::TextColored(ImVec4(255, 255, 0, 255), "Developer mode is disabled!");
+		}
+
+		if (ImGui::Checkbox("Terrain Collision", &v::mod_wcol_patch_clips.evar->enabled)) {
+			v::mod_wcol_patch_clips.SetValue(v::mod_wcol_patch_clips.evar->enabled);
+
+			if (!v::mod_wcol_patch_clips.isEnabled() && !cworld.terrain.clip_points.empty()) {
+				cworld.terrain.clip_points.clear();
+				cworld.terrain.clip_points.resize(0);
+			}
+			else if (v::mod_wcol_patch_clips.isEnabled() && cworld.terrain.clip_points.empty()) {
+				CMod_GetAllTerrainClips();
+			}
+
+
+		}ImGui::SameLine(); r::MetricsHelpMarker("You can see all map barriers made using terrain patches");
+
+		if (!v::mod_wcol_patch_clips.isEnabled())
+			ImGui::BeginDisabled();
+
+		ImGui::Text("\t"); ImGui::SameLine();
+		ImGui::BeginGroup();
+
+		if (ImGui::Checkbox("Two-sided polygons", &v::mod_wcol_two_sided.evar->enabled)) {
+			v::mod_wcol_two_sided.SetValue(v::mod_wcol_two_sided.evar->enabled);
+		}ImGui::SameLine(); r::MetricsHelpMarker("You can see both sides of the terrain patch");
+
+		if (ImGui::Checkbox("Depth-Test", &v::mod_wcol_depth.evar->enabled)) {
+			v::mod_wcol_depth.SetValue(v::mod_wcol_depth.evar->enabled);
+		}ImGui::SameLine(); r::MetricsHelpMarker("Visible through walls");
+
+		ImGui::PushItemWidth(75);
+		ImGui::SliderFloat("Alpha", &v::mod_wcol_alpha.evar->floatValue, 0.f, 1.f, "%.3f");
+
+		ImGui::PushItemWidth(75);
+		ImGui::DragFloat("Draw-Distance", &v::mod_wcol_drawdist.evar->floatValue, 10.f, 0.f, 100000.f, "%.1f");
+
+		ImGui::EndGroup();
+
+		if (!v::mod_wcol_patch_clips.isEnabled())
+			ImGui::EndDisabled();
 
 		ImGui::EndGroup();
 	}

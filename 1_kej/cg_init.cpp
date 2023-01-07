@@ -83,7 +83,7 @@ void cg::CG_PrepareHooks()
 	PM_ProjectVelocity_f			= (void(*)(vec3_t normal, vec3_t velIn, vec3_t velOut))										(0x40E330);
 	PM_BounceHeight_f				= (void(*)())																				(0x415863);
 	PM_BounceSteepness_f			= (void(*)())																				(0x415930);
-
+	r::RB_DrawDebug_f				= (char(*)(GfxViewParms*))																	(0x658860);
 }
 void cg::CG_InitForeverHooks()
 {
@@ -151,6 +151,7 @@ void cg::CG_InitHooks()
 	a->install(&(PVOID&)PM_ProjectVelocity_f, PM_ProjectVelocity);
 	a->install(&(PVOID&)PM_BounceHeight_f, PM_BounceHeight);
 	a->install(&(PVOID&)PM_BounceSteepness_f, PM_BounceSteepness);
+	a->install(&(PVOID&)r::RB_DrawDebug_f, r::RB_DrawDebug);
 
 	//a->install(&(PVOID&)r::Material_Register_FastFile_f, r::Material_Register_FastFile);
 
@@ -199,6 +200,7 @@ void cg::CG_RemoveHooks()
 	a->remove(&(PVOID&)PM_ProjectVelocity_f, PM_ProjectVelocity);
 	a->remove(&(PVOID&)PM_BounceHeight_f, PM_BounceHeight);
 	a->remove(&(PVOID&)PM_BounceSteepness_f, PM_BounceSteepness);
+	a->remove(&(PVOID&)r::RB_DrawDebug_f, r::RB_DrawDebug);
 
 	Com_Printf(CON_CHANNEL_CONSOLEONLY, " done!\n");
 

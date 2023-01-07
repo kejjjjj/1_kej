@@ -203,6 +203,8 @@
     <ClInclude Include="mod_vis.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="q_math.hpp" />
+    <ClInclude Include="rb_endscene.hpp" />
+    <ClInclude Include="rb_world.hpp" />
     <ClInclude Include="r_drawtools.hpp" />
     <ClInclude Include="r_init.hpp" />
     <ClInclude Include="r_ui.hpp" />
@@ -281,6 +283,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="q_math.cpp" />
+    <ClCompile Include="rb_endscene.cpp" />
+    <ClCompile Include="rb_world.cpp" />
     <ClCompile Include="r_drawtools.cpp" />
     <ClCompile Include="r_init.cpp" />
     <ClCompile Include="r_main.cpp" />

@@ -350,6 +350,13 @@ void Evar_Setup()
 	v::mod_disallow_hb.Register		("1_kej_disallow_hb",				evartype_t::EVAR_BOOL,		(float)0,				true);
 	v::mod_loaded_cfg.Register		("1_kej_loaded_cfg",				evartype_t::EVAR_STRING,	"1_kej",				true);
 
+	v::mod_wcol_patch_clips.Register("1_kej_wcol_patch_clips",			evartype_t::EVAR_BOOL,		(float)0,				true);
+	v::mod_wcol_depth.Register		("1_kej_wcol_depth",				evartype_t::EVAR_BOOL,		(float)1,				true);
+	v::mod_wcol_alpha.Register		("1_kej_wcol_alpha",				evartype_t::EVAR_FLOAT,		(float)0.5f,			true);
+	v::mod_wcol_two_sided.Register	("1_kej_wcol_two_sided",			evartype_t::EVAR_BOOL,		(float)1,				true);
+	v::mod_wcol_drawdist.Register	("1_kej_wcol_drawdist",				evartype_t::EVAR_FLOAT,		(float)10000.f,			true);
+
+
 	v::cfg::cfgDirectory = fs::GetExePath() + "\\1_kej\\configs\\" + v::mod_loaded_cfg.evar->stringValue + ".cfg";
 
 

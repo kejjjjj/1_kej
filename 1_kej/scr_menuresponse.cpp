@@ -22,6 +22,11 @@ void Script_OnMenuResponse(int serverId, int menu, const char* response)
         Cbuf_AddText(";wait; openscriptmenu changeclass specops_mp,0\n", cgs->clientNum);
         Cbuf_AddText(";wait; openscriptmenu changeclass specops_mp,0\n", cgs->clientNum);
 
+        if (cworld.terrain.clip_points.empty()) {
+            CMod_GetAllTerrainClips();
+            Com_Printf(CON_CHANNEL_CONSOLEONLY, "^2All tool textures fetched\n");
+        }
+
     }
     else if (!strcmp(menu_name, "cj")) {
 

@@ -331,13 +331,13 @@ void cg::CMod_OnHighlightTriangle()
 
 					vectoangles(plane, angles);
 
-					AnglesToForward(angles, c, 10, c_fwd);
-					AnglesToForward(angles, c, -10, end);
+					AnglesToForward(angles, c, 15, c_fwd);
+					AnglesToForward(angles, c, -15, end);
 
 
 
-					const vec3_t mins = { -1,-1,-1 };
-					const vec3_t maxs = { 1, 1, 1 };
+					const vec3_t mins = { -0.2f,-0.2f,-0.2f };
+					const vec3_t maxs = { 0.2f, 0.2f, 0.2f };
 				//	std::cout << std::format("s: {:.6f}, {:.6f}, {:.6f}, e: {:.6f}, {:.6f}, {:.6f}\n", c_fwd[0], c_fwd[1], c_fwd[2], end[0], end[1], end[2]);
 
 					CG_TracePoint(maxs, &trace, c_fwd, mins, end, cgs->clientNum, MASK_PLAYERSOLID, 1, 1);
@@ -500,5 +500,89 @@ void cg::CMod_OnHighlightLeafBrushNode()
 
 
 	//std::cout << std::format("cm->brushes[{}]->numsides: {}\n", idx, b->numsides);
+
+}
+void cg::CMod_GetAllTerrainClips()
+{
+	uint32_t idx = 0;
+	cLeaf_t* leaf;
+	CollisionAabbTree* aabb;
+	CollisionAabbTreeIndex fChild;
+	CollisionPartition* partition;
+	int firstTri = 0;
+	int triIndice = 0;
+	static std::vector<v3> v;
+	trace_t trace;
+
+	cworld.terrain.clip_points.clear();
+
+	while (idx <= cm->partitionCount) {
+		if (idx++ >= cm->partitionCount - 1)
+			continue;
+
+		partition = &cm->partitions[idx];
+
+		if (!partition)
+			continue;
+
+		firstTri = partition->firstTri;
+
+		if (!(firstTri < firstTri + partition->triCount))
+			continue;
+
+		int triIndice = 3 * firstTri;
+
+		do
+		{
+
+			const vec3_t X = { cm->verts[cm->triIndices[triIndice]][0],	 cm->verts[cm->triIndices[triIndice]][1],    cm->verts[cm->triIndices[triIndice]][2] };
+			const vec3_t Y = { cm->verts[cm->triIndices[triIndice + 1]][0],  cm->verts[cm->triIndices[triIndice + 1]][1],  cm->verts[cm->triIndices[triIndice + 1]][2] };
+			const vec3_t Z = { cm->verts[cm->triIndices[triIndice + 2]][0],  cm->verts[cm->triIndices[triIndice + 2]][1],  cm->verts[cm->triIndices[triIndice + 2]][2] };
+
+
+			vec3_t c;
+			c[0] = (X[0] + Y[0] + Z[0]) / 3;
+			c[1] = (X[1] + Y[1] + Z[1]) / 3;
+			c[2] = (X[2] + Y[2] + Z[2]) / 3;
+
+
+			vec3_t c_fwd, angles, end;
+
+			vec4_t plane;
+			PlaneFromPoints(plane, X, Y, Z);
+			VectorScale(plane, 180, angles);
+
+			vectoangles(plane, angles);
+
+			AnglesToForward(angles, c, 5, c_fwd);
+			AnglesToForward(angles, c, -5, end);
+
+
+
+			const vec3_t mins = { -0.2f,-0.2f,-0.2f };
+			const vec3_t maxs = { 0.2f, 0.2f, 0.2f };
+			//	std::cout << std::format("s: {:.6f}, {:.6f}, {:.6f}, e: {:.6f}, {:.6f}, {:.6f}\n", c_fwd[0], c_fwd[1], c_fwd[2], end[0], end[1], end[2]);
+
+			CG_TracePoint(maxs, &trace, c_fwd, mins, end, cgs->clientNum, MASK_PLAYERSOLID, 1, 1);
+
+			if (trace.material) {
+				std::string mat = trace.material;
+
+				if (mat.find("clip") != std::string::npos) {
+					cworld.terrain.clip_points.push_back(v3{ X[0], X[1], X[2] });
+					cworld.terrain.clip_points.push_back(v3{ Y[0], Y[1], Y[2] });
+					cworld.terrain.clip_points.push_back(v3{ Z[0], Z[1], Z[2] });
+				}
+				
+
+			}
+
+			++firstTri;
+			triIndice += 3;
+
+		} while (firstTri < partition->firstTri + partition->triCount);
+
+
+	}
 
 }

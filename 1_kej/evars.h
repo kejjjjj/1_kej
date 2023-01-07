@@ -78,7 +78,12 @@ namespace v
 		mod_smooth_rpg_anim,
 		mod_jump_anim,
 		mod_disallow_hb,
-		mod_loaded_cfg;
+		mod_loaded_cfg,
+		mod_wcol_patch_clips,
+		mod_wcol_depth,
+		mod_wcol_alpha,
+		mod_wcol_two_sided,
+		mod_wcol_drawdist;
 		
 
 
