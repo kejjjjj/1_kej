@@ -4,15 +4,12 @@ A CoD4 CodJumper tool made for advanced players who want to learn the gamemode m
 If you want to try an alpha version of the tool, see the early_version folder.
 Report any bugs you find!
 
-Join the discord!\
-https://discord.gg/eJSHyWWX
-
 ![](https://github.com/kejjjjj/1_kej/raw/master/resources/banner.png)
 
 # Supported Versions
 
 
-This project is compatible with the following versions of CoD4:\
+This project is compatible with the following versions of CoD4:
 - **1.7**
 - **IW3xo**
 - **CoD4x 21.1**
